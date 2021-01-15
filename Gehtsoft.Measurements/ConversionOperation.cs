@@ -16,5 +16,7 @@
         Divide,
         DivideFactor,
         Negate,
+        Atan,
+        Custom,
     };
 }

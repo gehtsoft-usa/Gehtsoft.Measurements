@@ -162,7 +162,7 @@ namespace Gehtsoft.Measurements
             if (attribute.Operation == ConversionOperation.Base)
                 return value;
 
-            Expression firstOperation = OperationToExpression(value, attribute.Operation, attribute.Factor);
+            Expression firstOperation = OperationToExpression(value, attribute.Operation, attribute.Factor, attribute.ConversionInterface);
             if (attribute.SecondOperation == ConversionOperation.None)
                 return firstOperation;
             else
@@ -180,12 +180,16 @@ namespace Gehtsoft.Measurements
             else
                 secondExpression = OperationToReverseExpression(value, attribute.SecondOperation, attribute.SecondFactor);
 
-            return OperationToReverseExpression(secondExpression, attribute.Operation, attribute.Factor);
+            return OperationToReverseExpression(secondExpression, attribute.Operation, attribute.Factor, attribute.ConversionInterface);
         }
 
-        private static Expression OperationToExpression(Expression value, ConversionOperation operation, double factor)
+        private static Type gMath = typeof(Math);
+        private static MethodInfo gTan = gMath.GetMethod(nameof(Math.Tan), new Type[] { typeof(double) });
+        private static MethodInfo gAtan = gMath.GetMethod(nameof(Math.Atan), new Type[] { typeof(double) });
+
+        private static Expression OperationToExpression(Expression value, ConversionOperation operation, double factor, ICustomConversionOperation op = null)
         {
-            Expression r = Expression.Constant(0);
+            Expression r = Expression.Constant(0.0);
             switch (operation)
             {
                 case ConversionOperation.Base:
@@ -212,13 +216,19 @@ namespace Gehtsoft.Measurements
                 case ConversionOperation.Negate:
                     r = Expression.Negate(value);
                     break;
+                case ConversionOperation.Atan:
+                    r = Expression.Call(null, gAtan, new Expression[] { value });
+                    break;
+                case ConversionOperation.Custom:
+                    r = Expression.Call(Expression.Constant(op), op.GetType().GetMethod(nameof(ICustomConversionOperation.ToBase)), new Expression[] { value });
+                    break;
             }
             return r;
         }
 
-        private static Expression OperationToReverseExpression(Expression value, ConversionOperation operation, double factor)
+        private static Expression OperationToReverseExpression(Expression value, ConversionOperation operation, double factor, ICustomConversionOperation op = null)
         {
-            Expression r = Expression.Constant(0);
+            Expression r = Expression.Constant(0.0);
             switch (operation)
             {
                 case ConversionOperation.Base:
@@ -228,18 +238,28 @@ namespace Gehtsoft.Measurements
                     r = Expression.Subtract(value, Expression.Constant(factor));
                     break;
                 case ConversionOperation.Subtract:
-                case ConversionOperation.SubtractFromFactor:
                     r = Expression.Add(value, Expression.Constant(factor));
+                    break;
+                case ConversionOperation.SubtractFromFactor:
+                    r = Expression.Negate(Expression.Subtract(value, Expression.Constant(factor)));
                     break;
                 case ConversionOperation.Multiply:
                     r = Expression.Divide(value, Expression.Constant(factor));
                     break;
                 case ConversionOperation.Divide:
-                case ConversionOperation.DivideFactor:
                     r = Expression.Multiply(value, Expression.Constant(factor));
+                    break;
+                case ConversionOperation.DivideFactor:
+                    r = Expression.Divide(Expression.Constant(factor), value);
                     break;
                 case ConversionOperation.Negate:
                     r = Expression.Negate(value);
+                    break;
+                case ConversionOperation.Atan:
+                    r = Expression.Call(null, gTan, new Expression[] { value });
+                    break;
+                case ConversionOperation.Custom:
+                    r = Expression.Call(Expression.Constant(op), op.GetType().GetMethod(nameof(ICustomConversionOperation.FromBase)), new Expression[] { value });
                     break;
             }
             return r;

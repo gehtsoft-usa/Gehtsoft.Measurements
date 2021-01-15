@@ -1,7 +1,18 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Reflection;
 
 namespace Gehtsoft.Measurements
 {
+    /// <summary>
+    /// The interface to implement the custom conversion
+    /// </summary>
+    public interface ICustomConversionOperation
+    {
+        double ToBase(double value);
+        double FromBase(double value);
+    };
+
     /// <summary>
     /// The attribute to specify the conversion rule for the measurmement unit.
     /// 
@@ -22,6 +33,48 @@ namespace Gehtsoft.Measurements
         /// <param name="operation">Must always be <code>ConversionOperation.Base</code></param>
         public ConversionAttribute(ConversionOperation operation) : this(operation, 0, ConversionOperation.None, 0)
         {
+            if (operation != ConversionOperation.Base && operation != ConversionOperation.Negate)
+                throw new ArgumentException("Operation must be either Base or Negate", nameof(operation));
+        }
+
+        private static ConcurrentDictionary<string, Type> gTypes = new ConcurrentDictionary<string, Type>();
+
+        internal ICustomConversionOperation ConversionInterface { get; private set; }
+
+        /// <summary>
+        /// The constructor to specify a custom conversion
+        /// </summary>
+        /// <param name="operation">Must always be <code>ConversionOperation.Base</code></param>
+        /// <param name="name">The full name (namespace + name) of the type that implements <see cref="ICustomConversionOperation">ICustomConversionOperation</see> interface</param>
+        public ConversionAttribute(ConversionOperation operation, string name) : this(operation, 0, ConversionOperation.None, 0)
+        {
+            if (operation != ConversionOperation.Custom)
+                throw new ArgumentException("Operation must be Custom", nameof(operation));
+
+            if (!gTypes.TryGetValue(name, out Type type))
+            {
+                Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+                type = null;
+                foreach (var assembly in assemblies)
+                {
+                    foreach (var type1 in assembly.GetTypes())
+                    {
+                        if (type1.FullName == name)
+                        {
+                            type = type1;
+                            break;
+                        }
+                    }
+                    if (type != null)
+                        break;
+                }
+                if (type == null)
+                    throw new ArgumentException($"Type {name} is not found", nameof(name));
+                gTypes.TryAdd(name, type);
+            }
+            ConversionInterface = Activator.CreateInstance(type) as ICustomConversionOperation;
+            if (ConversionInterface == null)
+                throw new ArgumentException($"Type {name} does not supprt {nameof(ICustomConversionOperation)}", nameof(name));
         }
 
 

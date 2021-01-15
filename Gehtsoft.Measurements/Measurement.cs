@@ -55,7 +55,7 @@ namespace Gehtsoft.Measurements
         /// The value as a string with maximum accuracy
         /// </summary>
         [JsonPropertyName("value")]
-        public string Text => ToString("N", CultureInfo.InvariantCulture);
+        public string Text => ToString("NF", CultureInfo.InvariantCulture);
 
 
         /// <summary>
@@ -67,19 +67,19 @@ namespace Gehtsoft.Measurements
         /// <summary>
         /// Convert to string with maximum accuracy in the specified culture
         /// </summary>
-        public string ToString(CultureInfo cultureInfo) => ToString("N", cultureInfo);
+        public string ToString(CultureInfo cultureInfo) => ToString("NF", cultureInfo);
 
         /// <summary>
         /// Convert to string with specified format
         /// </summary>
-        /// <param name="format">A numeric format or "ND" to format with the default accuracy</param>
+        /// <param name="format">A numeric format or "ND" to format with the default accuracy and NF to display as all digits after decimal point</param>
         /// <param name="cultureInfo"></param>
         /// <returns></returns>
         public string ToString(string format, CultureInfo cultureInfo)
         {
             if (format == "ND")
                 format = $"N{GetUnitDefaultAccuracy(Unit)}";
-            return $"{Value}{GetUnitName(Unit)}";
+            return $"{(format == "NF" ? Value.ToString() : Value.ToString(format))}{GetUnitName(Unit)}";
         }
 
         /// <summary>
@@ -113,6 +113,11 @@ namespace Gehtsoft.Measurements
                 value = FromBase(value, to);
             return value;
         }
+
+        /// <summary>
+        /// The base unit for the measurement
+        /// </summary>
+        public static T BaseUnit => gBase;
 
         private static readonly T gBase = UnitUtils.GetBase<T>();
         private static readonly Func<T, string> mGetUnitName = CodeGenerator.GenerateGetUnitName<T>();
@@ -195,14 +200,21 @@ namespace Gehtsoft.Measurements
             if (text.Length < 2)
                 return false;
 
-            int lastDigit = -1; ;
-            for (int i = text.Length - 1; i >= 0 && lastDigit == -1; i--)
-                if (text[i] >= '0' && text[i] <= '9' || text[i] == '.' || text[i] == ',')
+            int lastDigit = -1; 
+            for (int i = 0; i < text.Length; i++)
+            {
+                char c = text[i];
+                if (c >= '0' && c <= '9' || c == cultureInfo.NumberFormat.NumberDecimalSeparator[0] ||
+                    c == cultureInfo.NumberFormat.NumberGroupSeparator[0] ||
+                    c == cultureInfo.NumberFormat.NegativeSign[0] ||
+                    c == '+' || c == '-' || c == ' ')
                     lastDigit = i;
+                else
+                    break;
+            }
 
             if (lastDigit == text.Length - 1)
                 return false;
-
 
             T unit;
             try
@@ -285,6 +297,18 @@ namespace Gehtsoft.Measurements
             return v1.CompareTo(v2);
         }
 
+        public static bool operator ==(Measurement<T> v1, Measurement<T> v2) => v1.CompareTo(v2) == 0;
+        public static bool operator !=(Measurement<T> v1, Measurement<T> v2) => v1.CompareTo(v2) != 0;
+        public static bool operator >(Measurement<T> v1, Measurement<T> v2) => v1.CompareTo(v2) > 0;
+        public static bool operator <(Measurement<T> v1, Measurement<T> v2) => v1.CompareTo(v2) < 0;
+        public static bool operator >=(Measurement<T> v1, Measurement<T> v2) => v1.CompareTo(v2) >= 0;
+        public static bool operator <=(Measurement<T> v1, Measurement<T> v2) => v1.CompareTo(v2) <= 0;
 
+        public static Measurement<T> operator -(Measurement<T> v1) => new Measurement<T>(-v1.Value, v1.Unit);
+        public static Measurement<T> operator +(Measurement<T> v1, Measurement<T> v2) => new Measurement<T>(v1.Value - v2.In(v1.Unit), v1.Unit);
+        public static Measurement<T> operator -(Measurement<T> v1, Measurement<T> v2) => new Measurement<T>(v1.Value + v2.In(v1.Unit), v1.Unit);
+        public static Measurement<T> operator *(Measurement<T> v1, double value) => new Measurement<T>(v1.Value * value, v1.Unit);
+        public static Measurement<T> operator *(double value, Measurement<T> v1) => new Measurement<T>(v1.Value * value, v1.Unit);
+        public static Measurement<T> operator /(Measurement<T> v1, double value) => new Measurement<T>(v1.Value / value, v1.Unit);
     }
 }

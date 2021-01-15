@@ -24,7 +24,7 @@
         [Conversion(ConversionOperation.Multiply, 63360)]
         Mile,
         [Unit("nm", 3)]
-        [Conversion(ConversionOperation.Multiply, 72913.3858)]
+        [Conversion(ConversionOperation.Multiply, 1_852_000, ConversionOperation.Divide, 25.4)]
         NauticalMile,
         [Unit("mm", 0)]
         [Conversion(ConversionOperation.Divide, 25.4)]
