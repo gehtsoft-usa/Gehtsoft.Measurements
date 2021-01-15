@@ -6,6 +6,9 @@
     public enum DistanceUnit : int
     {
         [Unit("ln", 1)]
+        [Conversion(ConversionOperation.Divide, 12)]
+        Line,
+        [Unit("rln", 1)]
         [Conversion(ConversionOperation.Divide, 10)]
         RussianLine,
         [Unit("\"", "in", 1)]

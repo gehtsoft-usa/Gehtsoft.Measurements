@@ -20,8 +20,8 @@ namespace Gehtsoft.Measurements.Test
         [InlineData(DistanceUnit.Inch, "\"", "in")]
         [InlineData(DistanceUnit.Foot, "\'", "ft")]
         [InlineData(DistanceUnit.Yard, "yd", null)]
-        [InlineData(DistanceUnit.RussianLine, "ln", null)]
-        public void TestUnitNames(DistanceUnit unit, string name, string altName)
+        [InlineData(DistanceUnit.RussianLine, "rln", null)]
+        public void UnitNames(DistanceUnit unit, string name, string altName)
         {
             Measurement<DistanceUnit>.GetUnitName(unit).Should().Be(name);
             Measurement<DistanceUnit>.ParseUnitName(name).Should().Be(unit);
@@ -33,7 +33,7 @@ namespace Gehtsoft.Measurements.Test
         }
 
         [Fact]
-        public void TestUnitNamesList()
+        public void UnitNamesList()
         {
             var names = Measurement<DistanceUnit>.GetUnitNames();
             names.Should().Contain(new Tuple<DistanceUnit, string>(DistanceUnit.Inch, "\""));
@@ -44,7 +44,7 @@ namespace Gehtsoft.Measurements.Test
         [InlineData("iv", "1,234.24567ft", 1234.24567, DistanceUnit.Foot)]
         [InlineData("ru", "-1 234,24567'", -1234.24567, DistanceUnit.Foot)]
 
-        public void TestParser(string culture, string text, double value, DistanceUnit unit)
+        public void Parser(string culture, string text, double value, DistanceUnit unit)
         {
             CultureInfo ci = culture == "iv" ? CultureInfo.InvariantCulture : CultureInfo.GetCultures(CultureTypes.AllCultures).First(c => c.Name == culture);
             ci.Should().NotBeNull();
@@ -59,13 +59,40 @@ namespace Gehtsoft.Measurements.Test
         [InlineData(1, DistanceUnit.RussianLine, 0.1)]
         [InlineData(1, DistanceUnit.Centimeter, 0.3937007874015748031496062992126)]
         [InlineData(1, DistanceUnit.Meter, 39.37007874015748031496062992126)]
-        public void TestToBaseStatic(double value, DistanceUnit unit, double expected)
+        public void StaticConversion(double value, DistanceUnit unit, double expected)
         {
             Measurement<DistanceUnit>.ToBase(value, unit).Should().BeApproximately(expected, 1e-10);
+            Measurement<DistanceUnit>.FromBase(expected, unit).Should().BeApproximately(value, 1e-10);
+        }
+
+        [Theory]
+        [InlineData(1, DistanceUnit.Inch, 2.54, DistanceUnit.Centimeter)]
+        [InlineData(10, DistanceUnit.RussianLine, 1, DistanceUnit.Inch)]
+        [InlineData(10, DistanceUnit.RussianLine, 2.54, DistanceUnit.Centimeter)]
+        public void In(double value, DistanceUnit unit, double expected, DistanceUnit targetUnit)
+        {
+            Measurement<DistanceUnit> v = new Measurement<DistanceUnit>(value, unit);
+            v.In(targetUnit).Should().Be(expected);
+        }
+
+        [Theory]
+        [InlineData(1, DistanceUnit.Inch, 2.54, DistanceUnit.Centimeter, 0)]
+        [InlineData(2, DistanceUnit.Inch, 2.54, DistanceUnit.Centimeter, 1)]
+        [InlineData(0.5, DistanceUnit.Inch, 2.54, DistanceUnit.Centimeter, -1)]
+        public void Compare(double value1, DistanceUnit unit1, double value2, DistanceUnit unit2, int expectedResult)
+        {
+            Measurement<DistanceUnit> v1 = new Measurement<DistanceUnit>(value1, unit1);
+            Measurement<DistanceUnit> v2 = new Measurement<DistanceUnit>(value2, unit2);
+            if (expectedResult == 0)
+                v1.CompareTo(v2).Should().Be(0);
+            else if (expectedResult > 0)
+                v1.CompareTo(v2).Should().BeGreaterThan(0);
+            else if (expectedResult < 0)
+                v1.CompareTo(v2).Should().BeLessThan(0);
         }
 
         [Fact]
-        public void JsonTest()
+        public void SerializationJson()
         {
             Measurement<DistanceUnit> v = new Measurement<DistanceUnit>(1245, DistanceUnit.Meter);
             string s = JsonSerializer.Serialize(v);
@@ -77,7 +104,7 @@ namespace Gehtsoft.Measurements.Test
         }
 
         [Fact]
-        public void XmlTest()
+        public void SerializationXml()
         {
             Measurement<DistanceUnit> v = new Measurement<DistanceUnit>(1245, DistanceUnit.Meter);
             XmlSerializer serializer = new XmlSerializer(typeof(Measurement<DistanceUnit>));
@@ -97,7 +124,7 @@ namespace Gehtsoft.Measurements.Test
         }
 
         [Fact]
-        public void BinaronTest()
+        public void SerializationBinaron()
         {
             Measurement<DistanceUnit> v = new Measurement<DistanceUnit>(1245, DistanceUnit.Meter);
             byte[] arr;

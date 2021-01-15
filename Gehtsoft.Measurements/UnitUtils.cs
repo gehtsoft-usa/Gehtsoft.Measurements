@@ -7,9 +7,23 @@ namespace Gehtsoft.Measurements
 {
     internal static class UnitUtils
     {
-        public static Tuple<T, string>[] GetUnits<T>(Type type)
+        public static T GetBase<T>()
+        {
+            Type type = typeof(T);
+            var fields = type.GetFields(BindingFlags.Public | BindingFlags.Static);
+            for (int i = 0; i < fields.Length; i++)
+            {
+                ConversionAttribute attribute = fields[i].GetCustomAttribute<ConversionAttribute>();
+                if (attribute.Operation == ConversionOperation.Base)
+                    return (T)fields[i].GetRawConstantValue();
+            }
+            return default(T);
+        }
+
+        public static Tuple<T, string>[] GetUnits<T>()
             where T : Enum
         {
+            Type type = typeof(T);
             var fields = type.GetFields(BindingFlags.Public | BindingFlags.Static);
             Tuple<T, string>[] rv = new Tuple<T, string>[fields.Length];
             for (int i = 0; i < fields.Length; i++)

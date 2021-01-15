@@ -120,7 +120,7 @@ namespace Gehtsoft.Measurements
             return (Func<string, T>)functionDelegate;
         }
 
-        public static Func<double, T, double> GenerateToBaseConversion<T>()
+        public static Func<double, T, double> GenerateConversion<T>(bool direct)
         {
             Type type = typeof(T);
             var valueParameter = Expression.Parameter(typeof(double), "value");
@@ -135,7 +135,7 @@ namespace Gehtsoft.Measurements
             {
                 ConversionAttribute attribute = fields[i].GetCustomAttribute<ConversionAttribute>();
                 Expression unit = Expression.Constant(Enum.ToObject(type, fields[i].GetRawConstantValue()));
-                Expression convertor = ToBaseExpression(attribute, valueParameter);
+                Expression convertor = direct ? ToBaseExpression(attribute, valueParameter) : FromBaseExpression(attribute, valueParameter);
                 var returnStatement = Expression.Return(returnTarget, convertor);
                 cases[i] = Expression.SwitchCase(returnStatement, new Expression[] { unit });
             }
@@ -156,8 +156,6 @@ namespace Gehtsoft.Measurements
             var functionDelegate = expression.Compile();
             return (Func<double, T, double>)functionDelegate;
         }
-
-
 
         private static Expression ToBaseExpression(ConversionAttribute attribute, Expression value)
         {
@@ -182,7 +180,7 @@ namespace Gehtsoft.Measurements
             else
                 secondExpression = OperationToReverseExpression(value, attribute.SecondOperation, attribute.SecondFactor);
 
-            return OperationToReverseExpression(value, attribute.Operation, attribute.Factor);
+            return OperationToReverseExpression(secondExpression, attribute.Operation, attribute.Factor);
         }
 
         private static Expression OperationToExpression(Expression value, ConversionOperation operation, double factor)
