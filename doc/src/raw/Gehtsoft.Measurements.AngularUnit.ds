@@ -1,0 +1,174 @@
+﻿
+
+@class
+    @name=AngularUnit
+    @key=Gehtsoft.Measurements.AngularUnit
+    @ingroup=Gehtsoft.Measurements
+    @sig=T:Gehtsoft.Measurements.AngularUnit
+    @type=enum
+        
+    @parent=System.Enum
+    @brief=
+                
+    @member
+        
+        @type=field
+        @name=Radian
+        @key=Radian.Sn5
+        @divisor=.
+        @sig=F:Gehtsoft.Measurements.AngularUnit.Radian
+        @visibility=public
+        @scope=class
+        @brief=
+                
+            @declaration
+                @language=cs
+                @name=Radian
+                @return=[link=Gehtsoft.Measurements.AngularUnit]Gehtsoft.Measurements.AngularUnit[/link]
+                @suffix= = 0
+            @end
+            
+    @end
+    
+    @member
+        
+        @type=field
+        @name=Degree
+        @key=Degree.VF3
+        @divisor=.
+        @sig=F:Gehtsoft.Measurements.AngularUnit.Degree
+        @visibility=public
+        @scope=class
+        @brief=
+                
+            @declaration
+                @language=cs
+                @name=Degree
+                @return=[link=Gehtsoft.Measurements.AngularUnit]Gehtsoft.Measurements.AngularUnit[/link]
+                @suffix= = 1
+            @end
+            
+    @end
+    
+    @member
+        
+        @type=field
+        @name=MOA
+        @key=MOA.BxB
+        @divisor=.
+        @sig=F:Gehtsoft.Measurements.AngularUnit.MOA
+        @visibility=public
+        @scope=class
+        @brief=
+                
+            @declaration
+                @language=cs
+                @name=MOA
+                @return=[link=Gehtsoft.Measurements.AngularUnit]Gehtsoft.Measurements.AngularUnit[/link]
+                @suffix= = 2
+            @end
+            
+    @end
+    
+    @member
+        
+        @type=field
+        @name=Mil
+        @key=Mil.6g
+        @divisor=.
+        @sig=F:Gehtsoft.Measurements.AngularUnit.Mil
+        @visibility=public
+        @scope=class
+        @brief=
+                
+            @declaration
+                @language=cs
+                @name=Mil
+                @return=[link=Gehtsoft.Measurements.AngularUnit]Gehtsoft.Measurements.AngularUnit[/link]
+                @suffix= = 3
+            @end
+            
+    @end
+    
+    @member
+        
+        @type=field
+        @name=MRad
+        @key=MRad.VA4
+        @divisor=.
+        @sig=F:Gehtsoft.Measurements.AngularUnit.MRad
+        @visibility=public
+        @scope=class
+        @brief=
+                
+            @declaration
+                @language=cs
+                @name=MRad
+                @return=[link=Gehtsoft.Measurements.AngularUnit]Gehtsoft.Measurements.AngularUnit[/link]
+                @suffix= = 4
+            @end
+            
+    @end
+    
+    @member
+        
+        @type=field
+        @name=Thousand
+        @key=Thousand.JP1
+        @divisor=.
+        @sig=F:Gehtsoft.Measurements.AngularUnit.Thousand
+        @visibility=public
+        @scope=class
+        @brief=
+                
+            @declaration
+                @language=cs
+                @name=Thousand
+                @return=[link=Gehtsoft.Measurements.AngularUnit]Gehtsoft.Measurements.AngularUnit[/link]
+                @suffix= = 5
+            @end
+            
+    @end
+    
+    @member
+        
+        @type=field
+        @name=InchesPer100Yards
+        @key=InchesPer100Yards.wJ9
+        @divisor=.
+        @sig=F:Gehtsoft.Measurements.AngularUnit.InchesPer100Yards
+        @visibility=public
+        @scope=class
+        @brief=
+                
+            @declaration
+                @language=cs
+                @name=InchesPer100Yards
+                @return=[link=Gehtsoft.Measurements.AngularUnit]Gehtsoft.Measurements.AngularUnit[/link]
+                @suffix= = 6
+            @end
+            
+    @end
+    
+    @member
+        
+        @type=field
+        @name=CmPer100Meters
+        @key=CmPer100Meters.UyA
+        @divisor=.
+        @sig=F:Gehtsoft.Measurements.AngularUnit.CmPer100Meters
+        @visibility=public
+        @scope=class
+        @brief=
+                
+            @declaration
+                @language=cs
+                @name=CmPer100Meters
+                @return=[link=Gehtsoft.Measurements.AngularUnit]Gehtsoft.Measurements.AngularUnit[/link]
+                @suffix= = 7
+            @end
+            
+    @end
+    
+@end
+    

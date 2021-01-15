@@ -1,0 +1,114 @@
+﻿
+
+@class
+    @name=VelocityUnit
+    @key=Gehtsoft.Measurements.VelocityUnit
+    @ingroup=Gehtsoft.Measurements
+    @sig=T:Gehtsoft.Measurements.VelocityUnit
+    @type=enum
+        
+    @parent=System.Enum
+    @brief=
+                
+    @member
+        
+        @type=field
+        @name=MetersPerSecond
+        @key=MetersPerSecond.lXD
+        @divisor=.
+        @sig=F:Gehtsoft.Measurements.VelocityUnit.MetersPerSecond
+        @visibility=public
+        @scope=class
+        @brief=
+                
+            @declaration
+                @language=cs
+                @name=MetersPerSecond
+                @return=[link=Gehtsoft.Measurements.VelocityUnit]Gehtsoft.Measurements.VelocityUnit[/link]
+                @suffix= = 0
+            @end
+            
+    @end
+    
+    @member
+        
+        @type=field
+        @name=KilometersPerHour
+        @key=KilometersPerHour.bk2
+        @divisor=.
+        @sig=F:Gehtsoft.Measurements.VelocityUnit.KilometersPerHour
+        @visibility=public
+        @scope=class
+        @brief=
+                
+            @declaration
+                @language=cs
+                @name=KilometersPerHour
+                @return=[link=Gehtsoft.Measurements.VelocityUnit]Gehtsoft.Measurements.VelocityUnit[/link]
+                @suffix= = 1
+            @end
+            
+    @end
+    
+    @member
+        
+        @type=field
+        @name=FeetPerSecond
+        @key=FeetPerSecond.Y05
+        @divisor=.
+        @sig=F:Gehtsoft.Measurements.VelocityUnit.FeetPerSecond
+        @visibility=public
+        @scope=class
+        @brief=
+                
+            @declaration
+                @language=cs
+                @name=FeetPerSecond
+                @return=[link=Gehtsoft.Measurements.VelocityUnit]Gehtsoft.Measurements.VelocityUnit[/link]
+                @suffix= = 2
+            @end
+            
+    @end
+    
+    @member
+        
+        @type=field
+        @name=MilesPerHour
+        @key=MilesPerHour.BzE
+        @divisor=.
+        @sig=F:Gehtsoft.Measurements.VelocityUnit.MilesPerHour
+        @visibility=public
+        @scope=class
+        @brief=
+                
+            @declaration
+                @language=cs
+                @name=MilesPerHour
+                @return=[link=Gehtsoft.Measurements.VelocityUnit]Gehtsoft.Measurements.VelocityUnit[/link]
+                @suffix= = 3
+            @end
+            
+    @end
+    
+    @member
+        
+        @type=field
+        @name=Knot
+        @key=Knot.pzE
+        @divisor=.
+        @sig=F:Gehtsoft.Measurements.VelocityUnit.Knot
+        @visibility=public
+        @scope=class
+        @brief=
+                
+            @declaration
+                @language=cs
+                @name=Knot
+                @return=[link=Gehtsoft.Measurements.VelocityUnit]Gehtsoft.Measurements.VelocityUnit[/link]
+                @suffix= = 4
+            @end
+            
+    @end
+    
+@end
+    

@@ -1,0 +1,9 @@
+@group
+    @key=index
+    @brief=
+    @title=Gehtsoft Measurements Library
+    @ingroup=
+    @transform=yes
+    @sortgroups=no
+
+@end

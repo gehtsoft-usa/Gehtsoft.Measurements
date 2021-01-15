@@ -1,0 +1,231 @@
+﻿
+
+@class
+    @name=ConversionAttribute
+    @key=Gehtsoft.Measurements.ConversionAttribute
+    @ingroup=Gehtsoft.Measurements
+    @sig=T:Gehtsoft.Measurements.ConversionAttribute
+    @type=class
+        
+    @parent=System.Attribute
+    @brief=
+                
+    @member
+        
+        @type=property
+        @name=Operation
+        @key=Operation.ko6
+        @divisor=.
+        @sig=P:Gehtsoft.Measurements.ConversionAttribute.Operation
+        @visibility=public
+            
+        @scope=instance
+        @brief=
+                
+            @declaration
+                @language=cs
+                
+                @return=[link=Gehtsoft.Measurements.ConversionOperation]Gehtsoft.Measurements.ConversionOperation[/link]
+                @name=Operation
+                @suffix= public get; public set;
+            @end
+            
+    @end
+    
+    @member
+        
+        @type=property
+        @name=Factor
+        @key=Factor.QR6
+        @divisor=.
+        @sig=P:Gehtsoft.Measurements.ConversionAttribute.Factor
+        @visibility=public
+            
+        @scope=instance
+        @brief=
+                
+            @declaration
+                @language=cs
+                
+                @return=double
+                @name=Factor
+                @suffix= public get; public set;
+            @end
+            
+    @end
+    
+    @member
+        
+        @type=property
+        @name=SecondOperation
+        @key=SecondOperation.2P
+        @divisor=.
+        @sig=P:Gehtsoft.Measurements.ConversionAttribute.SecondOperation
+        @visibility=public
+            
+        @scope=instance
+        @brief=
+                
+            @declaration
+                @language=cs
+                
+                @return=[link=Gehtsoft.Measurements.ConversionOperation]Gehtsoft.Measurements.ConversionOperation[/link]
+                @name=SecondOperation
+                @suffix= public get; public set;
+            @end
+            
+    @end
+    
+    @member
+        
+        @type=property
+        @name=SecondFactor
+        @key=SecondFactor.BE3
+        @divisor=.
+        @sig=P:Gehtsoft.Measurements.ConversionAttribute.SecondFactor
+        @visibility=public
+            
+        @scope=instance
+        @brief=
+                
+            @declaration
+                @language=cs
+                
+                @return=double
+                @name=SecondFactor
+                @suffix= public get; public set;
+            @end
+            
+    @end
+    
+    @member
+        
+        @type=constructor
+        @name=ConversionAttribute
+        @key=.ctor.iIF
+        @divisor=.
+        @sig=M:Gehtsoft.Measurements.ConversionAttribute..ctor(Gehtsoft.Measurements.ConversionOperation)
+        @visibility=public
+        @scope=instance
+        @brief=
+                
+            @declaration
+                @language=cs
+                @name=ConversionAttribute
+                @return=
+                
+                @params=[link=Gehtsoft.Measurements.ConversionOperation]Gehtsoft.Measurements.ConversionOperation[/link] operation
+            @end
+            
+            @param
+                @name=operation
+
+            @end
+        
+    @end
+    
+    @member
+        
+        @type=constructor
+        @name=ConversionAttribute
+        @key=.ctor.KdB
+        @divisor=.
+        @sig=M:Gehtsoft.Measurements.ConversionAttribute..ctor(Gehtsoft.Measurements.ConversionOperation,System.String)
+        @visibility=public
+        @scope=instance
+        @brief=
+                
+            @declaration
+                @language=cs
+                @name=ConversionAttribute
+                @return=
+                
+                @params=[link=Gehtsoft.Measurements.ConversionOperation]Gehtsoft.Measurements.ConversionOperation[/link] operation, string name
+            @end
+            
+            @param
+                @name=operation
+
+            @end
+        
+            @param
+                @name=name
+
+            @end
+        
+    @end
+    
+    @member
+        
+        @type=constructor
+        @name=ConversionAttribute
+        @key=.ctor.Wy2
+        @divisor=.
+        @sig=M:Gehtsoft.Measurements.ConversionAttribute..ctor(Gehtsoft.Measurements.ConversionOperation,System.Double)
+        @visibility=public
+        @scope=instance
+        @brief=
+                
+            @declaration
+                @language=cs
+                @name=ConversionAttribute
+                @return=
+                
+                @params=[link=Gehtsoft.Measurements.ConversionOperation]Gehtsoft.Measurements.ConversionOperation[/link] operation, double factor
+            @end
+            
+            @param
+                @name=operation
+
+            @end
+        
+            @param
+                @name=factor
+
+            @end
+        
+    @end
+    
+    @member
+        
+        @type=constructor
+        @name=ConversionAttribute
+        @key=.ctor.eW2
+        @divisor=.
+        @sig=M:Gehtsoft.Measurements.ConversionAttribute..ctor(Gehtsoft.Measurements.ConversionOperation,System.Double,Gehtsoft.Measurements.ConversionOperation,System.Double)
+        @visibility=public
+        @scope=instance
+        @brief=
+                
+            @declaration
+                @language=cs
+                @name=ConversionAttribute
+                @return=
+                
+                @params=[link=Gehtsoft.Measurements.ConversionOperation]Gehtsoft.Measurements.ConversionOperation[/link] operation, double factor, [link=Gehtsoft.Measurements.ConversionOperation]Gehtsoft.Measurements.ConversionOperation[/link] secondOperation, double secondFactor
+            @end
+            
+            @param
+                @name=operation
+
+            @end
+        
+            @param
+                @name=factor
+
+            @end
+        
+            @param
+                @name=secondOperation
+
+            @end
+        
+            @param
+                @name=secondFactor
+
+            @end
+        
+    @end
+    
+@end
+    

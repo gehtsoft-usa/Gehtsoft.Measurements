@@ -1,0 +1,94 @@
+﻿
+
+@class
+    @name=TemperatureUnit
+    @key=Gehtsoft.Measurements.TemperatureUnit
+    @ingroup=Gehtsoft.Measurements
+    @sig=T:Gehtsoft.Measurements.TemperatureUnit
+    @type=enum
+        
+    @parent=System.Enum
+    @brief=
+                
+    @member
+        
+        @type=field
+        @name=Fahrenheit
+        @key=Fahrenheit.L05
+        @divisor=.
+        @sig=F:Gehtsoft.Measurements.TemperatureUnit.Fahrenheit
+        @visibility=public
+        @scope=class
+        @brief=
+                
+            @declaration
+                @language=cs
+                @name=Fahrenheit
+                @return=[link=Gehtsoft.Measurements.TemperatureUnit]Gehtsoft.Measurements.TemperatureUnit[/link]
+                @suffix= = 0
+            @end
+            
+    @end
+    
+    @member
+        
+        @type=field
+        @name=Celsius
+        @key=Celsius.5t9
+        @divisor=.
+        @sig=F:Gehtsoft.Measurements.TemperatureUnit.Celsius
+        @visibility=public
+        @scope=class
+        @brief=
+                
+            @declaration
+                @language=cs
+                @name=Celsius
+                @return=[link=Gehtsoft.Measurements.TemperatureUnit]Gehtsoft.Measurements.TemperatureUnit[/link]
+                @suffix= = 1
+            @end
+            
+    @end
+    
+    @member
+        
+        @type=field
+        @name=Kelvin
+        @key=Kelvin.ZeC
+        @divisor=.
+        @sig=F:Gehtsoft.Measurements.TemperatureUnit.Kelvin
+        @visibility=public
+        @scope=class
+        @brief=
+                
+            @declaration
+                @language=cs
+                @name=Kelvin
+                @return=[link=Gehtsoft.Measurements.TemperatureUnit]Gehtsoft.Measurements.TemperatureUnit[/link]
+                @suffix= = 2
+            @end
+            
+    @end
+    
+    @member
+        
+        @type=field
+        @name=Rankin
+        @key=Rankin.Vj
+        @divisor=.
+        @sig=F:Gehtsoft.Measurements.TemperatureUnit.Rankin
+        @visibility=public
+        @scope=class
+        @brief=
+                
+            @declaration
+                @language=cs
+                @name=Rankin
+                @return=[link=Gehtsoft.Measurements.TemperatureUnit]Gehtsoft.Measurements.TemperatureUnit[/link]
+                @suffix= = 3
+            @end
+            
+    @end
+    
+@end
+    

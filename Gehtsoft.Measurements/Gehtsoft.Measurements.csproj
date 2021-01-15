@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <DocumentationFile>bin/doc.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,0 +1,234 @@
+﻿
+
+@class
+    @name=ConversionOperation
+    @key=Gehtsoft.Measurements.ConversionOperation
+    @ingroup=Gehtsoft.Measurements
+    @sig=T:Gehtsoft.Measurements.ConversionOperation
+    @type=enum
+        
+    @parent=System.Enum
+    @brief=
+                
+    @member
+        
+        @type=field
+        @name=None
+        @key=None.0D6
+        @divisor=.
+        @sig=F:Gehtsoft.Measurements.ConversionOperation.None
+        @visibility=public
+        @scope=class
+        @brief=
+                
+            @declaration
+                @language=cs
+                @name=None
+                @return=[link=Gehtsoft.Measurements.ConversionOperation]Gehtsoft.Measurements.ConversionOperation[/link]
+                @suffix= = 0
+            @end
+            
+    @end
+    
+    @member
+        
+        @type=field
+        @name=Base
+        @key=Base.l84
+        @divisor=.
+        @sig=F:Gehtsoft.Measurements.ConversionOperation.Base
+        @visibility=public
+        @scope=class
+        @brief=
+                
+            @declaration
+                @language=cs
+                @name=Base
+                @return=[link=Gehtsoft.Measurements.ConversionOperation]Gehtsoft.Measurements.ConversionOperation[/link]
+                @suffix= = 1
+            @end
+            
+    @end
+    
+    @member
+        
+        @type=field
+        @name=Add
+        @key=Add.6pF
+        @divisor=.
+        @sig=F:Gehtsoft.Measurements.ConversionOperation.Add
+        @visibility=public
+        @scope=class
+        @brief=
+                
+            @declaration
+                @language=cs
+                @name=Add
+                @return=[link=Gehtsoft.Measurements.ConversionOperation]Gehtsoft.Measurements.ConversionOperation[/link]
+                @suffix= = 2
+            @end
+            
+    @end
+    
+    @member
+        
+        @type=field
+        @name=Subtract
+        @key=Subtract.FG5
+        @divisor=.
+        @sig=F:Gehtsoft.Measurements.ConversionOperation.Subtract
+        @visibility=public
+        @scope=class
+        @brief=
+                
+            @declaration
+                @language=cs
+                @name=Subtract
+                @return=[link=Gehtsoft.Measurements.ConversionOperation]Gehtsoft.Measurements.ConversionOperation[/link]
+                @suffix= = 3
+            @end
+            
+    @end
+    
+    @member
+        
+        @type=field
+        @name=SubtractFromFactor
+        @key=SubtractFromFactor.FR7
+        @divisor=.
+        @sig=F:Gehtsoft.Measurements.ConversionOperation.SubtractFromFactor
+        @visibility=public
+        @scope=class
+        @brief=
+                
+            @declaration
+                @language=cs
+                @name=SubtractFromFactor
+                @return=[link=Gehtsoft.Measurements.ConversionOperation]Gehtsoft.Measurements.ConversionOperation[/link]
+                @suffix= = 4
+            @end
+            
+    @end
+    
+    @member
+        
+        @type=field
+        @name=Multiply
+        @key=Multiply.yR8
+        @divisor=.
+        @sig=F:Gehtsoft.Measurements.ConversionOperation.Multiply
+        @visibility=public
+        @scope=class
+        @brief=
+                
+            @declaration
+                @language=cs
+                @name=Multiply
+                @return=[link=Gehtsoft.Measurements.ConversionOperation]Gehtsoft.Measurements.ConversionOperation[/link]
+                @suffix= = 5
+            @end
+            
+    @end
+    
+    @member
+        
+        @type=field
+        @name=Divide
+        @key=Divide.FW
+        @divisor=.
+        @sig=F:Gehtsoft.Measurements.ConversionOperation.Divide
+        @visibility=public
+        @scope=class
+        @brief=
+                
+            @declaration
+                @language=cs
+                @name=Divide
+                @return=[link=Gehtsoft.Measurements.ConversionOperation]Gehtsoft.Measurements.ConversionOperation[/link]
+                @suffix= = 6
+            @end
+            
+    @end
+    
+    @member
+        
+        @type=field
+        @name=DivideFactor
+        @key=DivideFactor.qZC
+        @divisor=.
+        @sig=F:Gehtsoft.Measurements.ConversionOperation.DivideFactor
+        @visibility=public
+        @scope=class
+        @brief=
+                
+            @declaration
+                @language=cs
+                @name=DivideFactor
+                @return=[link=Gehtsoft.Measurements.ConversionOperation]Gehtsoft.Measurements.ConversionOperation[/link]
+                @suffix= = 7
+            @end
+            
+    @end
+    
+    @member
+        
+        @type=field
+        @name=Negate
+        @key=Negate.7PC
+        @divisor=.
+        @sig=F:Gehtsoft.Measurements.ConversionOperation.Negate
+        @visibility=public
+        @scope=class
+        @brief=
+                
+            @declaration
+                @language=cs
+                @name=Negate
+                @return=[link=Gehtsoft.Measurements.ConversionOperation]Gehtsoft.Measurements.ConversionOperation[/link]
+                @suffix= = 8
+            @end
+            
+    @end
+    
+    @member
+        
+        @type=field
+        @name=Atan
+        @key=Atan.Zu9
+        @divisor=.
+        @sig=F:Gehtsoft.Measurements.ConversionOperation.Atan
+        @visibility=public
+        @scope=class
+        @brief=
+                
+            @declaration
+                @language=cs
+                @name=Atan
+                @return=[link=Gehtsoft.Measurements.ConversionOperation]Gehtsoft.Measurements.ConversionOperation[/link]
+                @suffix= = 9
+            @end
+            
+    @end
+    
+    @member
+        
+        @type=field
+        @name=Custom
+        @key=Custom.Ot3
+        @divisor=.
+        @sig=F:Gehtsoft.Measurements.ConversionOperation.Custom
+        @visibility=public
+        @scope=class
+        @brief=
+                
+            @declaration
+                @language=cs
+                @name=Custom
+                @return=[link=Gehtsoft.Measurements.ConversionOperation]Gehtsoft.Measurements.ConversionOperation[/link]
+                @suffix= = 10
+            @end
+            
+    @end
+    
+@end
+    

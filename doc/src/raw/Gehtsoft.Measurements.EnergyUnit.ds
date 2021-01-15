@@ -1,0 +1,134 @@
+﻿
+
+@class
+    @name=EnergyUnit
+    @key=Gehtsoft.Measurements.EnergyUnit
+    @ingroup=Gehtsoft.Measurements
+    @sig=T:Gehtsoft.Measurements.EnergyUnit
+    @type=enum
+        
+    @parent=System.Enum
+    @brief=
+                
+    @member
+        
+        @type=field
+        @name=FootPound
+        @key=FootPound.A5G
+        @divisor=.
+        @sig=F:Gehtsoft.Measurements.EnergyUnit.FootPound
+        @visibility=public
+        @scope=class
+        @brief=
+                
+            @declaration
+                @language=cs
+                @name=FootPound
+                @return=[link=Gehtsoft.Measurements.EnergyUnit]Gehtsoft.Measurements.EnergyUnit[/link]
+                @suffix= = 0
+            @end
+            
+    @end
+    
+    @member
+        
+        @type=field
+        @name=Joule
+        @key=Joule.2y7
+        @divisor=.
+        @sig=F:Gehtsoft.Measurements.EnergyUnit.Joule
+        @visibility=public
+        @scope=class
+        @brief=
+                
+            @declaration
+                @language=cs
+                @name=Joule
+                @return=[link=Gehtsoft.Measurements.EnergyUnit]Gehtsoft.Measurements.EnergyUnit[/link]
+                @suffix= = 1
+            @end
+            
+    @end
+    
+    @member
+        
+        @type=field
+        @name=BTU
+        @key=BTU.PvG
+        @divisor=.
+        @sig=F:Gehtsoft.Measurements.EnergyUnit.BTU
+        @visibility=public
+        @scope=class
+        @brief=
+                
+            @declaration
+                @language=cs
+                @name=BTU
+                @return=[link=Gehtsoft.Measurements.EnergyUnit]Gehtsoft.Measurements.EnergyUnit[/link]
+                @suffix= = 2
+            @end
+            
+    @end
+    
+    @member
+        
+        @type=field
+        @name=HpH
+        @key=HpH.f89
+        @divisor=.
+        @sig=F:Gehtsoft.Measurements.EnergyUnit.HpH
+        @visibility=public
+        @scope=class
+        @brief=
+                
+            @declaration
+                @language=cs
+                @name=HpH
+                @return=[link=Gehtsoft.Measurements.EnergyUnit]Gehtsoft.Measurements.EnergyUnit[/link]
+                @suffix= = 3
+            @end
+            
+    @end
+    
+    @member
+        
+        @type=field
+        @name=Wh
+        @key=Wh.0CD
+        @divisor=.
+        @sig=F:Gehtsoft.Measurements.EnergyUnit.Wh
+        @visibility=public
+        @scope=class
+        @brief=
+                
+            @declaration
+                @language=cs
+                @name=Wh
+                @return=[link=Gehtsoft.Measurements.EnergyUnit]Gehtsoft.Measurements.EnergyUnit[/link]
+                @suffix= = 4
+            @end
+            
+    @end
+    
+    @member
+        
+        @type=field
+        @name=kWh
+        @key=kWh.4G1
+        @divisor=.
+        @sig=F:Gehtsoft.Measurements.EnergyUnit.kWh
+        @visibility=public
+        @scope=class
+        @brief=
+                
+            @declaration
+                @language=cs
+                @name=kWh
+                @return=[link=Gehtsoft.Measurements.EnergyUnit]Gehtsoft.Measurements.EnergyUnit[/link]
+                @suffix= = 5
+            @end
+            
+    @end
+    
+@end
+    

@@ -1,3 +1,7 @@
 .vs/
 bin/
 obj/
+TestResults/
+**/doc/dst/
+*.csproj.user
+*.nupkg
