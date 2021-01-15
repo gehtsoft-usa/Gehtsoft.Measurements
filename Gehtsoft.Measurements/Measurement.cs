@@ -1,29 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 
 namespace Gehtsoft.Measurements
 {
     /// <summary>
-    /// The class to manipulate measurements expressed in the specified units
+    /// The class to manipulate measurements expressed in the specified units.
+    /// 
+    /// The class supports serialization using System.Text.Json serializer and XmlSerializer as well as 
+    /// many 3rd party serializers such as BinaronSerializer.
     /// </summary>
-    public readonly struct Measurement<T>
+    public struct Measurement<T> : IXmlSerializable
         where T : Enum
     {
         /// <summary>
         /// Numerical value
         /// </summary>
         [JsonIgnore]
-        public double Value { get; }
+        public double Value { get; private set; }
 
         /// <summary>
         /// The unit
         /// </summary>
         [JsonIgnore]
-        public T Unit { get; }
+        public T Unit { get; private set; }
 
         public Measurement(double value, T unit)
         {
@@ -34,10 +41,10 @@ namespace Gehtsoft.Measurements
         [JsonConstructor]
         public Measurement(string text)
         {
-            if (!Measurement<T>.TryParse(CultureInfo.InvariantCulture, text, out Measurement<T> x))
+            Value = 0;
+            Unit = default(T);
+            if (!Measurement<T>.TryParseInternal(CultureInfo.InvariantCulture, text, ref this)) 
                 throw new ArgumentException("Invalid value", nameof(text));
-            Value = x.Value;
-            Unit = x.Unit;
         }
 
         /// <summary>
@@ -71,11 +78,13 @@ namespace Gehtsoft.Measurements
             return $"{Value}{GetUnitName(Unit)}";
         }
 
-        private static readonly Func<int, string> mGetUnitName = CodeGenerator.GenerateGetUnitName(typeof(DistanceUnit));
-        private static readonly Func<string, int> mParseUnit =  CodeGenerator.GenerateParseUnitName(typeof(DistanceUnit));
-        private static readonly Func<int, int> mDefaultAccuracy = CodeGenerator.GenerateGetDefaultUnitAccuracy(typeof(DistanceUnit));
-        private static readonly Func<double, DistanceUnit, double> mToBase;
-        private static readonly Func<double, DistanceUnit, double> mFromBase;
+        private static readonly Func<T, string> mGetUnitName = CodeGenerator.GenerateGetUnitName<T>();
+        private static readonly Func<string, T> mParseUnit =  CodeGenerator.GenerateParseUnitName<T>();
+        private static readonly Func<T, int> mDefaultAccuracy = CodeGenerator.GenerateGetDefaultUnitAccuracy<T>();
+        private static readonly Func<double, T, double> mToBase = CodeGenerator.GenerateToBaseConversion<T>();
+        private static readonly Func<double, int, double> mFromBase;
+
+        public static double ToBase(double value, T unit) => mToBase(value, unit);
 
         /// <summary>
         /// Returns all units with their names
@@ -88,21 +97,21 @@ namespace Gehtsoft.Measurements
         /// </summary>
         /// <param name="unit"></param>
         /// <returns></returns>
-        public static string GetUnitName(T unit) => mGetUnitName((int)Convert.ChangeType(unit, TypeCode.Int32));
+        public static string GetUnitName(T unit) => mGetUnitName(unit);
 
         /// <summary>
         /// Gets the default accuracy of for the specified unit
         /// </summary>
         /// <param name="unit"></param>
         /// <returns></returns>
-        public static int GetUnitDefaultAccuracy(T unit) => mDefaultAccuracy((int)Convert.ChangeType(unit, TypeCode.Int32));
+        public static int GetUnitDefaultAccuracy(T unit) => mDefaultAccuracy(unit);
 
         /// <summary>
         /// Parses the unit name
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static T ParseUnitName(string name) => (T)Enum.ToObject(typeof(T), mParseUnit(name));
+        public static T ParseUnitName(string name) => mParseUnit(name);
 
         /// <summary>
         /// Try to parse the value using the current culture
@@ -121,11 +130,14 @@ namespace Gehtsoft.Measurements
         /// <returns></returns>
         public static bool TryParse(CultureInfo cultureInfo, string text, out Measurement<T> value)
         {
+            value = new Measurement<T>(0, default(T));
+            return TryParseInternal(cultureInfo, text, ref value);
+        }
+
+        private static bool TryParseInternal(CultureInfo cultureInfo, string text, ref Measurement<T> value)
+        {
             if (text.Length < 2)
-            {
-                value = new Measurement<T>(0, default(T));
                 return false;
-            }
 
             int lastDigit = -1; ;
             for (int i = text.Length - 1; i >= 0 && lastDigit == -1; i--)
@@ -133,10 +145,7 @@ namespace Gehtsoft.Measurements
                     lastDigit = i;
 
             if (lastDigit == text.Length - 1)
-            {
-                value = new Measurement<T>(0, default(T));
                 return false;
-            }
 
 
             T unit;
@@ -146,7 +155,6 @@ namespace Gehtsoft.Measurements
             }
             catch (ArgumentException e)
             {
-                value = new Measurement<T>(0, default(T));
                 return false;
             }
 
@@ -157,10 +165,29 @@ namespace Gehtsoft.Measurements
             {
                 value = new Measurement<T>(0, default(T));
                 return false;
-            }    
+            }
 
-            value = new Measurement<T>(v, unit);
+            value.Value = v;
+            value.Unit = unit;
             return true;
+        }
+
+        public XmlSchema GetSchema()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ReadXml(XmlReader reader)
+        {
+            reader.MoveToAttribute("value");
+            reader.ReadAttributeValue();
+            string s = reader.Value;
+            TryParseInternal(CultureInfo.InvariantCulture, s, ref this);
+        }
+
+        public void WriteXml(XmlWriter writer)
+        {
+            writer.WriteAttributeString("value", Text);
         }
     }
 }

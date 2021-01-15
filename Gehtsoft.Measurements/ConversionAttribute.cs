@@ -5,10 +5,10 @@ namespace Gehtsoft.Measurements
     [AttributeUsage(validOn: AttributeTargets.Field)]
     internal class ConversionAttribute : Attribute
     {
-        ConversionOperation Operation { get; set; }
-        double Factor { get; set; }
-        ConversionOperation SecondOperation { get; set; }
-        double SecondFactor { get; set; }
+        public ConversionOperation Operation { get; set; }
+        public double Factor { get; set; }
+        public ConversionOperation SecondOperation { get; set; }
+        public double SecondFactor { get; set; }
 
         public ConversionAttribute(ConversionOperation operation) : this(operation, 0, ConversionOperation.None, 0)
         {

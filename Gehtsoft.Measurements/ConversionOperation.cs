@@ -6,8 +6,10 @@
         Base,
         Add,
         Subtract,
-        Multiple,
+        SubtractFromFactor,
+        Multiply,
         Divide,
-        Custom,
+        DivideFactor,
+        Negate,
     };
 }
