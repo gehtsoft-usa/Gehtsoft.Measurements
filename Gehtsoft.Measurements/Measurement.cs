@@ -34,6 +34,11 @@ namespace Gehtsoft.Measurements
         [JsonIgnore]
         public T Unit { get; private set; }
 
+        /// <summary>
+        /// Constructor that accepts numeric value and unit 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="unit"></param>
         public Measurement(double value, T unit)
         {
             Value = value;
@@ -41,6 +46,11 @@ namespace Gehtsoft.Measurements
             mHashCode = null;
         }
 
+
+        /// <summary>
+        /// Constructor that accepts a text representation of a value
+        /// </summary>
+        /// <param name="text"></param>
         [JsonConstructor]
         public Measurement(string text)
         {
@@ -90,7 +100,7 @@ namespace Gehtsoft.Measurements
         public double In(T unit) => Convert(Value, Unit, unit);
 
         /// <summary>
-        /// Conver the value into another unit. 
+        /// Converts the value into another unit. 
         /// </summary>
         /// <param name="unit"></param>
         /// <returns></returns>
@@ -126,7 +136,20 @@ namespace Gehtsoft.Measurements
         private static readonly Func<double, T, double> mToBase = CodeGenerator.GenerateConversion<T>(true);
         private static readonly Func<double, T, double> mFromBase = CodeGenerator.GenerateConversion<T>(false);
 
+        /// <summary>
+        /// Converts the value from the specified units to a base unit. 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="unit"></param>
+        /// <returns></returns>
         public static double ToBase(double value, T unit) => mToBase(value, unit);
+        
+        /// <summary>
+        /// Converts the value to the specified unit  from a base unit. 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="unit"></param>
+        /// <returns></returns>
         public static double FromBase(double value, T unit) => mFromBase(value, unit);
 
         /// <summary>
@@ -297,18 +320,96 @@ namespace Gehtsoft.Measurements
             return v1.CompareTo(v2);
         }
 
+        /// <summary>
+        /// Checks whether two measurements are equal
+        /// </summary>
+        /// <param name="v1"></param>
+        /// <param name="v2"></param>
+        /// <returns></returns>
         public static bool operator ==(Measurement<T> v1, Measurement<T> v2) => v1.CompareTo(v2) == 0;
+        /// <summary>
+        /// Checks whether two measurements are not equal
+        /// </summary>
+        /// <param name="v1"></param>
+        /// <param name="v2"></param>
+        /// <returns></returns>
         public static bool operator !=(Measurement<T> v1, Measurement<T> v2) => v1.CompareTo(v2) != 0;
+        /// <summary>
+        /// Checks whether the measurement is greater than another
+        /// </summary>
+        /// <param name="v1"></param>
+        /// <param name="v2"></param>
+        /// <returns></returns>
         public static bool operator >(Measurement<T> v1, Measurement<T> v2) => v1.CompareTo(v2) > 0;
+        /// <summary>
+        /// Checks whether the measurement is less than another
+        /// </summary>
+        /// <param name="v1"></param>
+        /// <param name="v2"></param>
+        /// <returns></returns>
         public static bool operator <(Measurement<T> v1, Measurement<T> v2) => v1.CompareTo(v2) < 0;
+        /// <summary>
+        /// Checks whether the measurement is greater than or equal to another
+        /// </summary>
+        /// <param name="v1"></param>
+        /// <param name="v2"></param>
+        /// <returns></returns>
+
         public static bool operator >=(Measurement<T> v1, Measurement<T> v2) => v1.CompareTo(v2) >= 0;
+        /// <summary>
+        /// Checks whether the measurement is less than or equal another
+        /// </summary>
+        /// <param name="v1"></param>
+        /// <param name="v2"></param>
+        /// <returns></returns>
+
         public static bool operator <=(Measurement<T> v1, Measurement<T> v2) => v1.CompareTo(v2) <= 0;
 
+        /// <summary>
+        /// Negates the measurement value
+        /// </summary>
+        /// <param name="v1"></param>
+        /// <param name="v2"></param>
+        /// <returns></returns>
         public static Measurement<T> operator -(Measurement<T> v1) => new Measurement<T>(-v1.Value, v1.Unit);
+        /// <summary>
+        /// Add one measurement to another.
+        /// </summary>
+        /// <param name="v1"></param>
+        /// <param name="v2"></param>
+        /// /// <returns></returns>
         public static Measurement<T> operator +(Measurement<T> v1, Measurement<T> v2) => new Measurement<T>(v1.Value - v2.In(v1.Unit), v1.Unit);
+        /// <summary>
+        /// Subtracts one measurement from another.
+        /// </summary>
+        /// <param name="v1"></param>
+        /// <param name="v2"></param>
+        /// <returns></returns>
+
         public static Measurement<T> operator -(Measurement<T> v1, Measurement<T> v2) => new Measurement<T>(v1.Value + v2.In(v1.Unit), v1.Unit);
+        /// <summary>
+        /// Multiples a measurement by a constant. 
+        /// </summary>
+        /// <param name="v1"></param>
+        /// <param name="v2"></param>
+        /// <returns></returns>
+
         public static Measurement<T> operator *(Measurement<T> v1, double value) => new Measurement<T>(v1.Value * value, v1.Unit);
+
+        /// <summary>
+        /// Multiples a measurement by a constant. 
+        /// </summary>
+        /// <param name="v1"></param>
+        /// <param name="v2"></param>
+        /// <returns></returns>
         public static Measurement<T> operator *(double value, Measurement<T> v1) => new Measurement<T>(v1.Value * value, v1.Unit);
+
+        /// <summary>
+        /// Divides a measurement to a specified a constant. 
+        /// </summary>
+        /// <param name="v1"></param>
+        /// <param name="v2"></param>
+        /// <returns></returns>
         public static Measurement<T> operator /(Measurement<T> v1, double value) => new Measurement<T>(v1.Value / value, v1.Unit);
     }
 }

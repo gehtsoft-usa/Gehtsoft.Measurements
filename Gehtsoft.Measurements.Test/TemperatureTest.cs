@@ -28,6 +28,5 @@ namespace Gehtsoft.Measurements.Test
             v.Value.Should().BeApproximately(value, 1e-10);
             v.Unit.Should().Be(unit);
         }
-
     }
 }

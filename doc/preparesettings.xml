@@ -1,3 +1,3 @@
 ﻿<settings>
-    <assembly name="Gehtsoft.Measurements" xmldoc="..\..\..\bin\doc.xml"/>
+    <assembly name="Gehtsoft.Measurements"  xmldoc="..\..\..\bin\doc.xml"/>
 </settings>

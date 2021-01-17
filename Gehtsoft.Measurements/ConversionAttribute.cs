@@ -4,33 +4,42 @@ using System.Reflection;
 
 namespace Gehtsoft.Measurements
 {
-    /// <summary>
-    /// The interface to implement the custom conversion
-    /// </summary>
-    public interface ICustomConversionOperation
-    {
-        double ToBase(double value);
-        double FromBase(double value);
-    };
 
     /// <summary>
-    /// The attribute to specify the conversion rule for the measurmement unit.
+    /// The attribute to specify the conversion rule for the measurement unit.
     /// 
-    /// The attribute is applied on enum fields which describe one unit of the measurement (e.g. "meter")
+    /// The attribute is applied on enumeration fields which describe one unit of the measurement (e.g. "meter")
+    ///
+    /// One of the enumeration fields must always be attributed as a base value. 
     /// </summary>
     [AttributeUsage(validOn: AttributeTargets.Field)]
     public class ConversionAttribute : Attribute
     {
+        /// <summary>
+        /// The first operation to be performed in order to convert the unit into base value
+        /// </summary>
         public ConversionOperation Operation { get; set; }
+
+        /// <summary>
+        /// The numeric factor for the first operation
+        /// </summary>
         public double Factor { get; set; }
+
+        /// <summary>
+        /// The second operation to be performed in order to convert the unit into base value
+        /// </summary>
         public ConversionOperation SecondOperation { get; set; }
+
+        /// <summary>
+        /// The numeric factor for the second operation
+        /// </summary>
         public double SecondFactor { get; set; }
 
 
         /// <summary>
         /// The constructor to specify the base unit
         /// </summary>
-        /// <param name="operation">Must always be <code>ConversionOperation.Base</code></param>
+        /// <param name="operation">Must always be <code>ConversionOperation.Base</code> or <code>ConversionOperation.Negate</code></param>
         public ConversionAttribute(ConversionOperation operation) : this(operation, 0, ConversionOperation.None, 0)
         {
             if (operation != ConversionOperation.Base && operation != ConversionOperation.Negate)
@@ -81,8 +90,8 @@ namespace Gehtsoft.Measurements
         /// <summary>
         /// The constructor to specify one operation conversion
         /// </summary>
-        /// <param name="operation"></param>
-        /// <param name="factor"></param>
+        /// <param name="operation">The operation to convert the unit into base unit</param>
+        /// <param name="factor">The numeric factor for the operation</param>
         public ConversionAttribute(ConversionOperation operation, double factor) : this(operation, factor, ConversionOperation.None, 0)
         {
 
@@ -91,10 +100,10 @@ namespace Gehtsoft.Measurements
         /// <summary>
         /// The constructor to specify two-operation conversion
         /// </summary>
-        /// <param name="operation"></param>
-        /// <param name="factor"></param>
-        /// <param name="secondOperation"></param>
-        /// <param name="secondFactor"></param>
+        /// <param name="operation">The first operation to convert the unit into base unit</param>
+        /// <param name="factor">The numeric factor for the first operation</param>
+        /// <param name="secondOperation">The second operation to convert the unit into base unit</param>
+        /// <param name="secondFactor">The numeric factor for the second operation</param>
         public ConversionAttribute(ConversionOperation operation, double factor, ConversionOperation secondOperation, double secondFactor)
         {
             Operation = operation;

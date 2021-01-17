@@ -2,6 +2,7 @@
 bin/
 obj/
 TestResults/
-**/doc/dst/
+**/doc/dst/**/*
+**/doc/src/raw/**/*
 *.csproj.user
 *.nupkg
