@@ -6,3 +6,4 @@ TestResults/
 **/doc/src/raw/**/*
 *.csproj.user
 *.nupkg
+nuget/*.nuspec
