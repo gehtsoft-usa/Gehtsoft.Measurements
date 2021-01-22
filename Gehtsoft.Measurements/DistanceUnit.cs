@@ -30,7 +30,7 @@
         /// <summary>
         /// Foot
         /// </summary>
-        [Unit("ft", "\"", 2)]
+        [Unit("ft", "\'", 2)]
         [Conversion(ConversionOperation.Multiply, 12)]
         Foot,
 

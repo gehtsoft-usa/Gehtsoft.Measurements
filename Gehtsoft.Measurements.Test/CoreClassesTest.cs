@@ -236,6 +236,56 @@ namespace Gehtsoft.Measurements.Test
             }
         }
 
+        [Theory]
+        [InlineData(typeof(AccelerationUnit))]
+        [InlineData(typeof(AngularUnit))]
+        [InlineData(typeof(DensityUnit))]
+        [InlineData(typeof(DistanceUnit))]
+        [InlineData(typeof(EnergyUnit))]
+        [InlineData(typeof(ForceUnit))]
+        [InlineData(typeof(PowerUnit))]
+        [InlineData(typeof(PressureUnit))]
+        [InlineData(typeof(TemperatureUnit))]
+        [InlineData(typeof(VelocityUnit))]
+        [InlineData(typeof(VolumeUnit))]
+        [InlineData(typeof(WeightUnit))]
+        public void TestConversion(Type type)
+        {
+            Type generic = typeof(Measurement<>);
+            Type measureType = generic.MakeGenericType(new Type[] { type });
+
+            Array units = (Array)measureType.GetMethod(nameof(Measurement<DistanceUnit>.GetUnitNames)).Invoke(null, null);
+            units.Should().NotBeNullOrEmpty();
+            int i = 0;
+            foreach (object t in units)
+            {
+                object x = t.GetType().GetProperty("Item1").GetValue(t);
+                object n = t.GetType().GetProperty("Item2").GetValue(t);
+
+                x.GetType().Should().Be(type);
+                n.GetType().Should().Be(typeof(string));
+
+                object v = Activator.CreateInstance(measureType, new object[] { 123.0, x });
+
+                measureType.GetProperty(nameof(Measurement<DistanceUnit>.Value)).GetValue(v).Should().Be(123);
+                measureType.GetProperty(nameof(Measurement<DistanceUnit>.Unit)).GetValue(v).Should().Be(x);
+
+                string s = v.ToString();
+                s.Should().StartWith("123");
+                s.Should().EndWith(n as string);
+
+
+                object v1 = Activator.CreateInstance(measureType, new object[] { s });
+                measureType.GetProperty(nameof(Measurement<DistanceUnit>.Value)).GetValue(v1).Should().Be(123);
+                measureType.GetProperty(nameof(Measurement<DistanceUnit>.Unit)).GetValue(v1).Should().Be(x);
+
+                i++;
+
+            }
+            i.Should().BeGreaterThan(2);
+
+
+        }
 
     }
 }

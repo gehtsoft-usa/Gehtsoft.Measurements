@@ -15,7 +15,7 @@
         /// <summary>
         /// Kilogram per cubic centimeters
         /// </summary>
-        [Unit("kg/m³", "g/cm3", 3)]
+        [Unit("kg/m³", "kg/m3", 3)]
         [Conversion(ConversionOperation.Base)]
         KilogramPerCubicMeter,
 
