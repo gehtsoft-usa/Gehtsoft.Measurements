@@ -24,7 +24,7 @@
         /// </summary>
         [Unit("lb/in³", "lb/in3", 0)]
         [Conversion(ConversionOperation.Multiply, 27679.9)]
-        PoundsPerCubicFeet,
+        PoundsPerCubicInch,
 
         /// <summary>
         /// Ounces per cubic inch

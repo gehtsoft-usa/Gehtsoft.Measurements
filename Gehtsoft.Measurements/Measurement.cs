@@ -10,14 +10,14 @@ namespace Gehtsoft.Measurements
 {
     /// <summary>
     /// The class to manipulate measurements expressed in the specified units.
-    /// 
-    /// The unit of the measurement (e.g. length, weight) is defined as the parameter of this generic structure. 
+    ///
+    /// The unit of the measurement (e.g. length, weight) is defined as the parameter of this generic structure.
     /// The enumeration used as a measurement units specification must be marked using <see cref="UnitAttribute"/> and
     /// <see cref="ConversionAttribute"/>
-    /// 
-    /// The arithmetic operators (e.g. +, *) and comparison operators are supported. 
-    /// 
-    /// The class supports serialization using System.Text.Json serializer and XmlSerializer as well as 
+    ///
+    /// The arithmetic operators (e.g. +, *) and comparison operators are supported.
+    ///
+    /// The class supports serialization using System.Text.Json serializer and XmlSerializer as well as
     /// many 3rd party serializers such as BinaronSerializer.
     /// </summary>
     public struct Measurement<T> : IXmlSerializable, IEquatable<Measurement<T>>, IComparable<Measurement<T>>
@@ -26,7 +26,7 @@ namespace Gehtsoft.Measurements
         /// <summary>
         /// Numerical value
         /// </summary>
-        
+
         [JsonIgnore]
         public double Value { [MethodImpl(MethodImplOptions.AggressiveInlining)] get; private set; }
 
@@ -37,7 +37,7 @@ namespace Gehtsoft.Measurements
         public T Unit { [MethodImpl(MethodImplOptions.AggressiveInlining)] get; private set; }
 
         /// <summary>
-        /// Constructor that accepts numeric value and unit 
+        /// Constructor that accepts numeric value and unit
         /// </summary>
         /// <param name="value"></param>
         /// <param name="unit"></param>
@@ -61,7 +61,7 @@ namespace Gehtsoft.Measurements
             Value = 0;
             Unit = default(T);
             mHashCode = null;
-            if (!Measurement<T>.TryParseInternal(CultureInfo.InvariantCulture, text, ref this)) 
+            if (!Measurement<T>.TryParseInternal(CultureInfo.InvariantCulture, text, ref this))
                 throw new ArgumentException("Invalid value", nameof(text));
         }
 
@@ -105,7 +105,7 @@ namespace Gehtsoft.Measurements
         public double In(T unit) => Convert(Value, Unit, unit);
 
         /// <summary>
-        /// Converts the value into another unit. 
+        /// Converts the value into another unit.
         /// </summary>
         /// <param name="unit"></param>
         /// <returns></returns>
@@ -144,7 +144,7 @@ namespace Gehtsoft.Measurements
         private static readonly Func<double, T, double> mFromBase = CodeGenerator.GenerateConversion<T>(false);
 
         /// <summary>
-        /// Converts the value from the specified units to a base unit. 
+        /// Converts the value from the specified units to a base unit.
         /// </summary>
         /// <param name="value"></param>
         /// <param name="unit"></param>
@@ -153,7 +153,7 @@ namespace Gehtsoft.Measurements
         public static double ToBase(double value, T unit) => mToBase(value, unit);
 
         /// <summary>
-        /// Converts the value to the specified unit  from a base unit. 
+        /// Converts the value to the specified unit  from a base unit.
         /// </summary>
         /// <param name="value"></param>
         /// <param name="unit"></param>
@@ -234,7 +234,7 @@ namespace Gehtsoft.Measurements
             if (text.Length < 2)
                 return false;
 
-            int lastDigit = -1; 
+            int lastDigit = -1;
             for (int i = 0; i < text.Length; i++)
             {
                 char c = text[i];
@@ -406,7 +406,7 @@ namespace Gehtsoft.Measurements
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Measurement<T> operator -(Measurement<T> v1, Measurement<T> v2) => new Measurement<T>(v1.Value - v2.In(v1.Unit), v1.Unit);
         /// <summary>
-        /// Multiples a measurement by a constant. 
+        /// Multiples a measurement by a constant.
         /// </summary>
         /// <param name="v1"></param>
         /// <param name="v2"></param>
@@ -415,7 +415,7 @@ namespace Gehtsoft.Measurements
         public static Measurement<T> operator *(Measurement<T> v1, double v2) => new Measurement<T>(v1.Value * v2, v1.Unit);
 
         /// <summary>
-        /// Multiples a measurement by a constant. 
+        /// Multiples a measurement by a constant.
         /// </summary>
         /// <param name="v1"></param>
         /// <param name="v2"></param>
@@ -424,7 +424,7 @@ namespace Gehtsoft.Measurements
         public static Measurement<T> operator *(double v1, Measurement<T> v2) => new Measurement<T>(v2.Value * v1, v2.Unit);
 
         /// <summary>
-        /// Divides a measurement to a specified a constant. 
+        /// Divides a measurement to a specified a constant.
         /// </summary>
         /// <param name="v1"></param>
         /// <param name="v2"></param>
@@ -439,6 +439,6 @@ namespace Gehtsoft.Measurements
         /// <param name="v2"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Measurement<T> operator /(Measurement<T> v1, Measurement<T> v2) => new Measurement<T>(v1.Value / v2.In(v1.Unit), v1.Unit);
+        public static double operator /(Measurement<T> v1, Measurement<T> v2) => v1.Value / v2.In(v1.Unit);
     }
 }
