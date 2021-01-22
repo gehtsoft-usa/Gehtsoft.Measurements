@@ -431,5 +431,14 @@ namespace Gehtsoft.Measurements
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Measurement<T> operator /(Measurement<T> v1, double v2) => new Measurement<T>(v1.Value / v2, v1.Unit);
+
+        /// <summary>
+        /// Calculate ratio between two measurements
+        /// </summary>
+        /// <param name="v1"></param>
+        /// <param name="v2"></param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Measurement<T> operator /(Measurement<T> v1, Measurement<T> v2) => new Measurement<T>(v1.Value / v2.In(v1.Unit), v1.Unit);
     }
 }
