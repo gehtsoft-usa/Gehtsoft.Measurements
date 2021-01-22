@@ -135,8 +135,16 @@ namespace Gehtsoft.Measurements
         /// The base unit for the measurement
         /// </summary>
         public static T BaseUnit => gBase;
+        
+        /// <summary>
+        /// The value with a zero measurement
+        /// </summary>
+        public static Measurement<T> ZERO { get; } = new Measurement<T>(0, UnitUtils.GetBase<T>());
 
         private static readonly T gBase = UnitUtils.GetBase<T>();
+
+
+
         private static readonly Func<T, string> mGetUnitName = CodeGenerator.GenerateGetUnitName<T>();
         private static readonly Func<string, T> mParseUnit =  CodeGenerator.GenerateParseUnitName<T>();
         private static readonly Func<T, int> mDefaultAccuracy = CodeGenerator.GenerateGetDefaultUnitAccuracy<T>();
