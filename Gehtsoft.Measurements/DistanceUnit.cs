@@ -8,7 +8,7 @@
         /// <summary>
         /// English line (1/12 inch)
         /// </summary>
-        [Unit("ln", 1)]
+        [Unit("ln", "'''", 1)]
         [Conversion(ConversionOperation.Divide, 12)]
         Line,
 
@@ -23,14 +23,14 @@
         /// <summary>
         /// Inch
         /// </summary>
-        [Unit("\"", "in", 1)]
+        [Unit("in", "\"", 1)]
         [Conversion(ConversionOperation.Base)]
         Inch,
 
         /// <summary>
         /// Foot
         /// </summary>
-        [Unit("\'", "ft", 2)]
+        [Unit("ft", "\"", 2)]
         [Conversion(ConversionOperation.Multiply, 12)]
         Foot,
 

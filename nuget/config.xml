@@ -2,6 +2,9 @@
 <nuget xmlns="http://www.gehtsoft.com/build/nuget">
  <!-- versions. the FIRST version is the current -->
  <versions>
+  <version id="1.0.4">Initial version</version>
+  <version id="1.0.3">Initial version</version>
+  <version id="1.0.2">Initial version</version>
   <version id="1.0.1">Initial version</version>
  </versions>
  <properties>

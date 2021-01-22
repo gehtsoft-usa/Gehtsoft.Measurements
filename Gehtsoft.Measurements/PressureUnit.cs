@@ -52,6 +52,6 @@
         /// </summary>
         [Unit("psi", "lbf/in2", 1)]
         [Conversion(ConversionOperation.Multiply, 6895)]
-        PountsPerSquareInch,
+        PoundsPerSquareInch,
     }
 }

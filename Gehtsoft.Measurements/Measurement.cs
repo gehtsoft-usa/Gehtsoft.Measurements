@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 using System.Xml;
 using System.Xml.Schema;
@@ -25,20 +26,22 @@ namespace Gehtsoft.Measurements
         /// <summary>
         /// Numerical value
         /// </summary>
+        
         [JsonIgnore]
-        public double Value { get; private set; }
+        public double Value { [MethodImpl(MethodImplOptions.AggressiveInlining)] get; private set; }
 
         /// <summary>
         /// The unit
         /// </summary>
         [JsonIgnore]
-        public T Unit { get; private set; }
+        public T Unit { [MethodImpl(MethodImplOptions.AggressiveInlining)] get; private set; }
 
         /// <summary>
         /// Constructor that accepts numeric value and unit 
         /// </summary>
         /// <param name="value"></param>
         /// <param name="unit"></param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Measurement(double value, T unit)
         {
             Value = value;
@@ -52,6 +55,7 @@ namespace Gehtsoft.Measurements
         /// </summary>
         /// <param name="text"></param>
         [JsonConstructor]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Measurement(string text)
         {
             Value = 0;
@@ -97,6 +101,7 @@ namespace Gehtsoft.Measurements
         /// </summary>
         /// <param name="unit"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public double In(T unit) => Convert(Value, Unit, unit);
 
         /// <summary>
@@ -104,6 +109,7 @@ namespace Gehtsoft.Measurements
         /// </summary>
         /// <param name="unit"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Measurement<T> To(T unit) => new Measurement<T>(In(unit), unit);
 
         /// <summary>
@@ -113,6 +119,7 @@ namespace Gehtsoft.Measurements
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static double Convert(double value, T from, T to)
         {
             if (from.CompareTo(to) == 0)
@@ -142,14 +149,16 @@ namespace Gehtsoft.Measurements
         /// <param name="value"></param>
         /// <param name="unit"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static double ToBase(double value, T unit) => mToBase(value, unit);
-        
+
         /// <summary>
         /// Converts the value to the specified unit  from a base unit. 
         /// </summary>
         /// <param name="value"></param>
         /// <param name="unit"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static double FromBase(double value, T unit) => mFromBase(value, unit);
 
         /// <summary>
@@ -170,6 +179,7 @@ namespace Gehtsoft.Measurements
         /// </summary>
         /// <param name="unit"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int GetUnitDefaultAccuracy(T unit) => mDefaultAccuracy(unit);
 
         /// <summary>
@@ -206,6 +216,7 @@ namespace Gehtsoft.Measurements
         /// Returns hash code of the value
         /// </summary>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         override public int GetHashCode()
         {
             if (mHashCode == null)
@@ -286,7 +297,7 @@ namespace Gehtsoft.Measurements
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override bool Equals(object obj)
         {
             if (obj == null)
@@ -301,6 +312,7 @@ namespace Gehtsoft.Measurements
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(Measurement<T> other)
         {
             return other.In(gBase) == this.In(gBase);
@@ -311,7 +323,7 @@ namespace Gehtsoft.Measurements
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int CompareTo(Measurement<T> other)
         {
             double v1, v2;
@@ -326,6 +338,7 @@ namespace Gehtsoft.Measurements
         /// <param name="v1"></param>
         /// <param name="v2"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(Measurement<T> v1, Measurement<T> v2) => v1.CompareTo(v2) == 0;
         /// <summary>
         /// Checks whether two measurements are not equal
@@ -333,6 +346,7 @@ namespace Gehtsoft.Measurements
         /// <param name="v1"></param>
         /// <param name="v2"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(Measurement<T> v1, Measurement<T> v2) => v1.CompareTo(v2) != 0;
         /// <summary>
         /// Checks whether the measurement is greater than another
@@ -340,6 +354,7 @@ namespace Gehtsoft.Measurements
         /// <param name="v1"></param>
         /// <param name="v2"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator >(Measurement<T> v1, Measurement<T> v2) => v1.CompareTo(v2) > 0;
         /// <summary>
         /// Checks whether the measurement is less than another
@@ -347,6 +362,7 @@ namespace Gehtsoft.Measurements
         /// <param name="v1"></param>
         /// <param name="v2"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator <(Measurement<T> v1, Measurement<T> v2) => v1.CompareTo(v2) < 0;
         /// <summary>
         /// Checks whether the measurement is greater than or equal to another
@@ -354,7 +370,7 @@ namespace Gehtsoft.Measurements
         /// <param name="v1"></param>
         /// <param name="v2"></param>
         /// <returns></returns>
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator >=(Measurement<T> v1, Measurement<T> v2) => v1.CompareTo(v2) >= 0;
         /// <summary>
         /// Checks whether the measurement is less than or equal another
@@ -362,7 +378,7 @@ namespace Gehtsoft.Measurements
         /// <param name="v1"></param>
         /// <param name="v2"></param>
         /// <returns></returns>
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator <=(Measurement<T> v1, Measurement<T> v2) => v1.CompareTo(v2) <= 0;
 
         /// <summary>
@@ -371,6 +387,7 @@ namespace Gehtsoft.Measurements
         /// <param name="v1"></param>
         /// <param name="v2"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Measurement<T> operator -(Measurement<T> v1) => new Measurement<T>(-v1.Value, v1.Unit);
         /// <summary>
         /// Add one measurement to another.
@@ -378,6 +395,7 @@ namespace Gehtsoft.Measurements
         /// <param name="v1"></param>
         /// <param name="v2"></param>
         /// /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Measurement<T> operator +(Measurement<T> v1, Measurement<T> v2) => new Measurement<T>(v1.Value - v2.In(v1.Unit), v1.Unit);
         /// <summary>
         /// Subtracts one measurement from another.
@@ -385,16 +403,16 @@ namespace Gehtsoft.Measurements
         /// <param name="v1"></param>
         /// <param name="v2"></param>
         /// <returns></returns>
-
-        public static Measurement<T> operator -(Measurement<T> v1, Measurement<T> v2) => new Measurement<T>(v1.Value + v2.In(v1.Unit), v1.Unit);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Measurement<T> operator -(Measurement<T> v1, Measurement<T> v2) => new Measurement<T>(v1.Value - v2.In(v1.Unit), v1.Unit);
         /// <summary>
         /// Multiples a measurement by a constant. 
         /// </summary>
         /// <param name="v1"></param>
         /// <param name="v2"></param>
         /// <returns></returns>
-
-        public static Measurement<T> operator *(Measurement<T> v1, double value) => new Measurement<T>(v1.Value * value, v1.Unit);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Measurement<T> operator *(Measurement<T> v1, double v2) => new Measurement<T>(v1.Value * v2, v1.Unit);
 
         /// <summary>
         /// Multiples a measurement by a constant. 
@@ -402,7 +420,8 @@ namespace Gehtsoft.Measurements
         /// <param name="v1"></param>
         /// <param name="v2"></param>
         /// <returns></returns>
-        public static Measurement<T> operator *(double value, Measurement<T> v1) => new Measurement<T>(v1.Value * value, v1.Unit);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Measurement<T> operator *(double v1, Measurement<T> v2) => new Measurement<T>(v2.Value * v1, v2.Unit);
 
         /// <summary>
         /// Divides a measurement to a specified a constant. 
@@ -410,6 +429,7 @@ namespace Gehtsoft.Measurements
         /// <param name="v1"></param>
         /// <param name="v2"></param>
         /// <returns></returns>
-        public static Measurement<T> operator /(Measurement<T> v1, double value) => new Measurement<T>(v1.Value / value, v1.Unit);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Measurement<T> operator /(Measurement<T> v1, double v2) => new Measurement<T>(v1.Value / v2, v1.Unit);
     }
 }
