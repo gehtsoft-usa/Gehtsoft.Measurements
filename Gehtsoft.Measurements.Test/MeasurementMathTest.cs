@@ -105,5 +105,27 @@ namespace Gehtsoft.Measurements.Test
             r.In(eu).Should().BeApproximately(e, 1e-6);
         }
 
+        [Theory]
+        [InlineData(25, DistanceUnit.Meter, 5, VelocityUnit.MetersPerSecond, 5)]
+        [InlineData(25, DistanceUnit.Foot, 12.5, VelocityUnit.FeetPerSecond, 2)]
+        [InlineData(10, DistanceUnit.Kilometer, 5, VelocityUnit.KilometersPerHour, 7200)]
+        [InlineData(10, DistanceUnit.NauticalMile, 10, VelocityUnit.Knot, 3600)]
+
+        public void Velocity(double distance, DistanceUnit distanceUnit, double velocity, VelocityUnit velocityUnit, double time)
+        {
+            var distance1 = new Measurement<DistanceUnit>(distance, distanceUnit);
+            var velocity1 = new Measurement<VelocityUnit>(velocity, velocityUnit);
+            TimeSpan ts1 = TimeSpan.FromSeconds(time);
+
+            TimeSpan ts2 = MeasurementMath.TravelTime(distance1, velocity1);
+            ts2.TotalSeconds.Should().BeApproximately(time, 1e-5);
+
+            var distance2 = MeasurementMath.DistanceTraveled(velocity1, ts1);
+            distance2.In(distanceUnit).Should().BeApproximately(distance, 1e-5);
+
+            var velocity2 = MeasurementMath.Velocity(distance1, ts1);
+            velocity2.In(velocityUnit).Should().BeApproximately(velocity, 1e-5);
+        }
+
     }
 }

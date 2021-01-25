@@ -91,6 +91,7 @@ namespace Gehtsoft.Measurements
         /// <param name="width"></param>
         /// <param name="height"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Measurement<AreaUnit> RectangleArea(Measurement<DistanceUnit> width, Measurement<DistanceUnit> height) => new Measurement<AreaUnit>(width.In(DistanceUnit.Meter) * height.In(DistanceUnit.Meter), AreaUnit.SquareMeter);
 
         /// <summary>
@@ -99,6 +100,7 @@ namespace Gehtsoft.Measurements
         /// <param name="area"></param>
         /// <param name="depth"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Measurement<VolumeUnit> RecangularPrismVolume(Measurement<AreaUnit> area, Measurement<DistanceUnit> depth) => new Measurement<VolumeUnit>(area.In(AreaUnit.SquareMeter) * depth.In(DistanceUnit.Meter), VolumeUnit.CubicMeter);
 
         /// <summary>
@@ -107,6 +109,24 @@ namespace Gehtsoft.Measurements
         /// <param name="weight">Weight</param>
         /// <param name="area">Area</param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Measurement<PressureUnit> Pressure(Measurement<WeightUnit> weight, Measurement<AreaUnit> area) => new Measurement<PressureUnit>(weight.In(WeightUnit.Pound) / area.In(AreaUnit.SquareInch), PressureUnit.PoundsPerSquareInch);
+
+        /// <summary>
+        /// Calculate time of travel
+        /// </summary>
+        /// <param name="distance"></param>
+        /// <param name="velocity"></param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TimeSpan TravelTime(Measurement<DistanceUnit> distance, Measurement<VelocityUnit> velocity) => TimeSpan.FromSeconds(distance.In(DistanceUnit.Meter) / velocity.In(VelocityUnit.MetersPerSecond));
+
+        /// <summary>
+        /// Calculate traveled distance
+        /// </summary>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Measurement<DistanceUnit> DistanceTraveled(Measurement<VelocityUnit> velocity, TimeSpan travelTime) => new Measurement<DistanceUnit>(velocity.In(VelocityUnit.MetersPerSecond) * travelTime.TotalSeconds, DistanceUnit.Meter);
+        
     }
 }

@@ -1,3 +1,9 @@
 ﻿<settings>
     <assembly name="Gehtsoft.Measurements"  xmldoc="..\..\..\bin\doc.xml"/>
+
+    <strip-namespace name="System" />
+    <strip-namespace name="System.Linq" />
+    <strip-namespace name="System.Collections" />
+    <strip-namespace name="System.Collections.Generic" />
+    <strip-namespace name="Gehtsoft.Measurements" />
 </settings>
