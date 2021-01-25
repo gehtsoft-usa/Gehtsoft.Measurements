@@ -1,14 +1,14 @@
 # Gehtsoft.Measurements
 
-The C# library to manipulate with various measurments (e.g. distances, weight, angles, temperatures and so on) expressed in various units (e.g. distances in inches, yards, meters)
+The C# library to manipulate with various measurements (e.g. distances, weight, angles, temperatures, and so on) expressed in various units (e.g. distances in inches, yards, meters)
 
-Currently distance/length, velocity, weight, angular measurements and energy units are supported.
+Currently, distance/length, velocity, weight, angular measurements, and energy units are supported.
 
 The library is shared under LGPL license. 
 
 ## Using Library
 
-The core class of the library is a generic structure `Measurement`. The structure accepts an enumeration as a parameter and this enumeration defines the measurement unit to be used:
+The core class of the library is the generic structure `Measurement`. The structure accepts an enumeration as a parameter and this enumeration defines the measurement unit to be used:
 
 ```csharp
 Measurement<DistanceUnit> v = new Measurement<DistanceUnit>(10, DistanceUnit.Feet);
