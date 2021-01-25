@@ -26,10 +26,10 @@
   <DocGen Project="project.xml" />
   <Copy SourceFiles="@(CustomFile)" DestinationFolder="$(DocTargetDir)" />
   <Copy SourceFiles="@(ContractFile)" DestinationFolder="$(PdfSampleDir)" />
-  <ContentFromPackage Package="Gehtsoft.Build.DocGen" Source="Content\template\html\res" Version="0.1.3" Destination="$(DocTargetDir)\res" />
-  <ContentFromPackage Package="Gehtsoft.Build.DocGen" Source="Content\template\html\highlighter" Version="0.1.3" Destination="$(DocTargetDir)\highlighter" />
-  <ContentFromPackage Package="Gehtsoft.Build.DocGen" Source="Content\template\html\menu" Version="0.1.3" Destination="$(DocTargetDir)\menu" />
-  <ContentFromPackage Package="Gehtsoft.Build.DocGen" Source="Content\template\html\pageImages" Version="0.1.3" Destination="$(DocTargetDir)\pageImages" />
+  <ContentFromPackage Package="Gehtsoft.Build.DocGen" Source="Content\template\html\res" Version="0.1.6" Destination="$(DocTargetDir)\res" />
+  <ContentFromPackage Package="Gehtsoft.Build.DocGen" Source="Content\template\html\highlighter" Version="0.1.6" Destination="$(DocTargetDir)\highlighter" />
+  <ContentFromPackage Package="Gehtsoft.Build.DocGen" Source="Content\template\html\menu" Version="0.1.6" Destination="$(DocTargetDir)\menu" />
+  <ContentFromPackage Package="Gehtsoft.Build.DocGen" Source="Content\template\html\pageImages" Version="0.1.6" Destination="$(DocTargetDir)\pageImages" />
  </Target>
  <ItemGroup>
   <DocSource Include="$(MSBuildProjectDirectory)\..\Gehtsoft.Measurements\bin\Release\netstandard2.0\Gehtsoft.Measurements.dll" />

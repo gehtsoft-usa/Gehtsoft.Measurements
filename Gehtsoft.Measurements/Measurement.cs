@@ -20,7 +20,7 @@ namespace Gehtsoft.Measurements
     /// The class supports serialization using System.Text.Json serializer and XmlSerializer as well as
     /// many 3rd party serializers such as BinaronSerializer.
     /// </summary>
-    public struct Measurement<T> : IXmlSerializable, IEquatable<Measurement<T>>, IComparable<Measurement<T>>
+    public struct Measurement<T> : IXmlSerializable, IEquatable<Measurement<T>>, IComparable<Measurement<T>>, IFormattable
         where T : Enum
     {
         /// <summary>
@@ -81,7 +81,7 @@ namespace Gehtsoft.Measurements
         /// <summary>
         /// Convert to string with maximum accuracy in the specified culture
         /// </summary>
-        public string ToString(CultureInfo cultureInfo) => ToString("NF", cultureInfo);
+        public string ToString(IFormatProvider cultureInfo) => ToString("NF", cultureInfo);
 
         /// <summary>
         /// Convert to string with specified format
@@ -89,7 +89,7 @@ namespace Gehtsoft.Measurements
         /// <param name="format">A numeric format or "ND" to format with the default accuracy and NF to display as all digits after decimal point</param>
         /// <param name="cultureInfo"></param>
         /// <returns></returns>
-        public string ToString(string format, CultureInfo cultureInfo)
+        public string ToString(string format, IFormatProvider cultureInfo)
         {
             if (format == "ND")
                 format = $"N{GetUnitDefaultAccuracy(Unit)}";
@@ -339,6 +339,7 @@ namespace Gehtsoft.Measurements
             v2 = other.In(gBase);
             return v1.CompareTo(v2);
         }
+
 
         /// <summary>
         /// Checks whether two measurements are equal

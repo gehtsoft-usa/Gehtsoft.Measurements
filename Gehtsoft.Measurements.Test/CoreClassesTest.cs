@@ -283,7 +283,17 @@ namespace Gehtsoft.Measurements.Test
 
             }
             i.Should().BeGreaterThan(2);
+        }
 
+        [Fact]
+
+        public void Formattable()
+        {
+            Measurement<DistanceUnit> v = new Measurement<DistanceUnit>(1.2345678, DistanceUnit.Meter);
+            $"{v}".Should().Be("1.2345678m");
+            $"{v:ND}".Should().Be("1.2m");
+            $"{v:N2}".Should().Be("1.23m");
+            $"{v:N4}".Should().Be("1.2346m");
 
         }
 
