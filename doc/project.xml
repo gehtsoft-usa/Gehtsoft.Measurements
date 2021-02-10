@@ -5,17 +5,17 @@
     </dg:common>
 
     <dg:source>
-        <dg:file name="src\index.ds" encoding="utf-8" />
-        <dg:folder name="src\cls" encoding="utf-8" />
-        <dg:folder name="src\raw" encoding="utf-8" />
+        <dg:file name="src/index.ds" encoding="utf-8" />
+        <dg:folder name="src/cls" encoding="utf-8" />
+        <dg:folder name="src/raw" encoding="utf-8" />
 
     </dg:source>
 
-    <dg:output template="%docgen%\template\html\main.xsl" file="dst/null-file" encoding="utf-8" >
+    <dg:output template="%docgen%/template/html/main.xsl" file="dst/null-file" encoding="utf-8" >
         <dg:define name="text-language" value="en" />
         <dg:define name="hhp-language" value="0x409 English (United States)" />
         <dg:define name="help-title" value="Gehtsoft PDF Flow Library" />
-        <dg:define name="chm-file" value="..\Gehtsoft.PDFFlowLibrary.chm" />
+        <dg:define name="chm-file" value="../Gehtsoft.PDFFlowLibrary.chm" />
         <dg:define name="advanced-web-content" value="yes" />
         <dg:define name="default-transform" value="yes" />
         <dg:define name="enable-highlighter" value="yes" />

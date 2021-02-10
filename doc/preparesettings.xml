@@ -1,5 +1,5 @@
 ﻿<settings>
-    <assembly name="Gehtsoft.Measurements"  xmldoc="..\..\..\bin\doc.xml"/>
+    <assembly name="Gehtsoft.Measurements"  xmldoc="../../../bin/doc.xml"/>
 
     <strip-namespace name="System" />
     <strip-namespace name="System.Linq" />
