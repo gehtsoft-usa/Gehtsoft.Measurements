@@ -7,6 +7,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      config: 'Release'
     steps:
     - name: checkout sources
       uses: actions/checkout@v2
@@ -15,8 +17,13 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.102
+    
+    - name: Build release version
+      run: |
+        dotnet restore
+        dotnet build --configuration $config --no-restore
 
-    - name: Setup envionment
+    - name: Setup envionment for doc
       run: |
         echo "gs-nuget=https://www.myget.org/F/gehtsoft-public/api" >> $GITHUB_ENV
 
