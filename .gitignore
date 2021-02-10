@@ -2,6 +2,7 @@
 bin/
 obj/
 TestResults/
+.inspections/
 **/doc/dst/**/*
 **/doc/src/raw/**/*
 *.csproj.user

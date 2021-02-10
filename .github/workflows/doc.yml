@@ -1,0 +1,37 @@
+name: Build doc with docgen & publish it to git hub pages
+
+on:
+  workflow_dispatch:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout sources
+      uses: actions/checkout@v2
+
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.102
+
+    - name: Setup envionment
+      run: |
+        echo "gs-nuget=https://www.myget.org/F/gehtsoft-public/api" >> $GITHUB_ENV
+
+    - name: build doc
+      run: |
+        cd doc
+        dotnet restore project.proj
+        dotnet build project.proj /t:Scan,Raw --no-restore
+        dotnet build project.proj /t:MakeDoc --no-restore
+
+    - name: Deploy to GitHub Pages
+      if: success()
+      uses: crazy-max/ghaction-github-pages@v2
+      with:
+        target_branch: gh-pages
+        build_dir: doc/dst
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
