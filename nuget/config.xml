@@ -14,7 +14,7 @@
  <properties>
   <owner>Gehtsoft</owner>
   <projectUrl>https://github.com/gehtsoft-usa/Gehtsoft.Measurements</projectUrl>
-  <license>LGPL-2.1-or-later</license>
+  <license type="expression">LGPL-2.1-or-later</license>
   <copyright>Gehtsoft USA LLC 2016-2021</copyright>
  </properties>
  <projects>
