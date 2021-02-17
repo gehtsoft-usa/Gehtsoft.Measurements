@@ -66,7 +66,7 @@ namespace Gehtsoft.Measurements
         }
 
         /// <summary>
-        /// The value as a string with maximum accuracy
+        /// The value as a string with maximum accuracy in invariant culture
         /// </summary>
         [JsonPropertyName("value")]
         public string Text => ToString("NF", CultureInfo.InvariantCulture);
@@ -318,7 +318,7 @@ namespace Gehtsoft.Measurements
         /// <summary>
         /// Checks whether the measurement equals to another measurement
         /// </summary>
-        /// <param name="obj"></param>
+        /// <param name="other"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(Measurement<T> other)
@@ -329,7 +329,7 @@ namespace Gehtsoft.Measurements
         /// <summary>
         /// Compares measurement to another measurement
         /// </summary>
-        /// <param name="obj"></param>
+        /// <param name="other"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int CompareTo(Measurement<T> other)
@@ -394,7 +394,6 @@ namespace Gehtsoft.Measurements
         /// Negates the measurement value
         /// </summary>
         /// <param name="v1"></param>
-        /// <param name="v2"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Measurement<T> operator -(Measurement<T> v1) => new Measurement<T>(-v1.Value, v1.Unit);
