@@ -1,3 +1,7 @@
+# Status
+![unit tests](https://github.com/gehtsoft-usa/Gehtsoft.Measurements/actions/workflows/test.yml/badge.svg)
+![documentation](https://github.com/gehtsoft-usa/Gehtsoft.Measurements/actions/workflows/doc.yml/badge.svg)
+
 # Gehtsoft.Measurements
 
 The C# library to manipulate with various measurements (e.g. distances, weight, angles, temperatures, and so on) expressed in various units (e.g. distances in inches, yards, meters)
