@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       config: 'Release'
+      gs-nuget: https://www.myget.org/F/gehtsoft-public/api
     steps:
     - name: checkout sources
       uses: actions/checkout@v2
