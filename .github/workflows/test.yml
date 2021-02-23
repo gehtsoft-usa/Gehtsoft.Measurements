@@ -1,4 +1,5 @@
 name: .NET Core Build with Tests
+
 on:
   push:
     branches: [ main ]
@@ -9,6 +10,7 @@ on:
 
 jobs:
   build:
+    name: test
     runs-on: ubuntu-latest
     env:
       config: 'Release'
@@ -42,7 +44,7 @@ jobs:
               echo "file_name=TestReport.${{steps.PRNUMBER.outputs.pr}}.${{github.run_number}}.md" >> $GITHUB_ENV
             else
               echo "title=Test Run ${{github.run_number}}" >> $GITHUB_ENV
-              echo "file_name=TestReport.${{github.run_number}}.md" >> $GITHUB_ENV              
+              echo "file_name=TestReport.${{github.run_number}}.md" >> $GITHUB_ENV
             fi
 
       # run tests with built project

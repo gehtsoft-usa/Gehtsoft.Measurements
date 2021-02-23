@@ -8,6 +8,7 @@ on:
 
 jobs:
   build:
+    name: doc
     runs-on: ubuntu-latest
     env:
       config: 'Release'
@@ -19,7 +20,7 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.102
-    
+
     - name: Build release version
       run: |
         dotnet restore

@@ -2,14 +2,7 @@
 <nuget xmlns="http://www.gehtsoft.com/build/nuget">
  <!-- versions. the FIRST version is the current -->
  <versions>
-  <version id="1.0.9">Initial version</version>
-  <version id="1.0.8">Initial version</version>
-  <version id="1.0.7">Initial version</version>
-  <version id="1.0.6">Initial version</version>
-  <version id="1.0.4">Initial version</version>
-  <version id="1.0.3">Initial version</version>
-  <version id="1.0.2">Initial version</version>
-  <version id="1.0.1">Initial version</version>
+  <version id="1.1.0">Add xml doc</version>
  </versions>
  <properties>
   <owner>Gehtsoft</owner>
@@ -20,6 +13,7 @@
  <projects>
    <project id="Gehtsoft.Measurements">
     <description>Measurements library</description>
+    <additional-file file="../doc/Gehtsoft.Measurements.xml" target="*"></additional-file>
    </project>
  </projects>
 </nuget>

@@ -1,1 +1,0 @@
-"inspectcode.exe" -o=.inspections/report.xml -s=WARNING Gehtsoft.Measurements.sln

@@ -77,6 +77,15 @@ namespace Gehtsoft.Measurements
         public static Measurement<VelocityUnit> Velocity(Measurement<DistanceUnit> distance, TimeSpan time) => new Measurement<VelocityUnit>(distance.In(DistanceUnit.Meter) / time.TotalSeconds, VelocityUnit.MetersPerSecond);
 
         /// <summary>
+        /// Calculate velocity from acceleration and time
+        /// </summary>
+        /// <param name="acceleration"></param>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Measurement<VelocityUnit> Velocity(Measurement<AccelerationUnit> acceleration, TimeSpan time) => new Measurement<VelocityUnit>(acceleration.In(AccelerationUnit.MeterPerSecondSquare) * time.TotalSeconds, VelocityUnit.MetersPerSecond);
+
+        /// <summary>
         /// Calculate kinetic energy
         /// </summary>
         /// <param name="weight"></param>
@@ -122,11 +131,18 @@ namespace Gehtsoft.Measurements
         public static TimeSpan TravelTime(Measurement<DistanceUnit> distance, Measurement<VelocityUnit> velocity) => TimeSpan.FromSeconds(distance.In(DistanceUnit.Meter) / velocity.In(VelocityUnit.MetersPerSecond));
 
         /// <summary>
-        /// Calculate traveled distance
+        /// Calculate traveled distance for constant velocity
         /// </summary>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Measurement<DistanceUnit> DistanceTraveled(Measurement<VelocityUnit> velocity, TimeSpan travelTime) => new Measurement<DistanceUnit>(velocity.In(VelocityUnit.MetersPerSecond) * travelTime.TotalSeconds, DistanceUnit.Meter);
-        
+
+        /// <summary>
+        /// Calculate traveled distance for constant acceleration
+        /// </summary>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Measurement<DistanceUnit> DistanceTraveled(Measurement<AccelerationUnit> acceleration, TimeSpan travelTime) => new Measurement<DistanceUnit>(Velocity(acceleration, travelTime).In(VelocityUnit.MetersPerSecond) / 2 * travelTime.TotalSeconds, DistanceUnit.Meter);
+
     }
 }

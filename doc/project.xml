@@ -19,7 +19,10 @@
         <dg:define name="advanced-web-content" value="yes" />
         <dg:define name="default-transform" value="yes" />
         <dg:define name="enable-highlighter" value="yes" />
-        <!-- <dg:define name="withTableEvent" value="yes" /> -->
+    </dg:output>
+    <dg:output template="%docgen%/template/xmldoc/main.xsl" file="Gehtsoft.Measurements.xml" encoding="utf-8">
+        <dg:define name="assembly" value="Gehtsoft.Measurements" />
+        <dg:define name="namespace" value="Gehtsoft.Measurement.+" />
     </dg:output>
 </dg:help-project>
 
