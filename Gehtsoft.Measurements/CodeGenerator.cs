@@ -92,7 +92,7 @@ namespace Gehtsoft.Measurements
             {
                 UnitAttribute attribute = fields[i].GetCustomAttribute<UnitAttribute>();
                 var value = Enum.ToObject(type, fields[i].GetRawConstantValue());
-                
+
                 var returnStatement = Expression.Return(returnTarget, Expression.Constant(value));
                 Expression[] args;
                 if (attribute.HasAlternativeName)
@@ -183,86 +183,64 @@ namespace Gehtsoft.Measurements
             return OperationToReverseExpression(secondExpression, attribute.Operation, attribute.Factor, attribute.ConversionInterface);
         }
 
-        private static Type gMath = typeof(Math);
-        private static MethodInfo gTan = gMath.GetMethod(nameof(Math.Tan), new Type[] { typeof(double) });
-        private static MethodInfo gAtan = gMath.GetMethod(nameof(Math.Atan), new Type[] { typeof(double) });
+        private static readonly Type gMath = typeof(Math);
+        private static readonly MethodInfo gTan = gMath.GetMethod(nameof(Math.Tan), new Type[] { typeof(double) });
+        private static readonly MethodInfo gAtan = gMath.GetMethod(nameof(Math.Atan), new Type[] { typeof(double) });
 
         private static Expression OperationToExpression(Expression value, ConversionOperation operation, double factor, ICustomConversionOperation op = null)
         {
-            Expression r = Expression.Constant(0.0);
             switch (operation)
             {
                 case ConversionOperation.Base:
-                    r = value;
-                    break;
+                    return value;
                 case ConversionOperation.Add:
-                    r = Expression.Add(value, Expression.Constant(factor));
-                    break;
+                    return Expression.Add(value, Expression.Constant(factor));
                 case ConversionOperation.Subtract:
-                    r = Expression.Subtract(value, Expression.Constant(factor));
-                    break;
+                    return Expression.Subtract(value, Expression.Constant(factor));
                 case ConversionOperation.SubtractFromFactor:
-                    r = Expression.Subtract(Expression.Constant(factor), value);
-                    break;
+                    return Expression.Subtract(Expression.Constant(factor), value);
                 case ConversionOperation.Multiply:
-                    r = Expression.Multiply(value, Expression.Constant(factor));
-                    break;
+                    return Expression.Multiply(value, Expression.Constant(factor));
                 case ConversionOperation.Divide:
-                    r = Expression.Divide(value, Expression.Constant(factor));
-                    break;
+                    return Expression.Divide(value, Expression.Constant(factor));
                 case ConversionOperation.DivideFactor:
-                    r = Expression.Divide(Expression.Constant(factor), value);
-                    break;
+                    return Expression.Divide(Expression.Constant(factor), value);
                 case ConversionOperation.Negate:
-                    r = Expression.Negate(value);
-                    break;
+                    return Expression.Negate(value);
                 case ConversionOperation.Atan:
-                    r = Expression.Call(null, gAtan, new Expression[] { value });
-                    break;
+                    return Expression.Call(null, gAtan, new Expression[] { value });
                 case ConversionOperation.Custom:
-                    r = Expression.Call(Expression.Constant(op), op.GetType().GetMethod(nameof(ICustomConversionOperation.ToBase)), new Expression[] { value });
-                    break;
+                    return Expression.Call(Expression.Constant(op), op.GetType().GetMethod(nameof(ICustomConversionOperation.ToBase)), new Expression[] { value });
             }
-            return r;
+            return Expression.Constant(0.0);
         }
 
         private static Expression OperationToReverseExpression(Expression value, ConversionOperation operation, double factor, ICustomConversionOperation op = null)
         {
-            Expression r = Expression.Constant(0.0);
             switch (operation)
             {
                 case ConversionOperation.Base:
-                    r = value;
-                    break;
+                    return value;
                 case ConversionOperation.Add:
-                    r = Expression.Subtract(value, Expression.Constant(factor));
-                    break;
+                    return Expression.Subtract(value, Expression.Constant(factor));
                 case ConversionOperation.Subtract:
-                    r = Expression.Add(value, Expression.Constant(factor));
-                    break;
+                    return Expression.Add(value, Expression.Constant(factor));
                 case ConversionOperation.SubtractFromFactor:
-                    r = Expression.Negate(Expression.Subtract(value, Expression.Constant(factor)));
-                    break;
+                    return Expression.Negate(Expression.Subtract(value, Expression.Constant(factor)));
                 case ConversionOperation.Multiply:
-                    r = Expression.Divide(value, Expression.Constant(factor));
-                    break;
+                    return Expression.Divide(value, Expression.Constant(factor));
                 case ConversionOperation.Divide:
-                    r = Expression.Multiply(value, Expression.Constant(factor));
-                    break;
+                    return Expression.Multiply(value, Expression.Constant(factor));
                 case ConversionOperation.DivideFactor:
-                    r = Expression.Divide(Expression.Constant(factor), value);
-                    break;
+                    return Expression.Divide(Expression.Constant(factor), value);
                 case ConversionOperation.Negate:
-                    r = Expression.Negate(value);
-                    break;
+                    return Expression.Negate(value);
                 case ConversionOperation.Atan:
-                    r = Expression.Call(null, gTan, new Expression[] { value });
-                    break;
+                    return Expression.Call(null, gTan, new Expression[] { value });
                 case ConversionOperation.Custom:
-                    r = Expression.Call(Expression.Constant(op), op.GetType().GetMethod(nameof(ICustomConversionOperation.FromBase)), new Expression[] { value });
-                    break;
+                    return Expression.Call(Expression.Constant(op), op.GetType().GetMethod(nameof(ICustomConversionOperation.FromBase)), new Expression[] { value });
             }
-            return r;
+            return Expression.Constant(0.0);
         }
     }
 }
