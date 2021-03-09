@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 using System.Xml;
 using System.Xml.Schema;
@@ -20,7 +21,7 @@ namespace Gehtsoft.Measurements
     /// The class supports serialization using System.Text.Json serializer and XmlSerializer as well as
     /// many 3rd party serializers such as BinaronSerializer.
     /// </summary>
-    public struct Measurement<T> : IXmlSerializable, IEquatable<Measurement<T>>, IComparable<Measurement<T>>, IFormattable
+    public readonly struct Measurement<T> : IEquatable<Measurement<T>>, IComparable<Measurement<T>>, IFormattable
         where T : Enum
     {
         /// <summary>
@@ -28,13 +29,13 @@ namespace Gehtsoft.Measurements
         /// </summary>
 
         [JsonIgnore]
-        public double Value { [MethodImpl(MethodImplOptions.AggressiveInlining)] get; private set; }
+        public readonly double Value;
 
         /// <summary>
         /// The unit
         /// </summary>
         [JsonIgnore]
-        public T Unit { [MethodImpl(MethodImplOptions.AggressiveInlining)] get; private set; }
+        public readonly T Unit;
 
         /// <summary>
         /// Constructor that accepts numeric value and unit
@@ -46,7 +47,6 @@ namespace Gehtsoft.Measurements
         {
             Value = value;
             Unit = unit;
-            mHashCode = null;
         }
 
 
@@ -58,11 +58,11 @@ namespace Gehtsoft.Measurements
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Measurement(string text)
         {
-            Value = 0;
-            Unit = default(T);
-            mHashCode = null;
-            if (!Measurement<T>.TryParseInternal(CultureInfo.InvariantCulture, text, ref this))
+            if (!Measurement<T>.TryParseInternal(CultureInfo.InvariantCulture, text, out double value, out T unit))
                 throw new ArgumentException("Invalid value", nameof(text));
+
+            Value = value;
+            Unit = unit;
         }
 
         /// <summary>
@@ -87,9 +87,9 @@ namespace Gehtsoft.Measurements
         /// Convert to string with specified format
         /// </summary>
         /// <param name="format">A numeric format or "ND" to format with the default accuracy and NF to display as all digits after decimal point</param>
-        /// <param name="cultureInfo"></param>
+        /// <param name="formatProvider"></param>
         /// <returns></returns>
-        public string ToString(string format, IFormatProvider cultureInfo)
+        public string ToString(string format, IFormatProvider formatProvider)
         {
             if (format == "ND")
                 format = $"N{GetUnitDefaultAccuracy(Unit)}";
@@ -135,7 +135,7 @@ namespace Gehtsoft.Measurements
         /// The base unit for the measurement
         /// </summary>
         public static T BaseUnit => gBase;
-        
+
         /// <summary>
         /// The value with a zero measurement
         /// </summary>
@@ -214,11 +214,14 @@ namespace Gehtsoft.Measurements
         /// <returns></returns>
         public static bool TryParse(CultureInfo cultureInfo, string text, out Measurement<T> value)
         {
-            value = new Measurement<T>(0, default(T));
-            return TryParseInternal(cultureInfo, text, ref value);
-        }
 
-        private int? mHashCode;
+            bool rc = TryParseInternal(cultureInfo, text, out double _value, out T unit);
+            if (rc)
+                value = new Measurement<T>(_value, unit);
+            else
+                value = new Measurement<T>(0, default(T));
+            return rc;
+        }
 
         /// <summary>
         /// Returns hash code of the value
@@ -227,20 +230,20 @@ namespace Gehtsoft.Measurements
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         override public int GetHashCode()
         {
-            if (mHashCode == null)
-            {
-                if (Unit.CompareTo(gBase) != 0)
-                    Value = ToBase(Value, Unit);
-                mHashCode = Value.GetHashCode();
-            }
-            return mHashCode.Value;
+            double value = Value;
+            if (Unit.CompareTo(gBase) != 0)
+                value = ToBase(Value, Unit);
+            return value.GetHashCode();
         }
 
-
-        private static bool TryParseInternal(CultureInfo cultureInfo, string text, ref Measurement<T> value)
+        private static bool TryParseInternal(CultureInfo cultureInfo, string text, out double value, out T unit)
         {
+            value = 0;
+            unit = default(T);
+
             if (text.Length < 2)
                 return false;
+
 
             int lastDigit = -1;
             for (int i = 0; i < text.Length; i++)
@@ -258,7 +261,6 @@ namespace Gehtsoft.Measurements
             if (lastDigit == text.Length - 1)
                 return false;
 
-            T unit;
             try
             {
                 unit = ParseUnitName(text.Substring(lastDigit + 1));
@@ -268,36 +270,8 @@ namespace Gehtsoft.Measurements
                 return false;
             }
 
-            double v = 0;
-
             string n = text.Substring(0, lastDigit + 1);
-            if (!double.TryParse(n, NumberStyles.Float | NumberStyles.AllowThousands, cultureInfo, out v))
-            {
-                value = new Measurement<T>(0, default(T));
-                return false;
-            }
-
-            value.Value = v;
-            value.Unit = unit;
-            return true;
-        }
-
-        XmlSchema IXmlSerializable.GetSchema()
-        {
-            throw new NotImplementedException();
-        }
-
-        void IXmlSerializable.ReadXml(XmlReader reader)
-        {
-            reader.MoveToAttribute("value");
-            reader.ReadAttributeValue();
-            string s = reader.Value;
-            TryParseInternal(CultureInfo.InvariantCulture, s, ref this);
-        }
-
-        void IXmlSerializable.WriteXml(XmlWriter writer)
-        {
-            writer.WriteAttributeString("value", Text);
+            return double.TryParse(n, NumberStyles.Float | NumberStyles.AllowThousands, cultureInfo, out value);
         }
 
         /// <summary>
@@ -339,6 +313,8 @@ namespace Gehtsoft.Measurements
             v2 = other.In(gBase);
             return v1.CompareTo(v2);
         }
+
+
 
 
         /// <summary>

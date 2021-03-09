@@ -3,7 +3,7 @@
     /// <summary>
     /// Units of density
     /// </summary>
-    public enum DensityUnit : int
+    public enum DensityUnit
     {
         /// <summary>
         /// Gram per cubic centimeters

@@ -4,13 +4,12 @@ using System.Reflection;
 
 namespace Gehtsoft.Measurements
 {
-
     /// <summary>
     /// The attribute to specify the conversion rule for the measurement unit.
-    /// 
+    ///
     /// The attribute is applied on enumeration fields which describe one unit of the measurement (e.g. "meter")
     ///
-    /// One of the enumeration fields must always be attributed as a base value. 
+    /// One of the enumeration fields must always be attributed as a base value.
     /// </summary>
     [AttributeUsage(validOn: AttributeTargets.Field)]
     public class ConversionAttribute : Attribute
@@ -35,20 +34,19 @@ namespace Gehtsoft.Measurements
         /// </summary>
         public double SecondFactor { get; set; }
 
+        private static readonly ConcurrentDictionary<string, Type> gTypes = new ConcurrentDictionary<string, Type>();
+
+        internal ICustomConversionOperation ConversionInterface { get; }
 
         /// <summary>
         /// The constructor to specify the base unit
         /// </summary>
-        /// <param name="operation">Must always be <code>ConversionOperation.Base</code> or <code>ConversionOperation.Negate</code></param>
+        /// <param name="operation">Must always be <c>ConversionOperation.Base</c> or <c>ConversionOperation.Negate</c></param>
         public ConversionAttribute(ConversionOperation operation) : this(operation, 0, ConversionOperation.None, 0)
         {
             if (operation != ConversionOperation.Base && operation != ConversionOperation.Negate)
                 throw new ArgumentException("Operation must be either Base or Negate", nameof(operation));
         }
-
-        private static ConcurrentDictionary<string, Type> gTypes = new ConcurrentDictionary<string, Type>();
-
-        internal ICustomConversionOperation ConversionInterface { get; private set; }
 
         /// <summary>
         /// The constructor to specify a custom conversion
@@ -86,7 +84,6 @@ namespace Gehtsoft.Measurements
                 throw new ArgumentException($"Type {name} does not supprt {nameof(ICustomConversionOperation)}", nameof(name));
         }
 
-
         /// <summary>
         /// The constructor to specify one operation conversion
         /// </summary>
@@ -94,7 +91,6 @@ namespace Gehtsoft.Measurements
         /// <param name="factor">The numeric factor for the operation</param>
         public ConversionAttribute(ConversionOperation operation, double factor) : this(operation, factor, ConversionOperation.None, 0)
         {
-
         }
 
         /// <summary>

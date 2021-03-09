@@ -7,6 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gehtsoft.Measurements", "Ge
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gehtsoft.Measurements.Test", "Gehtsoft.Measurements.Test\Gehtsoft.Measurements.Test.csproj", "{15E9136D-771C-46A4-A95B-D870E82C7EA1}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3F91B56D-D4E5-4AB6-B1A4-ED39E4C85480}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,9 +31,9 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		        SolutionGuid = {1DB720A6-F8F3-459A-B73B-7B427A562420}
-		                        SolutionGuid = {08DCD22C-F051-46F7-B091-A7FA54E2A4FD}
-		                SolutionGuid = {AAE7D1C7-ADD5-4A4F-AE8E-445215839359}
 		SolutionGuid = {E0AECE1B-C354-42E2-8028-622EDC10DBC6}
+		                SolutionGuid = {AAE7D1C7-ADD5-4A4F-AE8E-445215839359}
+		                        SolutionGuid = {08DCD22C-F051-46F7-B091-A7FA54E2A4FD}
+		        SolutionGuid = {1DB720A6-F8F3-459A-B73B-7B427A562420}
 	EndGlobalSection
 EndGlobal

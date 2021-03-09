@@ -3,7 +3,7 @@
     /// <summary>
     /// Weight units
     /// </summary>
-    public enum WeightUnit : int
+    public enum WeightUnit
     {
         /// <summary>
         /// Grains

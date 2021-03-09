@@ -3,7 +3,7 @@
     /// <summary>
     /// The distance units
     /// </summary>
-    public enum DistanceUnit : int
+    public enum DistanceUnit
     {
         /// <summary>
         /// English line (1/12 inch)
@@ -54,7 +54,7 @@
         [Unit("nm", 3)]
         [Conversion(ConversionOperation.Multiply, 1_852_000, ConversionOperation.Divide, 25.4)]
         NauticalMile,
-        
+
         /// <summary>
         /// Millimeter
         /// </summary>

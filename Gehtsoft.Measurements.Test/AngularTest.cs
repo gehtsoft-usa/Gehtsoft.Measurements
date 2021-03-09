@@ -15,7 +15,7 @@ namespace Gehtsoft.Measurements.Test
         [InlineData(1, AngularUnit.Thousand, 10.47198, AngularUnit.CmPer100Meters, 1e-5)]
         public void Conversion(double value, AngularUnit unit, double expected, AngularUnit targetUnit, double accurracy = 1e-10)
         {
-            Measurement<AngularUnit> v = new Measurement<AngularUnit>(value, unit);
+            var v = new Measurement<AngularUnit>(value, unit);
             v.In(targetUnit).Should().BeApproximately(expected, accurracy);
         }
     }

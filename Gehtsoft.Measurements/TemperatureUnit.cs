@@ -3,7 +3,7 @@
     /// <summary>
     /// Temperature units
     /// </summary>
-    public enum TemperatureUnit : int
+    public enum TemperatureUnit
     {
         /// <summary>
         /// Degrees of Fahrenheit
@@ -11,14 +11,14 @@
         [Unit("°F", "F", 1)]
         [Conversion(ConversionOperation.Base)]
         Fahrenheit = 0,
-        
+
         /// <summary>
         /// Degrees of Celsius
         /// </summary>
         [Unit("°C", "C", 1)]
         [Conversion(ConversionOperation.Multiply, 1.8, ConversionOperation.Add, 32)]
         Celsius,
-        
+
         /// <summary>
         /// Degrees of Kelvin
         /// </summary>

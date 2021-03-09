@@ -3,7 +3,7 @@
     /// <summary>
     /// Units of volume
     /// </summary>
-    public enum AreaUnit : int
+    public enum AreaUnit
     {
         /// <summary>
         /// Square millimeter
@@ -40,7 +40,6 @@
         [Conversion(ConversionOperation.Multiply, 645.16)]
         SquareInch,
 
-
         /// <summary>
         /// Square foot
         /// </summary>
@@ -76,5 +75,4 @@
         [Conversion(ConversionOperation.Multiply, 1e+10)]
         Hectare,
     }
-
 }

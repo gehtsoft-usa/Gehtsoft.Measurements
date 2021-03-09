@@ -3,7 +3,7 @@
     /// <summary>
     /// Units of volume
     /// </summary>
-    public enum VolumeUnit : int
+    public enum VolumeUnit
     {
         /// <summary>
         /// Milliliter
@@ -96,4 +96,4 @@
         [Conversion(ConversionOperation.Multiply, 3785.412)]
         Gallon,
     }
-    }
+}

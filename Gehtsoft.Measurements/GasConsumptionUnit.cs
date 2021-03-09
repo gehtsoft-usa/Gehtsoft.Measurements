@@ -3,7 +3,7 @@
     /// <summary>
     /// Units of gas consumption
     /// </summary>
-    public enum GasConsumptionUnit : int
+    public enum GasConsumptionUnit
     {
         /// <summary>
         /// Liters per km
