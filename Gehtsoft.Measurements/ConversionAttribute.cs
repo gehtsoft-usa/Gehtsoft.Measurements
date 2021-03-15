@@ -5,11 +5,9 @@ using System.Reflection;
 namespace Gehtsoft.Measurements
 {
     /// <summary>
-    /// The attribute to specify the conversion rule for the measurement unit.
-    ///
-    /// The attribute is applied on enumeration fields which describe one unit of the measurement (e.g. "meter")
-    ///
-    /// One of the enumeration fields must always be attributed as a base value.
+    /// <para>The attribute to specify the conversion rule for the measurement unit.</para>
+    /// <para>The attribute is applied on enumeration fields which describe one unit of the measurement (e.g. "meter")</para>
+    /// <para>One of the enumeration fields must always be attributed as a base value.</para>
     /// </summary>
     [AttributeUsage(validOn: AttributeTargets.Field)]
     public class ConversionAttribute : Attribute
@@ -51,7 +49,7 @@ namespace Gehtsoft.Measurements
         /// <summary>
         /// The constructor to specify a custom conversion
         /// </summary>
-        /// <param name="operation">Must always be <code>ConversionOperation.Base</code></param>
+        /// <param name="operation">Must always be <c>ConversionOperation.Base</c></param>
         /// <param name="name">The full name (namespace + name) of the type that implements <see cref="ICustomConversionOperation">ICustomConversionOperation</see> interface</param>
         public ConversionAttribute(ConversionOperation operation, string name) : this(operation, 0, ConversionOperation.None, 0)
         {

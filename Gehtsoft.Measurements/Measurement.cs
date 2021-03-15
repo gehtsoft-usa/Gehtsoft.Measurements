@@ -10,24 +10,24 @@ using System.Xml.Serialization;
 namespace Gehtsoft.Measurements
 {
     /// <summary>
-    /// The class to manipulate measurements expressed in the specified units.
-    ///
+    /// <para>The class to manipulate measurements expressed in the specified units.</para>
+    /// <para>
     /// The unit of the measurement (e.g. length, weight) is defined as the parameter of this generic structure.
     /// The enumeration used as a measurement units specification must be marked using <see cref="UnitAttribute"/> and
     /// <see cref="ConversionAttribute"/>
-    ///
-    /// The arithmetic operators (e.g. +, *) and comparison operators are supported.
-    ///
+    /// </para>
+    /// <para>The arithmetic operators (e.g. +, *) and comparison operators are supported.</para>
+    /// <para>
     /// The class supports serialization using System.Text.Json serializer and XmlSerializer as well as
     /// many 3rd party serializers such as BinaronSerializer.
+    /// </para>
     /// </summary>
-    public readonly struct Measurement<T> : IEquatable<Measurement<T>>, IComparable<Measurement<T>>, IFormattable 
+    public readonly struct Measurement<T> : IEquatable<Measurement<T>>, IComparable<Measurement<T>>, IFormattable
         where T : Enum
     {
         /// <summary>
         /// Numerical value
         /// </summary>
-
         [JsonIgnore]
         public readonly double Value;
 
@@ -69,7 +69,6 @@ namespace Gehtsoft.Measurements
         /// </summary>
         [JsonPropertyName("value")]
         public string Text => ToString("NF", CultureInfo.InvariantCulture);
-
 
         /// <summary>
         /// Convert to string with maximum accuracy in invariant culture
@@ -123,9 +122,9 @@ namespace Gehtsoft.Measurements
         {
             if (from.CompareTo(to) == 0)
                 return value;
-            if (from.CompareTo(gBase) != 0)
+            if (from.CompareTo(BaseUnit) != 0)
                 value = ToBase(value, from);
-            if (to.CompareTo(gBase) != 0)
+            if (to.CompareTo(BaseUnit) != 0)
                 value = FromBase(value, to);
             return value;
         }
@@ -133,16 +132,12 @@ namespace Gehtsoft.Measurements
         /// <summary>
         /// The base unit for the measurement
         /// </summary>
-        public static T BaseUnit => gBase;
+        public static T BaseUnit { get; } = UnitUtils.GetBase<T>();
 
         /// <summary>
         /// The value with a zero measurement
         /// </summary>
         public static Measurement<T> ZERO { get; } = new Measurement<T>(0, UnitUtils.GetBase<T>());
-
-        private static readonly T gBase = UnitUtils.GetBase<T>();
-
-
 
         private static readonly Func<T, string> mGetUnitName = CodeGenerator.GenerateGetUnitName<T>();
         private static readonly Func<string, T> mParseUnit =  CodeGenerator.GenerateParseUnitName<T>();
@@ -213,12 +208,11 @@ namespace Gehtsoft.Measurements
         /// <returns></returns>
         public static bool TryParse(CultureInfo cultureInfo, string text, out Measurement<T> value)
         {
-
             bool rc = TryParseInternal(cultureInfo, text, out double _value, out T unit);
             if (rc)
                 value = new Measurement<T>(_value, unit);
             else
-                value = new Measurement<T>(0, default(T));
+                value = new Measurement<T>(0, default);
             return rc;
         }
 
@@ -230,7 +224,7 @@ namespace Gehtsoft.Measurements
         override public int GetHashCode()
         {
             double value = Value;
-            if (Unit.CompareTo(gBase) != 0)
+            if (Unit.CompareTo(BaseUnit) != 0)
                 value = ToBase(Value, Unit);
             return value.GetHashCode();
         }
@@ -238,23 +232,29 @@ namespace Gehtsoft.Measurements
         private static bool TryParseInternal(CultureInfo cultureInfo, string text, out double value, out T unit)
         {
             value = 0;
-            unit = default(T);
+            unit = default;
 
             if (text.Length < 2)
                 return false;
-
 
             int lastDigit = -1;
             for (int i = 0; i < text.Length; i++)
             {
                 char c = text[i];
-                if (c >= '0' && c <= '9' || c == cultureInfo.NumberFormat.NumberDecimalSeparator[0] ||
+                if ((c >= '0' && c <= '9') ||
+                    c == cultureInfo.NumberFormat.NumberDecimalSeparator[0] ||
                     c == cultureInfo.NumberFormat.NumberGroupSeparator[0] ||
                     c == cultureInfo.NumberFormat.NegativeSign[0] ||
-                    c == '+' || c == '-' || c == ' ')
+                    c == '+' ||
+                    c == '-' ||
+                    c == ' ')
+                {
                     lastDigit = i;
+                }
                 else
+                {
                     break;
+                }
             }
 
             if (lastDigit == text.Length - 1)
@@ -296,7 +296,7 @@ namespace Gehtsoft.Measurements
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(Measurement<T> other)
         {
-            return other.In(gBase) == this.In(gBase);
+            return other.In(BaseUnit) == this.In(BaseUnit);
         }
 
         /// <summary>
@@ -308,8 +308,8 @@ namespace Gehtsoft.Measurements
         public int CompareTo(Measurement<T> other)
         {
             double v1, v2;
-            v1 = In(gBase);
-            v2 = other.In(gBase);
+            v1 = In(BaseUnit);
+            v2 = other.In(BaseUnit);
             return v1.CompareTo(v2);
         }
 

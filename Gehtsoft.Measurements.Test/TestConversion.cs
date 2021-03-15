@@ -9,7 +9,7 @@
 
         public double ToBase(double value)
         {
-            return 2 / value - 1;
+            return (2 / value) - 1;
         }
     }
 }

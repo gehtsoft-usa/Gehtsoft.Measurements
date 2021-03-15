@@ -13,7 +13,7 @@ namespace Gehtsoft.Measurements.Test
         [InlineData(117, TemperatureUnit.Fahrenheit, 576.67, TemperatureUnit.Rankin, 1e-5)]
         public void Conversion(double value, TemperatureUnit unit, double expected, TemperatureUnit targetUnit, double accurracy = 1e-10)
         {
-            Measurement<TemperatureUnit> v = new Measurement<TemperatureUnit>(value, unit);
+            var v = new Measurement<TemperatureUnit>(value, unit);
             v.In(targetUnit).Should().BeApproximately(expected, accurracy);
         }
 

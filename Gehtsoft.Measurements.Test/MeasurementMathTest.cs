@@ -126,6 +126,5 @@ namespace Gehtsoft.Measurements.Test
             var velocity2 = MeasurementMath.Velocity(distance1, ts1);
             velocity2.In(velocityUnit).Should().BeApproximately(velocity, 1e-5);
         }
-
     }
 }

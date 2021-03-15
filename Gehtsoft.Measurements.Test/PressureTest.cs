@@ -13,7 +13,7 @@ namespace Gehtsoft.Measurements.Test
 
         public void Conversion(double value, PressureUnit unit, double expected, PressureUnit targetUnit, double accurracy = 1e-10)
         {
-            Measurement<PressureUnit> v = new Measurement<PressureUnit>(value, unit);
+            var v = new Measurement<PressureUnit>(value, unit);
             v.In(targetUnit).Should().BeApproximately(expected, accurracy);
         }
     }

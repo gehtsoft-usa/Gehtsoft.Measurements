@@ -17,7 +17,7 @@ namespace Gehtsoft.Measurements
                 if (attribute.Operation == ConversionOperation.Base)
                     return (T)fields[i].GetRawConstantValue();
             }
-            return default(T);
+            return default;
         }
 
         public static Tuple<T, string>[] GetUnits<T>()

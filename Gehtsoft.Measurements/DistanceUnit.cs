@@ -15,7 +15,6 @@
         /// <summary>
         /// Russian line (1/10 inch)
         /// </summary>
-
         [Unit("rln", 1)]
         [Conversion(ConversionOperation.Divide, 10)]
         RussianLine,

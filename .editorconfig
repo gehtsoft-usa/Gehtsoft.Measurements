@@ -1,6 +1,2 @@
 ﻿[*.cs]
 
-# RCS1226: Add paragraph to documentation comment.
-dotnet_diagnostic.RCS1226.severity = none
-# RCS1247: Fix documentation comment tag
-dotnet_diagnostic.RCS1247.severity = none

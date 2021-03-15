@@ -45,7 +45,6 @@ namespace Gehtsoft.Measurements
         /// <summary>
         /// Calculate arctangent as angular value
         /// </summary>
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Measurement<AngularUnit> Atan(double value) => new Measurement<AngularUnit>(Math.Atan(value), AngularUnit.Radian);
 
@@ -143,6 +142,5 @@ namespace Gehtsoft.Measurements
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Measurement<DistanceUnit> DistanceTraveled(Measurement<AccelerationUnit> acceleration, TimeSpan travelTime) => new Measurement<DistanceUnit>(Velocity(acceleration, travelTime).In(VelocityUnit.MetersPerSecond) / 2 * travelTime.TotalSeconds, DistanceUnit.Meter);
-
     }
 }
