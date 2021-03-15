@@ -21,7 +21,7 @@ namespace Gehtsoft.Measurements
     /// The class supports serialization using System.Text.Json serializer and XmlSerializer as well as
     /// many 3rd party serializers such as BinaronSerializer.
     /// </summary>
-    public readonly struct Measurement<T> : IEquatable<Measurement<T>>, IComparable<Measurement<T>>, IFormattable
+    public readonly struct Measurement<T> : IEquatable<Measurement<T>>, IComparable<Measurement<T>>, IFormattable 
         where T : Enum
     {
         /// <summary>
@@ -48,7 +48,6 @@ namespace Gehtsoft.Measurements
             Value = value;
             Unit = unit;
         }
-
 
         /// <summary>
         /// Constructor that accepts a text representation of a value
@@ -313,9 +312,6 @@ namespace Gehtsoft.Measurements
             v2 = other.In(gBase);
             return v1.CompareTo(v2);
         }
-
-
-
 
         /// <summary>
         /// Checks whether two measurements are equal

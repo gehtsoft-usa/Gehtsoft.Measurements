@@ -178,6 +178,39 @@ namespace Gehtsoft.Measurements.Test
             m.ToString(format, CultureInfo.InvariantCulture).Should().Be(text);
         }
 
+        [XmlRoot("container")]
+        public class XmlContainerForMeasurement
+        {
+            [XmlIgnore]
+            public Measurement<DistanceUnit> Value { get; set; }
+
+            [XmlAttribute("value")]
+            public string XmlValue
+            {
+                get => Value.Text;
+                set => Value = new Measurement<DistanceUnit>(value);
+            }
+        }
+
+        [Fact]
+        public void SerializationXml()
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(XmlContainerForMeasurement));
+            var container = new XmlContainerForMeasurement() { Value = new Measurement<DistanceUnit>(15, DistanceUnit.Centimeter) };
+            using (var sw = new StringWriter())
+            {
+                serializer.Serialize(sw, container);
+                string xml = sw.ToString();
+
+                using (var sr = new StringReader(xml))
+                {
+                    var container1 = serializer.Deserialize(sr) as XmlContainerForMeasurement;
+                    container1.Should().NotBeNull();
+                    container1.Value.Should().Be(new Measurement<DistanceUnit>(15, DistanceUnit.Centimeter));
+                }
+            }
+        }
+
         [Fact]
         public void SerializationJson()
         {

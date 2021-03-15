@@ -62,5 +62,12 @@
         [Unit("cm/100m", 2)]
         [Conversion(ConversionOperation.Divide, 10000, ConversionOperation.Atan, 0)]
         CmPer100Meters,
+
+        /// <summary>
+        /// The incline measured in percents
+        /// </summary>
+        [Unit("%", "percent", 0)]
+        [Conversion(ConversionOperation.Divide, 100, ConversionOperation.Atan, 0)]
+        Percent,
     }
 }
