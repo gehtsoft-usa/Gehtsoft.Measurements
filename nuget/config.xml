@@ -2,7 +2,7 @@
 <nuget xmlns="http://www.gehtsoft.com/build/nuget">
  <!-- versions. the FIRST version is the current -->
  <versions>
-  <version id="1.1.0">Add xml doc</version>
+  <version id="1.1.10">Make structure read-only, add XML doc to nuget package, add slope % to angular, remove direct XmlSerializer support</version>
  </versions>
  <properties>
   <owner>Gehtsoft</owner>

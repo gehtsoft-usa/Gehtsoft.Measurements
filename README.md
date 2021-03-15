@@ -28,7 +28,8 @@ You can then manipulate this value using C# operator, format them or convert it 
 
 The class fully supports serialization using `System.Text.Json` and `Binaron.Serializer` (see https://github.com/zachsaw/Binaron.Serializer).
 `XmlSerializer` cannot be implemented for a readonly structures without introducing of non-safe code. Please refer to tests for an example
-how to implement an XML serialization.
+how to implement an XML serialization
+(https://github.com/gehtsoft-usa/Gehtsoft.Measurements/blob/76fc639a657186dc91615839ca9ded4c14af7bc2/Gehtsoft.Measurements.Test/CoreClassesTest.cs#L181).
 
 Read more on http://docs.gehtsoftusa.com/Gehtsoft.Measurements/web-content.html#index.html
 
