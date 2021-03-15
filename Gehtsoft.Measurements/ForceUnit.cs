@@ -3,7 +3,7 @@
     /// <summary>
     /// The units of force
     /// </summary>
-    public enum ForceUnit : int
+    public enum ForceUnit
     {
         /// <summary>
         /// Newton (aka kg⋅m/s²)
@@ -40,6 +40,4 @@
         [Unit("pdl", 3)]
         Poundal,
     }
-
-
 }

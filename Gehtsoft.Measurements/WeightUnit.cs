@@ -3,7 +3,7 @@
     /// <summary>
     /// Weight units
     /// </summary>
-    public enum WeightUnit : int
+    public enum WeightUnit
     {
         /// <summary>
         /// Grains
@@ -49,6 +49,4 @@
         [Conversion(ConversionOperation.Multiply, 1.7718451953125)]
         Dram
     }
-
-
 }

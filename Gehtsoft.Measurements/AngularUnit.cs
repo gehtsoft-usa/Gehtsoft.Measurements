@@ -3,7 +3,7 @@
     /// <summary>
     /// Units for angular measurements
     /// </summary>
-    public enum AngularUnit : int
+    public enum AngularUnit
     {
         /// <summary>
         /// Radians (2π radians per full circle)
@@ -40,14 +40,14 @@
         [Unit("mrad", 2)]
         [Conversion(ConversionOperation.Divide, 1000)]
         MRad,
-        
+
         /// <summary>
         /// A thousand (Soviet/Russian or Finish military unit, 1/3000 of a circle)
         /// </summary>
         //1/3000 of circle
         [Unit("ths", 2)]
         [Conversion(ConversionOperation.Divide, 3000, ConversionOperation.Multiply, 3.14159265358979)]
-        Thousand,               
+        Thousand,
 
         /// <summary>
         /// Inches per 100 yards
@@ -62,5 +62,12 @@
         [Unit("cm/100m", 2)]
         [Conversion(ConversionOperation.Divide, 10000, ConversionOperation.Atan, 0)]
         CmPer100Meters,
+
+        /// <summary>
+        /// The incline measured in percents
+        /// </summary>
+        [Unit("%", "percent", 0)]
+        [Conversion(ConversionOperation.Divide, 100, ConversionOperation.Atan, 0)]
+        Percent,
     }
 }

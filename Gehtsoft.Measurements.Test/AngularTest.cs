@@ -13,9 +13,12 @@ namespace Gehtsoft.Measurements.Test
         [InlineData(1, AngularUnit.MRad, 3.6, AngularUnit.InchesPer100Yards, 1e-5)]
         [InlineData(1, AngularUnit.Mil, 3.5343, AngularUnit.InchesPer100Yards, 1e-5)]
         [InlineData(1, AngularUnit.Thousand, 10.47198, AngularUnit.CmPer100Meters, 1e-5)]
+        [InlineData(100, AngularUnit.Percent, 45, AngularUnit.Degree, 1e-5)]
+        [InlineData(50, AngularUnit.Percent, 26.56505, AngularUnit.Degree, 1e-5)]
+        [InlineData(26.56505, AngularUnit.Degree, 50, AngularUnit.Percent, 1e-5)]
         public void Conversion(double value, AngularUnit unit, double expected, AngularUnit targetUnit, double accurracy = 1e-10)
         {
-            Measurement<AngularUnit> v = new Measurement<AngularUnit>(value, unit);
+            var v = new Measurement<AngularUnit>(value, unit);
             v.In(targetUnit).Should().BeApproximately(expected, accurracy);
         }
     }

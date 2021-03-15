@@ -14,7 +14,7 @@ namespace Gehtsoft.Measurements.Test
         [InlineData(1, VolumeUnit.CubicFeet, 7.480519, VolumeUnit.Gallon, 1e-5)]
         public void Conversion(double value, VolumeUnit unit, double expected, VolumeUnit targetUnit, double accurracy = 1e-10)
         {
-            Measurement<VolumeUnit> v = new Measurement<VolumeUnit>(value, unit);
+            var v = new Measurement<VolumeUnit>(value, unit);
             v.In(targetUnit).Should().BeApproximately(expected, accurracy);
         }
 
@@ -27,6 +27,5 @@ namespace Gehtsoft.Measurements.Test
             v.Value.Should().BeApproximately(value, 1e-10);
             v.Unit.Should().Be(unit);
         }
-
     }
 }

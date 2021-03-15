@@ -3,7 +3,7 @@
     /// <summary>
     /// The units of velocity
     /// </summary>
-    public enum VelocityUnit : int
+    public enum VelocityUnit
     {
         /// <summary>
         /// Meters per second
@@ -11,28 +11,28 @@
         [Unit("m/s", 0)]
         [Conversion(ConversionOperation.Base)]
         MetersPerSecond = 0,
-        
+
         /// <summary>
         /// Kilometers per hour
         /// </summary>
         [Unit("km/h", "kmph", 1)]
         [Conversion(ConversionOperation.Divide, 3.6)]
         KilometersPerHour,
-        
+
         /// <summary>
         /// Feet per second
         /// </summary>
         [Unit("ft/s", 1)]
         [Conversion(ConversionOperation.Divide, 3.2808399)]
         FeetPerSecond,
-        
+
         /// <summary>
         /// Miles per hour
         /// </summary>
         [Unit("mi/h", "mph", 1)]
         [Conversion(ConversionOperation.Divide, 2.23693629)]
         MilesPerHour,
-        
+
         /// <summary>
         /// Knots
         /// </summary>

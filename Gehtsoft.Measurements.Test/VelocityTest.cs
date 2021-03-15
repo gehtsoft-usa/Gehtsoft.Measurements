@@ -12,7 +12,7 @@ namespace Gehtsoft.Measurements.Test
         [InlineData(2700, VelocityUnit.FeetPerSecond, 822.96, VelocityUnit.MetersPerSecond)]
         public void Conversion(double value, VelocityUnit unit, double expected, VelocityUnit targetUnit, double accurracy = 1e-5)
         {
-            Measurement<VelocityUnit> v = new Measurement<VelocityUnit>(value, unit);
+            var v = new Measurement<VelocityUnit>(value, unit);
             v.In(targetUnit).Should().BeApproximately(expected, accurracy);
         }
     }

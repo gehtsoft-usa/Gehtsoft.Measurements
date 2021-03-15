@@ -10,7 +10,7 @@ namespace Gehtsoft.Measurements.Test
         [InlineData(1, EnergyUnit.BTU, 778.1280674872351, EnergyUnit.FootPound)]
         public void Conversion(double value, EnergyUnit unit, double expected, EnergyUnit targetUnit, double accurracy = 1e-10)
         {
-            Measurement<EnergyUnit> v = new Measurement<EnergyUnit>(value, unit);
+            var v = new Measurement<EnergyUnit>(value, unit);
             v.In(targetUnit).Should().BeApproximately(expected, accurracy);
         }
     }

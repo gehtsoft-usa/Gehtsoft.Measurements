@@ -10,7 +10,7 @@ namespace Gehtsoft.Measurements.Test
         [InlineData(120, AreaUnit.Acre, 0.48562300014476, AreaUnit.SquareKilometer, 1e-5)]
         public void Conversion(double value, AreaUnit unit, double expected, AreaUnit targetUnit, double accurracy = 1e-10)
         {
-            Measurement<AreaUnit> v = new Measurement<AreaUnit>(value, unit);
+            var v = new Measurement<AreaUnit>(value, unit);
             v.In(targetUnit).Should().BeApproximately(expected, accurracy);
         }
     }

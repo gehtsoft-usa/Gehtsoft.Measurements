@@ -3,7 +3,7 @@
     /// <summary>
     /// Acceleration
     /// </summary>
-    public enum AccelerationUnit : int
+    public enum AccelerationUnit
     {
         /// <summary>
         /// Gals or cm/s²

@@ -29,7 +29,7 @@ namespace Gehtsoft.Measurements.Test
         [InlineData(1, DistanceUnit.NauticalMile, 1852, DistanceUnit.Meter)]
         public void Conversion(double value, DistanceUnit unit, double expected, DistanceUnit targetUnit)
         {
-            Measurement<DistanceUnit> v = new Measurement<DistanceUnit>(value, unit);
+            var v = new Measurement<DistanceUnit>(value, unit);
             v.In(targetUnit).Should().BeApproximately(expected, 1e-10);
         }
     }

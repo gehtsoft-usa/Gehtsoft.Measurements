@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -13,7 +14,6 @@ using Xunit;
 
 namespace Gehtsoft.Measurements.Test
 {
-
     public class TestCoreClasses
     {
         [Fact]
@@ -86,7 +86,7 @@ namespace Gehtsoft.Measurements.Test
             Measurement<TestUnit>.ToBase(value, unit).Should().BeApproximately(expected, 1e-10);
             Measurement<TestUnit>.FromBase(expected, unit).Should().BeApproximately(value, 1e-10);
 
-            Measurement<TestUnit> v1 = new Measurement<TestUnit>(value, unit);
+            var v1 = new Measurement<TestUnit>(value, unit);
             v1.In(TestUnit.Base).Should().BeApproximately(expected, 1e-10);
             v1.To(TestUnit.Base).Value.Should().BeApproximately(expected, 1e-10);
         }
@@ -99,7 +99,6 @@ namespace Gehtsoft.Measurements.Test
             Measurement<TestUnit>.Convert(value, unit, unit1).Should().BeApproximately(expected, 1e-10);
         }
 
-
         [Theory]
         [InlineData(1, TestUnit.Unit1, 1, TestUnit.Unit1, 0)]
         [InlineData(2, TestUnit.Unit1, 1, TestUnit.Unit1, 1)]
@@ -109,8 +108,8 @@ namespace Gehtsoft.Measurements.Test
         [InlineData(12, TestUnit.Unit2, 6, TestUnit.Unit4, -1)]
         public void Compare(double value1, TestUnit unit1, double value2, TestUnit unit2, int expected)
         {
-            Measurement<TestUnit> v1 = new Measurement<TestUnit>(value1, unit1);
-            Measurement<TestUnit> v2 = new Measurement<TestUnit>(value2, unit2);
+            var v1 = new Measurement<TestUnit>(value1, unit1);
+            var v2 = new Measurement<TestUnit>(value2, unit2);
             int rc = v1.CompareTo(v2);
             if (expected == 0)
             {
@@ -127,7 +126,6 @@ namespace Gehtsoft.Measurements.Test
                 rc.Should().BeLessThan(0);
                 v1.Equals(v2).Should().BeFalse();
             }
-
         }
 
         [Theory]
@@ -151,13 +149,12 @@ namespace Gehtsoft.Measurements.Test
             o.Unit.Should().Be(unit);
         }
 
-
         [Theory]
         [InlineData("1\"", 1, TestUnit.Unit1)]
         [InlineData("1.2345678u2", 1.2345678, TestUnit.Unit2)]
         public void ParsingConstructor(string text, double value, TestUnit unit)
         {
-            Measurement<TestUnit> m = new Measurement<TestUnit>(text);
+            var m = new Measurement<TestUnit>(text);
             m.Value.Should().BeApproximately(value, 1e-10);
             m.Unit.Should().Be(unit);
         }
@@ -167,7 +164,7 @@ namespace Gehtsoft.Measurements.Test
         [InlineData("1.2345678u2", 1.2345678, TestUnit.Unit2)]
         public void ConversionToString1(string text, double value, TestUnit unit)
         {
-            Measurement<TestUnit> m = new Measurement<TestUnit>(value, unit);
+            var m = new Measurement<TestUnit>(value, unit);
             m.ToString(CultureInfo.InvariantCulture).Should().Be(text);
         }
 
@@ -177,48 +174,54 @@ namespace Gehtsoft.Measurements.Test
         [InlineData("1.2346u2", "N4", 1.2345678, TestUnit.Unit2)]
         public void ConversionToString2(string text, string format, double value, TestUnit unit)
         {
-            Measurement<TestUnit> m = new Measurement<TestUnit>(value, unit);
+            var m = new Measurement<TestUnit>(value, unit);
             m.ToString(format, CultureInfo.InvariantCulture).Should().Be(text);
         }
 
-
-
-        [Fact]
-        public void SerializationJson()
+        [XmlRoot("container")]
+        public class XmlContainerForMeasurement
         {
-            Measurement<TestUnit> v = new Measurement<TestUnit>(1245.78912345, TestUnit.Unit1);
-            string s = JsonSerializer.Serialize(v);
-            s.Should().Be("{\"value\":\"1245.78912345\\u0022\"}");
-            var v1 = JsonSerializer.Deserialize<Measurement<TestUnit>>(s);
-            v1.Value.Should().Be(1245.78912345);
-            v1.Unit.Should().Be(TestUnit.Unit1);
+            [XmlIgnore]
+            public Measurement<DistanceUnit> Value { get; set; }
 
+            [XmlAttribute("value")]
+            public string XmlValue
+            {
+                get => Value.Text;
+                set => Value = new Measurement<DistanceUnit>(value);
+            }
         }
 
         [Fact]
         public void SerializationXml()
         {
-            Measurement<TestUnit> v = new Measurement<TestUnit>(1245.78912345, TestUnit.Unit1);
-            XmlSerializer serializer = new XmlSerializer(typeof(Measurement<TestUnit>));
-            string raw;
-            using (StringWriter writer = new StringWriter())
-            {
-                serializer.Serialize(writer, v);
-                raw = writer.ToString();
-            }
+            var serializer = new XmlSerializer(typeof(XmlContainerForMeasurement));
+            var container = new XmlContainerForMeasurement() { Value = new Measurement<DistanceUnit>(15, DistanceUnit.Centimeter) };
+            using var sw = new StringWriter();
+            serializer.Serialize(sw, container);
+            string xml = sw.ToString();
 
-            using (StringReader r = new StringReader(raw))
-            {
-                var v1 = (Measurement<TestUnit>)serializer.Deserialize(r);
-                v1.Value.Should().Be(1245.78912345);
-                v1.Unit.Should().Be(TestUnit.Unit1);
-            }
+            using var sr = new StringReader(xml);
+            var container1 = serializer.Deserialize(sr) as XmlContainerForMeasurement;
+            container1.Should().NotBeNull();
+            container1.Value.Should().Be(new Measurement<DistanceUnit>(15, DistanceUnit.Centimeter));
+        }
+
+        [Fact]
+        public void SerializationJson()
+        {
+            var v = new Measurement<TestUnit>(1245.78912345, TestUnit.Unit1);
+            string s = JsonSerializer.Serialize(v);
+            s.Should().Be("{\"value\":\"1245.78912345\\u0022\"}");
+            var v1 = JsonSerializer.Deserialize<Measurement<TestUnit>>(s);
+            v1.Value.Should().Be(1245.78912345);
+            v1.Unit.Should().Be(TestUnit.Unit1);
         }
 
         [Fact]
         public void SerializationBinaron()
         {
-            Measurement<TestUnit> v = new Measurement<TestUnit>(1245.78912345, TestUnit.Unit1);
+            var v = new Measurement<TestUnit>(1245.78912345, TestUnit.Unit1);
             byte[] arr;
 
             using (var ms = new MemoryStream())
@@ -226,7 +229,6 @@ namespace Gehtsoft.Measurements.Test
                 BinaronConvert.Serialize<Measurement<TestUnit>>(v, ms);
                 arr = ms.ToArray();
             }
-
 
             using (var ms = new MemoryStream(arr))
             {
@@ -267,20 +269,18 @@ namespace Gehtsoft.Measurements.Test
 
                 object v = Activator.CreateInstance(measureType, new object[] { 123.0, x });
 
-                measureType.GetProperty(nameof(Measurement<DistanceUnit>.Value)).GetValue(v).Should().Be(123);
-                measureType.GetProperty(nameof(Measurement<DistanceUnit>.Unit)).GetValue(v).Should().Be(x);
+                measureType.GetField (nameof(Measurement<DistanceUnit>.Value)).GetValue(v).Should().Be(123);
+                measureType.GetField(nameof(Measurement<DistanceUnit>.Unit)).GetValue(v).Should().Be(x);
 
                 string s = v.ToString();
                 s.Should().StartWith("123");
                 s.Should().EndWith(n as string);
 
-
                 object v1 = Activator.CreateInstance(measureType, new object[] { s });
-                measureType.GetProperty(nameof(Measurement<DistanceUnit>.Value)).GetValue(v1).Should().Be(123);
-                measureType.GetProperty(nameof(Measurement<DistanceUnit>.Unit)).GetValue(v1).Should().Be(x);
+                measureType.GetField(nameof(Measurement<DistanceUnit>.Value)).GetValue(v1).Should().Be(123);
+                measureType.GetField(nameof(Measurement<DistanceUnit>.Unit)).GetValue(v1).Should().Be(x);
 
                 i++;
-
             }
             i.Should().BeGreaterThan(2);
         }
@@ -289,14 +289,12 @@ namespace Gehtsoft.Measurements.Test
 
         public void Formattable()
         {
-            Measurement<DistanceUnit> v = new Measurement<DistanceUnit>(1.2345678, DistanceUnit.Meter);
+            var v = new Measurement<DistanceUnit>(1.2345678, DistanceUnit.Meter);
             $"{v}".Should().Be("1.2345678m");
             $"{v:ND}".Should().Be("1.2m");
             $"{v:N2}".Should().Be("1.23m");
             $"{v:N4}".Should().Be("1.2346m");
-
         }
-
     }
 }
 

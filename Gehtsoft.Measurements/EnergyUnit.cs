@@ -3,7 +3,7 @@
     /// <summary>
     /// Energy units
     /// </summary>
-    public enum EnergyUnit : int
+    public enum EnergyUnit
     {
         /// <summary>
         /// Feet-pounds
@@ -27,7 +27,7 @@
         BTU,
 
         /// <summary>
-        /// Hoursepowers-hour 
+        /// Hoursepowers-hour
         /// </summary>
         [Unit("hp·h", "hp-h", 0)]
         [Conversion(ConversionOperation.Multiply, 2_684_500)]

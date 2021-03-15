@@ -1,9 +1,8 @@
 ﻿namespace Gehtsoft.Measurements
 {
     /// <summary>
-    /// The operation used to specify conversion of one unit to another.
-    /// 
-    /// The value is used in <see cref="ConversionAttribute"/>
+    /// <para>The operation used to specify conversion of one unit to another.</para>
+    /// <para>The value is used in <see cref="ConversionAttribute"/></para>
     /// </summary>
     public enum ConversionOperation
     {
@@ -12,9 +11,8 @@
         /// </summary>
         None,
         /// <summary>
-        /// Marks the unit as a base unit. 
-        /// 
-        /// Cannot be combined with other operations
+        /// <para>Marks the unit as a base unit.</para>
+        /// <para>Cannot be combined with other operations</para>
         /// </summary>
         Base,
         /// <summary>
@@ -42,23 +40,19 @@
         /// </summary>
         DivideFactor,
         /// <summary>
-        /// Negates the value
-        /// 
-        /// The factor is ignored
+        /// <para>Negates the value</para>
+        /// <para>The factor is ignored</para>
         /// </summary>
         Negate,
         /// <summary>
-        /// Calculates arctangent of the value
-        /// 
-        /// The factor is ignored
+        /// <para>Calculates arctangent of the value</para>
+        /// <para>The factor is ignored</para>
         /// </summary>
         Atan,
         /// <summary>
-        /// The custom conversion. 
-        /// 
-        /// The custom conversion should be implemented using <see cref="ICustomConversionOperation"/> interface. 
-        /// 
-        /// Cannot be combined with other operations. 
+        /// <para>The custom conversion.</para>
+        /// <para>The custom conversion should be implemented using <see cref="ICustomConversionOperation"/> interface.</para>
+        /// <para>Cannot be combined with other operations.</para>
         /// </summary>
         Custom,
     };

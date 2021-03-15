@@ -23,6 +23,7 @@
     <dg:output template="%docgen%/template/xmldoc/main.xsl" file="Gehtsoft.Measurements.xml" encoding="utf-8">
         <dg:define name="assembly" value="Gehtsoft.Measurements" />
         <dg:define name="namespace" value="Gehtsoft.Measurement.+" />
+        <dg:define name="write-summary" value="yes" />
     </dg:output>
 </dg:help-project>
 

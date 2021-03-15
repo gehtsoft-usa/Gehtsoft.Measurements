@@ -5,9 +5,8 @@ using System.Text;
 namespace Gehtsoft.Measurements
 {
     /// <summary>
-    /// The attribute to specify the name for the measurmement unit.
-    /// 
-    ///  The attribute is applied on enum fields which describe one unit of the measurement (e.g. "meter")
+    /// <para>The attribute to specify the name for the measurement unit.</para>
+    /// <para>The attribute is applied on enumeration fields which describe one unit of the measurement (e.g. "meter")</para>
     /// </summary>
     [AttributeUsage(validOn: AttributeTargets.Field)]
     public class UnitAttribute : Attribute
@@ -18,9 +17,8 @@ namespace Gehtsoft.Measurements
         public string Name { get; set; }
 
         /// <summary>
-        /// The alternative name of the unit
-        /// 
-        /// An example of two names if inch, that may be records as 5in as well as 5".
+        /// <para>The alternative name of the unit</para>
+        /// <para>An example of two names if inch, that may be records as 5in as well as 5".</para>
         /// </summary>
         public string AlterantiveName { get; set; }
 
@@ -30,7 +28,7 @@ namespace Gehtsoft.Measurements
         public bool HasAlternativeName => !string.IsNullOrEmpty(AlterantiveName);
 
         /// <summary>
-        /// The default accuracy (number of digits after decimal point). 
+        /// The default accuracy (number of digits after decimal point).
         /// </summary>
         public int DefaultAccuracy { get; set; }
 

@@ -13,7 +13,7 @@ namespace Gehtsoft.Measurements.Test
         [InlineData(5, WeightUnit.Ounce, 141.747615, WeightUnit.Gram, 1e-5)]
         public void Conversion(double value, WeightUnit unit, double expected, WeightUnit targetUnit, double accurracy = 1e-10)
         {
-            Measurement<WeightUnit> v = new Measurement<WeightUnit>(value, unit);
+            var v = new Measurement<WeightUnit>(value, unit);
             v.In(targetUnit).Should().BeApproximately(expected, accurracy);
         }
     }

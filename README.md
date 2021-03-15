@@ -8,7 +8,7 @@ The C# library to manipulate with various measurements (e.g. distances, weight, 
 
 Currently, distance/length, velocity, weight, angular measurements, and energy units are supported.
 
-The library is shared under LGPL license. 
+The library is shared under LGPL license.
 
 ## Using Library
 
@@ -26,25 +26,27 @@ You can then manipulate this value using C# operator, format them or convert it 
  var v2 = v1.To(DistanceUnit.Meter);
 ```
 
-The class fully supports serialization using `System.Text.Json`, `System.Xml.Serialization.XmlSerializer` and `Binaron.Serializer` (see https://github.com/zachsaw/Binaron.Serializer).
+The class fully supports serialization using `System.Text.Json` and `Binaron.Serializer` (see https://github.com/zachsaw/Binaron.Serializer).
+`XmlSerializer` cannot be implemented for a readonly structures without introducing of non-safe code. Please refer to tests for an example
+how to implement an XML serialization.
 
 Read more on http://docs.gehtsoftusa.com/Gehtsoft.Measurements/web-content.html#index.html
 
 ## Defining your own units
 
-You can define your own measurment units by creating a enumeration and mark it using `Unit` and `Conversion`  attributes. The first attribute defines the unit name and the default accuracy of the values. The second attribute defines the rules of the conversion. One unit must always be a "base" unit, and conversion rules for other units defines how to convert the specified unit into a base unit. 
+You can define your own measurment units by creating a enumeration and mark it using `Unit` and `Conversion`  attributes. The first attribute defines the unit name and the default accuracy of the values. The second attribute defines the rules of the conversion. One unit must always be a "base" unit, and conversion rules for other units defines how to convert the specified unit into a base unit.
 
 ```csharp
 enum MyWeightUnit
 {
     //1 gram
-	[Unit("g", 3)]
-	[Conversion(ConversionOperation.Base)]
-	Gram,
+    [Unit("g", 3)]
+    [Conversion(ConversionOperation.Base)]
+    Gram,
 
    //1 kilogram (1 kilogram = 1000 gram)
-	[Unit("kg", 3)]
-	[Conversion(ConversionOperation.Multiply, 1000)]
-	Kilogram,
+    [Unit("kg", 3)]
+    [Conversion(ConversionOperation.Multiply, 1000)]
+    Kilogram,
 }
 ```
