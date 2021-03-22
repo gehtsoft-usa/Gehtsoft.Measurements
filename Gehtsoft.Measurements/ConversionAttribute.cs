@@ -49,7 +49,7 @@ namespace Gehtsoft.Measurements
         /// <summary>
         /// The constructor to specify a custom conversion
         /// </summary>
-        /// <param name="operation">Must always be <c>ConversionOperation.Base</c></param>
+        /// <param name="operation">Must always be `ConversionOperation.Base`</param>
         /// <param name="name">The full name (namespace + name) of the type that implements <see cref="ICustomConversionOperation">ICustomConversionOperation</see> interface</param>
         public ConversionAttribute(ConversionOperation operation, string name) : this(operation, 0, ConversionOperation.None, 0)
         {

@@ -16,11 +16,12 @@ namespace Gehtsoft.Measurements
     /// The enumeration used as a measurement units specification must be marked using <see cref="UnitAttribute"/> and
     /// <see cref="ConversionAttribute"/>
     /// </para>
-    /// <para>The arithmetic operators (e.g. +, *) and comparison operators are supported.</para>
+    /// <para>The arithmetic operators (e.g. `+`, `*`) and comparison operators are supported.</para>
     /// <para>
-    /// The class supports serialization using System.Text.Json serializer and XmlSerializer as well as
-    /// many 3rd party serializers such as BinaronSerializer.
+    /// The class supports serialization using `System.Text.Json` serializer and `XmlSerializer` as well as
+    /// many 3rd party serializers such as `BinaronSerializer`.
     /// </para>
+    /// <param name="T">The measurement unit</param>
     /// </summary>
     public readonly struct Measurement<T> : IEquatable<Measurement<T>>, IComparable<Measurement<T>>, IFormattable
         where T : Enum
@@ -84,7 +85,7 @@ namespace Gehtsoft.Measurements
         /// <summary>
         /// Convert to string with specified format
         /// </summary>
-        /// <param name="format">A numeric format or "ND" to format with the default accuracy and NF to display as all digits after decimal point</param>
+        /// <param name="format">A numeric format or `"ND"` to format with the default accuracy and `"NF"` to display as all digits after decimal point</param>
         /// <param name="formatProvider"></param>
         /// <returns></returns>
         public string ToString(string format, IFormatProvider formatProvider)
