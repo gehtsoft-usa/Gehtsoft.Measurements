@@ -27,6 +27,8 @@ namespace Gehtsoft.Measurements.Test
         [InlineData(1, DistanceUnit.Millimeter, 0.001, DistanceUnit.Meter)]
         [InlineData(1760, DistanceUnit.Yard, 1, DistanceUnit.Mile)]
         [InlineData(1, DistanceUnit.NauticalMile, 1852, DistanceUnit.Meter)]
+        [InlineData(11, DistanceUnit.Point, 3.88055555556, DistanceUnit.Millimeter)]
+        [InlineData(11, DistanceUnit.Pica, 46.56666666667, DistanceUnit.Millimeter)]
         public void Conversion(double value, DistanceUnit unit, double expected, DistanceUnit targetUnit)
         {
             var v = new Measurement<DistanceUnit>(value, unit);

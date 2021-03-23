@@ -81,5 +81,19 @@
         [Unit("km", 3)]
         [Conversion(ConversionOperation.Divide, 25.4, ConversionOperation.Multiply, 1_000_000)]
         Kilometer,
+
+        /// <summary>
+        /// Typographical/DTP point (1 pt == 1/72 of inch)
+        /// </summary>
+        [Unit("pt", 1)]
+        [Conversion(ConversionOperation.Divide, 72)]
+        Point,
+
+        /// <summary>
+        /// Typographical/DTP point (1 pt == 1/72 of inch)
+        /// </summary>
+        [Unit("p", 1)]
+        [Conversion(ConversionOperation.Divide, 6)]
+        Pica,
     }
 }

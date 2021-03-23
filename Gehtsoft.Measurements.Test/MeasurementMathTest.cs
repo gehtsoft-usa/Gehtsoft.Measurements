@@ -17,6 +17,7 @@ namespace Gehtsoft.Measurements.Test
         {
             var v = new Measurement<AngularUnit>(value, unit);
             MeasurementMath.Sin(v).Should().BeApproximately(expected, 1e-10);
+            v.Sin().Should().BeApproximately(expected, 1e-10);
             MeasurementMath.Asin(expected).In(unit).Should().BeApproximately(value, 1e-7);
         }
 
@@ -61,6 +62,11 @@ namespace Gehtsoft.Measurements.Test
             var v1 = MeasurementMath.Abs(v);
             v1.Value.Should().BeApproximately(expected, 1e-10);
             v1.Unit.Should().Be(unit);
+
+            var v2 = v.Abs();
+            v2.Value.Should().BeApproximately(expected, 1e-10);
+            v2.Unit.Should().Be(unit);
+
         }
 
         [Theory]
@@ -125,6 +131,55 @@ namespace Gehtsoft.Measurements.Test
 
             var velocity2 = MeasurementMath.Velocity(distance1, ts1);
             velocity2.In(velocityUnit).Should().BeApproximately(velocity, 1e-5);
+        }
+
+        [Fact]
+        public void CompareStatements()
+        {
+            (DistanceUnit.Centimeter.New(10) == DistanceUnit.Meter.New(0.1)).Should().BeTrue();
+            (DistanceUnit.Centimeter.New(10) != DistanceUnit.Meter.New(0.1)).Should().BeFalse();
+            (DistanceUnit.Centimeter.New(10) > DistanceUnit.Meter.New(0.1)).Should().BeFalse();
+            (DistanceUnit.Centimeter.New(10) >= DistanceUnit.Meter.New(0.1)).Should().BeTrue();
+            (DistanceUnit.Centimeter.New(10) < DistanceUnit.Meter.New(0.1)).Should().BeFalse();
+            (DistanceUnit.Centimeter.New(10) <= DistanceUnit.Meter.New(0.1)).Should().BeTrue();
+
+            (DistanceUnit.Centimeter.New(20) == DistanceUnit.Meter.New(0.1)).Should().BeFalse();
+            (DistanceUnit.Centimeter.New(20) != DistanceUnit.Meter.New(0.1)).Should().BeTrue();
+            (DistanceUnit.Centimeter.New(20) > DistanceUnit.Meter.New(0.1)).Should().BeTrue();
+            (DistanceUnit.Centimeter.New(20) >= DistanceUnit.Meter.New(0.1)).Should().BeTrue();
+            (DistanceUnit.Centimeter.New(20) < DistanceUnit.Meter.New(0.1)).Should().BeFalse();
+            (DistanceUnit.Centimeter.New(20) <= DistanceUnit.Meter.New(0.1)).Should().BeFalse();
+
+            (DistanceUnit.Centimeter.New(5) == DistanceUnit.Meter.New(0.1)).Should().BeFalse();
+            (DistanceUnit.Centimeter.New(5) != DistanceUnit.Meter.New(0.1)).Should().BeTrue();
+            (DistanceUnit.Centimeter.New(5) > DistanceUnit.Meter.New(0.1)).Should().BeFalse();
+            (DistanceUnit.Centimeter.New(5) >= DistanceUnit.Meter.New(0.1)).Should().BeFalse();
+            (DistanceUnit.Centimeter.New(5) < DistanceUnit.Meter.New(0.1)).Should().BeTrue();
+            (DistanceUnit.Centimeter.New(5) <= DistanceUnit.Meter.New(0.1)).Should().BeTrue();
+        }
+
+        [Fact]
+        public void MathStatements()
+        {
+            (DistanceUnit.Centimeter.New(5) + DistanceUnit.Millimeter.New(5)).Should().Be(DistanceUnit.Centimeter.New(5.5));
+            (DistanceUnit.Centimeter.New(5) - DistanceUnit.Millimeter.New(5)).Should().Be(DistanceUnit.Centimeter.New(4.5));
+            (DistanceUnit.Centimeter.New(5) * 2).Should().Be(DistanceUnit.Centimeter.New(10));
+            (2 * DistanceUnit.Centimeter.New(5)).Should().Be(DistanceUnit.Centimeter.New(10));
+            (DistanceUnit.Centimeter.New(5) / 2).Should().Be(DistanceUnit.Centimeter.New(2.5));
+            (DistanceUnit.Centimeter.New(5) / DistanceUnit.Centimeter.New(2.5)).Should().Be(2.0);
+
+            (+DistanceUnit.Centimeter.New(5)).Should().Be(DistanceUnit.Centimeter.New(5));
+            (-DistanceUnit.Centimeter.New(5)).Should().Be(DistanceUnit.Centimeter.New(-5));
+
+            (WeightUnit.UKTonne.New(1) / WeightUnit.USTonne.New(1)).Should().BeApproximately(1.1201764057331863285556780595369, 1e-10);
+        }
+
+        [Fact]
+        public void Sign()
+        {
+            AngularUnit.MOA.New(5).Sign().Should().BeGreaterThan(0);
+            AngularUnit.MOA.New(0).Sign().Should().Be(0);
+            AngularUnit.MOA.New(-5).Sign().Should().BeLessThan(0);
         }
     }
 }

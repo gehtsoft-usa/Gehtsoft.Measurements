@@ -295,6 +295,44 @@ namespace Gehtsoft.Measurements.Test
             $"{v:N2}".Should().Be("1.23m");
             $"{v:N4}".Should().Be("1.2346m");
         }
+
+        [Fact]
+        public void NewUnitExtension()
+        {
+            var u1 = AngularUnit.MOA.New(25);
+            u1.Should().Be(new Measurement<AngularUnit>(25, AngularUnit.MOA));
+
+            var u2 = DistanceUnit.Point.New(1.23456);
+            u2.Value.Should().Be(1.23456);
+            u2.Unit.Should().Be(DistanceUnit.Point);
+        }
+
+        [Fact]
+        public void TupleTest()
+        {
+            var t1 = new Tuple<double, AngularUnit>(15, AngularUnit.MOA);
+
+            var u1 = new Measurement<AngularUnit>(t1);
+            u1.Should().Be(AngularUnit.MOA.New(15));
+
+            var u2 = (Measurement<AngularUnit>)t1;
+            u2.Should().Be(AngularUnit.MOA.New(15));
+
+            var t2 = (Tuple<double, AngularUnit>)u1;
+            t2.Should().Be(new Tuple<double, AngularUnit>(15, AngularUnit.MOA));
+
+            (double a, AngularUnit b) t3 = (10.0, AngularUnit.MOA);
+
+            var u3 = new Measurement<AngularUnit>(t3);
+            u3.Value.Should().Be(t3.a);
+            u3.Unit.Should().Be(t3.b);
+
+            var t4 = ((double x, AngularUnit y))u3;
+            t4.x.Should().Be(10);
+            t4.y.Should().Be(AngularUnit.MOA);
+
+
+        }
     }
 }
 

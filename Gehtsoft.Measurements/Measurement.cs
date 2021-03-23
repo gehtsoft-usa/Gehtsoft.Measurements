@@ -21,7 +21,6 @@ namespace Gehtsoft.Measurements
     /// The class supports serialization using `System.Text.Json` serializer and `XmlSerializer` as well as
     /// many 3rd party serializers such as `BinaronSerializer`.
     /// </para>
-    /// <param name="T">The measurement unit</param>
     /// </summary>
     public readonly struct Measurement<T> : IEquatable<Measurement<T>>, IComparable<Measurement<T>>, IFormattable
         where T : Enum
@@ -48,6 +47,26 @@ namespace Gehtsoft.Measurements
         {
             Value = value;
             Unit = unit;
+        }
+
+        /// <summary>
+        /// Constructor that accepts a tuple.
+        /// </summary>
+        /// <param name="value"></param>
+        public Measurement(Tuple<double, T> value)
+        {
+            Value = value.Item1;
+            Unit = value.Item2;
+        }
+
+        /// <summary>
+        /// Constructor that accepts a anonymous tuple.
+        /// </summary>
+        /// <param name="value"></param>
+        public Measurement((double, T) value)
+        {
+            Value = value.Item1;
+            Unit = value.Item2;
         }
 
         /// <summary>
@@ -311,6 +330,8 @@ namespace Gehtsoft.Measurements
             double v1, v2;
             v1 = In(BaseUnit);
             v2 = other.In(BaseUnit);
+            if (Math.Abs(v1 - v2) < 1e-10)
+                    return 0;
             return v1.CompareTo(v2);
         }
 
@@ -370,6 +391,15 @@ namespace Gehtsoft.Measurements
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Measurement<T> operator -(Measurement<T> v1) => new Measurement<T>(-v1.Value, v1.Unit);
+
+        /// <summary>
+        /// Unary plus value
+        /// </summary>
+        /// <param name="v1"></param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Measurement<T> operator +(Measurement<T> v1) => v1;
+
         /// <summary>
         /// Add one measurement to another.
         /// </summary>
@@ -421,5 +451,24 @@ namespace Gehtsoft.Measurements
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static double operator /(Measurement<T> v1, Measurement<T> v2) => v1.Value / v2.In(v1.Unit);
+
+        /// <summary>
+        /// Implicitly converts the value to a tuple
+        /// </summary>
+        /// <param name="value"></param>
+        public static implicit operator Tuple<double, T>(Measurement<T> value) => new Tuple<double, T>(value.Value, value.Unit);
+
+        /// <summary>
+        /// Explicitly converts the a tuple to a value
+        /// </summary>
+        /// <param name="value"></param>
+        public static explicit operator Measurement<T>(Tuple<double, T>  value) => new Measurement<T>(value.Item1, value.Item2);
+
+        /// <summary>
+        /// Implicitly converts the value to an anonymous tuple
+        /// </summary>
+        /// <param name="value"></param>
+        public static implicit operator (double, T)(Measurement<T> value) => (value.Value, value.Unit);
+
     }
 }

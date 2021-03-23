@@ -74,5 +74,12 @@
         [Unit("ha", 0)]
         [Conversion(ConversionOperation.Multiply, 1e+10)]
         Hectare,
+
+        /// <summary>
+        /// Ar (1/100 of hectare, "sotka")
+        /// </summary>
+        [Unit("ar", 0)]
+        [Conversion(ConversionOperation.Multiply, 1e+8)]
+        Ar,
     }
 }

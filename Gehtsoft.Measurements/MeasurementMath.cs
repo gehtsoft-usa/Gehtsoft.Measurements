@@ -11,24 +11,40 @@ namespace Gehtsoft.Measurements
     public static class MeasurementMath
     {
         /// <summary>
+        /// <para>Returns sign of the value</para>
+        /// <para>The method return `-1` for negative values, `0` for zero value and `1` for positive values</para>
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static int Sign<T>(this Measurement<T> value) where T : Enum
+        {
+            if (value.Value < 0)
+                return -1;
+            else if (value.Value == 0)
+                return 0;
+            return 1;
+        }
+
+        /// <summary>
         /// Calculate sine of angular value
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static double Sin(Measurement<AngularUnit> value) => Math.Sin(value.In(AngularUnit.Radian));
+        public static double Sin(this Measurement<AngularUnit> value) => Math.Sin(value.In(AngularUnit.Radian));
 
         /// <summary>
         /// Calculate cosine of angular value
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static double Cos(Measurement<AngularUnit> value) => Math.Cos(value.In(AngularUnit.Radian));
+        public static double Cos(this Measurement<AngularUnit> value) => Math.Cos(value.In(AngularUnit.Radian));
 
         /// <summary>
         /// Calculate tangent of angular value
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static double Tan(Measurement<AngularUnit> value) => Math.Tan(value.In(AngularUnit.Radian));
+        public static double Tan(this Measurement<AngularUnit> value) => Math.Tan(value.In(AngularUnit.Radian));
 
         /// <summary>
         /// Calculate arcsine as angular value
@@ -52,19 +68,19 @@ namespace Gehtsoft.Measurements
         /// Calculate square root of a value
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Measurement<T> Sqrt<T>(Measurement<T> value) where T : Enum => new Measurement<T>(Math.Sqrt(value.Value), value.Unit);
+        public static Measurement<T> Sqrt<T>(this Measurement<T> value) where T : Enum => new Measurement<T>(Math.Sqrt(value.Value), value.Unit);
 
         /// <summary>
         /// Raise the value in the power specified
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Measurement<T> Pow<T>(Measurement<T> value, double exp) where T : Enum => new Measurement<T>(Math.Pow(value.Value, exp), value.Unit);
+        public static Measurement<T> Pow<T>(this Measurement<T> value, double exp) where T : Enum => new Measurement<T>(Math.Pow(value.Value, exp), value.Unit);
 
         /// <summary>
         /// Calculate the absolute value
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Measurement<T> Abs<T>(Measurement<T> value) where T : Enum => new Measurement<T>(Math.Abs(value.Value), value.Unit);
+        public static Measurement<T> Abs<T>(this Measurement<T> value) where T : Enum => new Measurement<T>(Math.Abs(value.Value), value.Unit);
 
         /// <summary>
         /// Calculate velocity from distance and time
