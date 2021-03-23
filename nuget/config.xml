@@ -2,7 +2,7 @@
 <nuget xmlns="http://www.gehtsoft.com/build/nuget">
  <!-- versions. the FIRST version is the current -->
  <versions>
-  <version id="1.1.10">Make structure read-only, add XML doc to nuget package, add slope % to angular, remove direct XmlSerializer support</version>
+  <version id="1.1.11">Add troy oz, metric, uk and us tonne, typographical points and picas. Make some math methods extensions. Add new method to construct value (unit.New(value)). Add conversion from and to tuples.</version>
  </versions>
  <properties>
   <owner>Gehtsoft</owner>
