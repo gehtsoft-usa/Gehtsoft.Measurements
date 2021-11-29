@@ -59,11 +59,12 @@ jobs:
         name: 'Test Run'
         path: ${{github.workspace}}/${{env.file_name}}
 
-      # add report as PR comment (if PR)
-    - name: comment PR
-      uses: machine-learning-apps/pr-comment@master
-      if: ${{ github.event_name == 'pull_request' }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        path: ${{env.file_name}}
+# - TBD: action is outdated and is not supported anymore, need to find a new one
+#      # add report as PR comment (if PR)
+#    - name: comment PR
+#      uses: machine-learning-apps/pr-comment@master
+#      if: ${{ github.event_name == 'pull_request' }}
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      with:
+#        path: ${{env.file_name}}
