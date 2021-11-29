@@ -4,7 +4,7 @@
   <TargetFramework>netstandard2.0</TargetFramework>
  </PropertyGroup>
  <ItemGroup>
-  <PackageReference Include="Gehtsoft.Build.DocGen" Version="0.1.16" IncludeAssets="build" />
+  <PackageReference Include="Gehtsoft.Build.DocGen" Version="0.1.27" IncludeAssets="build" />
   <PackageReference Include="Gehtsoft.Build.ContentDelivery" Version="0.1.10" IncludeAssets="build" />
  </ItemGroup>
  <PropertyGroup>
@@ -25,10 +25,10 @@
   <MakeDir Directories="$(DocTargetDir)" />
   <DocGen Project="project.xml" />
   <Copy SourceFiles="@(CustomFile)" DestinationFolder="$(DocTargetDir)" />
-  <ContentFromPackage Package="gehtsoft.build.docgen" Source="Content/template/html/res" Version="0.1.16" Destination="$(DocTargetDir)/res" />
-  <ContentFromPackage Package="gehtsoft.build.docgen" Source="Content/template/html/highlighter" Version="0.1.16" Destination="$(DocTargetDir)/highlighter" />
-  <ContentFromPackage Package="gehtsoft.build.docgen" Source="Content/template/html/menu" Version="0.1.16" Destination="$(DocTargetDir)/menu" />
-  <ContentFromPackage Package="gehtsoft.build.docgen" Source="Content/template/html/pageImages" Version="0.1.16" Destination="$(DocTargetDir)/pageImages" />
+  <ContentFromPackage Package="gehtsoft.build.docgen" Source="Content/template/html/res" Version="0.1.27" Destination="$(DocTargetDir)/res" />
+  <ContentFromPackage Package="gehtsoft.build.docgen" Source="Content/template/html/highlighter" Version="0.1.27" Destination="$(DocTargetDir)/highlighter" />
+  <ContentFromPackage Package="gehtsoft.build.docgen" Source="Content/template/html/menu" Version="0.1.27" Destination="$(DocTargetDir)/menu" />
+  <ContentFromPackage Package="gehtsoft.build.docgen" Source="Content/template/html/pageImages" Version="0.1.27" Destination="$(DocTargetDir)/pageImages" />
  </Target>
  <ItemGroup>
   <DocSource Include="$(MSBuildProjectDirectory)/../Gehtsoft.Measurements/bin/Release/netstandard2.0/Gehtsoft.Measurements.dll" />
