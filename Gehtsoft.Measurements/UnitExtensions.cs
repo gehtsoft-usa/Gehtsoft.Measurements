@@ -20,7 +20,7 @@ namespace Gehtsoft.Measurements
         public static Measurement<T> New<T>(this T unit, double value) where T : Enum => new Measurement<T>(value, unit);
 
         /// <summary>
-        /// Converts an enumeration of doubles into an enumeration of measures of the specified unit. 
+        /// Converts an enumeration of doubles into an enumeration of measures of the specified unit.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="values"></param>

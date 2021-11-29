@@ -469,6 +469,5 @@ namespace Gehtsoft.Measurements
         /// </summary>
         /// <param name="value"></param>
         public static implicit operator (double, T)(Measurement<T> value) => (value.Value, value.Unit);
-
     }
 }

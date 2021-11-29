@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
+#pragma warning disable RCS1196 // Call extension method as instance method.
+
 namespace Gehtsoft.Measurements.Test
 {
     public class MeasurementMathTest
@@ -66,7 +68,6 @@ namespace Gehtsoft.Measurements.Test
             var v2 = v.Abs();
             v2.Value.Should().BeApproximately(expected, 1e-10);
             v2.Unit.Should().Be(unit);
-
         }
 
         [Theory]

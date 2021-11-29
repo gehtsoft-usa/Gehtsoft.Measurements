@@ -257,7 +257,8 @@ namespace Gehtsoft.Measurements.Test
             Type measureType = generic.MakeGenericType(new Type[] { type });
 
             Array units = (Array)measureType.GetMethod(nameof(Measurement<DistanceUnit>.GetUnitNames)).Invoke(null, null);
-            units.Should().NotBeNullOrEmpty();
+            units.Should().NotBeNull();
+            units.Length.Should().NotBe(0);
             int i = 0;
             foreach (object t in units)
             {
@@ -327,11 +328,9 @@ namespace Gehtsoft.Measurements.Test
             u3.Value.Should().Be(t3.a);
             u3.Unit.Should().Be(t3.b);
 
-            var t4 = ((double x, AngularUnit y))u3;
+            (double x, AngularUnit y) t4 = u3;
             t4.x.Should().Be(10);
             t4.y.Should().Be(AngularUnit.MOA);
-
-
         }
     }
 }

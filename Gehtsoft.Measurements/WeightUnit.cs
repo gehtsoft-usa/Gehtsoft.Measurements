@@ -17,28 +17,28 @@
         [Unit("oz", 1)]
         [Conversion(ConversionOperation.Multiply, 437.5)]
         Ounce,
-        
+
         /// <summary>
         /// Grams
         /// </summary>
         [Unit("g", 1)]
         [Conversion(ConversionOperation.Multiply, 15.4323583529)]
         Gram,
-        
+
         /// <summary>
         /// Points
         /// </summary>
         [Unit("lb", 3)]
         [Conversion(ConversionOperation.Multiply, 7000)]
         Pound,
-        
+
         /// <summary>
         /// Kilograms
         /// </summary>
         [Unit("kg", 3)]
         [Conversion(ConversionOperation.Multiply, 15432.3583529)]
         Kilogram,
-        
+
         /// <summary>
         /// Newton
         /// </summary>
@@ -80,7 +80,5 @@
         [Unit("uk.t", 3)]
         [Conversion(ConversionOperation.Multiply, 15432358.3529 * 1.016)]
         UKTonne,
-
-
     }
 }
