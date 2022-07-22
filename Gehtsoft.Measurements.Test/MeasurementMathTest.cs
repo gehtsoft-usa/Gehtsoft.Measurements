@@ -160,6 +160,16 @@ namespace Gehtsoft.Measurements.Test
         }
 
         [Fact]
+        public void CompareVerySmall()
+        {
+            1e-200.As(DistanceUnit.Centimeter).CompareTo(1e-201.As(DistanceUnit.Centimeter)).Should().Be(1);
+            1e-201.As(DistanceUnit.Centimeter).CompareTo(1e-200.As(DistanceUnit.Centimeter)).Should().Be(-1);
+            1e-200.As(DistanceUnit.Centimeter).CompareTo(1e-202.As(DistanceUnit.Meter)).Should().Be(0);
+        }
+
+        
+        
+        [Fact]
         public void MathStatements()
         {
             (DistanceUnit.Centimeter.New(5) + DistanceUnit.Millimeter.New(5)).Should().Be(DistanceUnit.Centimeter.New(5.5));
@@ -181,6 +191,32 @@ namespace Gehtsoft.Measurements.Test
             AngularUnit.MOA.New(5).Sign().Should().BeGreaterThan(0);
             AngularUnit.MOA.New(0).Sign().Should().Be(0);
             AngularUnit.MOA.New(-5).Sign().Should().BeLessThan(0);
+        }
+
+        [Fact]
+        public void NewTest()
+        {
+            var a = AngularUnit.Degree.New(5);
+            a.In(AngularUnit.Degree).Should().BeApproximately(5, 1e-10);
+            a.Unit.Should().Be(AngularUnit.Degree);
+        }
+
+        [Fact]
+        public void AsTest()
+        {
+            var a = (5.0).As(AngularUnit.Degree);
+            a.In(AngularUnit.Degree).Should().BeApproximately(5, 1e-10);
+            a.Unit.Should().Be(AngularUnit.Degree);
+        }
+
+        [Fact]
+        public void AsTest1()
+        {
+            var a = (new double[] { 1, 2, 3 }).As(AngularUnit.Degree).ToArray();
+            a.Should().HaveCount(3);
+            a[0].In(AngularUnit.Degree).Should().BeApproximately(1, 1e-10);
+            a[1].In(AngularUnit.Degree).Should().BeApproximately(2, 1e-10);
+            a[2].In(AngularUnit.Degree).Should().BeApproximately(3, 1e-10);
         }
     }
 }

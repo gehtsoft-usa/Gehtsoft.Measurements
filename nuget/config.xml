@@ -2,13 +2,14 @@
 <nuget xmlns="http://www.gehtsoft.com/build/nuget">
  <!-- versions. the FIRST version is the current -->
  <versions>
+  <version id="1.1.12">Fix comparison of very small values. Update dependencies, minor changes.</version>
   <version id="1.1.11">Add troy oz, metric, uk and us tonne, typographical points and picas. Make some math methods extensions. Add new method to construct value (unit.New(value)). Add conversion from and to tuples.</version>
  </versions>
  <properties>
   <owner>Gehtsoft</owner>
   <projectUrl>https://github.com/gehtsoft-usa/Gehtsoft.Measurements</projectUrl>
   <license type="expression">LGPL-2.1-or-later</license>
-  <copyright>Gehtsoft USA LLC 2016-2021</copyright>
+  <copyright>Gehtsoft USA LLC 2016-2022</copyright>
  </properties>
  <projects>
    <project id="Gehtsoft.Measurements">

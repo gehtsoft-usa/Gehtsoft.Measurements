@@ -90,7 +90,7 @@
         Point,
 
         /// <summary>
-        /// Typographical/DTP point (1 pt == 1/72 of inch)
+        /// Typographical/DTP pica (1 pt == 1/6 of inch)
         /// </summary>
         [Unit("p", 1)]
         [Conversion(ConversionOperation.Divide, 6)]

@@ -11,6 +11,7 @@
         [Unit("gr", 0)]
         [Conversion(ConversionOperation.Base)]
         Grain = 0,
+        
         /// <summary>
         /// Ounces
         /// </summary>

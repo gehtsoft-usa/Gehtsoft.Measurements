@@ -6,9 +6,9 @@
     public enum ForceUnit
     {
         /// <summary>
-        /// Newton (aka kg⋅m/s²)
+        /// Newton (aka kg·m/s²)
         /// </summary>
-        [Unit("N", "kg⋅m/s²", 3)]
+        [Unit("N", "kg·m/s²", 3)]
         [Conversion(ConversionOperation.Base)]
         Newton,
 

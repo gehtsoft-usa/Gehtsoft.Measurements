@@ -11,10 +11,17 @@ namespace Gehtsoft.Measurements.Test
         [InlineData(-50, TemperatureUnit.Fahrenheit, 227.5944444, TemperatureUnit.Kelvin, 1e-5)]
         [InlineData(38, TemperatureUnit.Celsius, 560.07, TemperatureUnit.Rankin, 1e-5)]
         [InlineData(117, TemperatureUnit.Fahrenheit, 576.67, TemperatureUnit.Rankin, 1e-5)]
+        [InlineData(32, TemperatureUnit.Reaumur, 40, TemperatureUnit.Celsius, 1e-5)]
+        [InlineData(90, TemperatureUnit.Delisle, 40, TemperatureUnit.Celsius, 1e-5)]
+        [InlineData(225, TemperatureUnit.Delisle, -50, TemperatureUnit.Celsius, 1e-5)]
         public void Conversion(double value, TemperatureUnit unit, double expected, TemperatureUnit targetUnit, double accurracy = 1e-10)
         {
             var v = new Measurement<TemperatureUnit>(value, unit);
             v.In(targetUnit).Should().BeApproximately(expected, accurracy);
+
+            v = new Measurement<TemperatureUnit>(expected, targetUnit);
+            v.In(unit).Should().BeApproximately(value, accurracy);
+
         }
 
         [Theory]

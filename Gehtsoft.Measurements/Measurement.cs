@@ -327,11 +327,15 @@ namespace Gehtsoft.Measurements
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int CompareTo(Measurement<T> other)
         {
-            double v1, v2;
+            double v1, v2, e;
             v1 = In(BaseUnit);
             v2 = other.In(BaseUnit);
-            if (Math.Abs(v1 - v2) < 1e-10)
-                    return 0;
+            if (v1 < 1e-12 || v2 < 1e-12)
+                e = Math.Max(v1 / 1e12, v2 / 1e12); //compare to 12 sign after decimal point
+            else
+                e = 1e-12;
+            if (Math.Abs(v1 - v2) < e)
+                return 0;
             return v1.CompareTo(v2);
         }
 

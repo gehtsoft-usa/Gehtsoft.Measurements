@@ -32,5 +32,19 @@
         [Unit("°R", "R", 1)]
         [Conversion(ConversionOperation.Subtract, 459.67)]
         Rankin,
+
+        /// <summary>
+        /// Reaumur scale
+        /// </summary>
+        [Unit("°Re", "Re", 1)]
+        [Conversion(ConversionOperation.Multiply, 2.25, ConversionOperation.Add, 32)]
+        Reaumur,
+
+        /// <summary>
+        /// Delisle scale
+        /// </summary>
+        [Unit("°De", "De", 1)]
+        [Conversion(ConversionOperation.Multiply, -1.2, ConversionOperation.Add, 212)]
+        Delisle,
     }
 }
