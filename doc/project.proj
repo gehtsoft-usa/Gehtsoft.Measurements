@@ -4,7 +4,7 @@
   <TargetFramework>netstandard2.0</TargetFramework>
  </PropertyGroup>
  <ItemGroup>
-  <PackageReference Include="Gehtsoft.Build.DocGen" Version="0.1.27" IncludeAssets="build" />
+  <PackageReference Include="Gehtsoft.Build.DocGen" Version="0.1.28" IncludeAssets="build" />
   <PackageReference Include="Gehtsoft.Build.ContentDelivery" Version="0.1.10" IncludeAssets="build" />
  </ItemGroup>
  <PropertyGroup>
@@ -34,7 +34,7 @@
   <DocSource Include="$(MSBuildProjectDirectory)/../Gehtsoft.Measurements/bin/Release/netstandard2.0/Gehtsoft.Measurements.dll" />
  </ItemGroup>
  <Target Name="Scan">
-  <Asm2Xml Assemblies="@(DocSource)" OutputXml="obj/raw.xml" Mode="net50" />
+  <Asm2Xml Assemblies="@(DocSource)" OutputXml="obj/raw.xml" Mode="net60" />
  </Target>
  <Target Name="Raw">
   <RemoveDir Directories="@(CurrentRawDir)" />
