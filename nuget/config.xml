@@ -14,7 +14,8 @@
  <projects>
    <project id="Gehtsoft.Measurements">
     <description>Measurements library</description>
-    <additional-file file="../doc/Gehtsoft.Measurements.xml" target="*"></additional-file>
+    <additional-file file="../doc/Gehtsoft.Measurements.xml" target="*" />
+    <additional-file file="../nuget/readme.md" target="docs/" />
    </project>
  </projects>
 </nuget>
