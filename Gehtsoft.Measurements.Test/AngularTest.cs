@@ -16,9 +16,19 @@ namespace Gehtsoft.Measurements.Test
         [InlineData(100, AngularUnit.Percent, 45, AngularUnit.Degree, 1e-5)]
         [InlineData(50, AngularUnit.Percent, 26.56505, AngularUnit.Degree, 1e-5)]
         [InlineData(26.56505, AngularUnit.Degree, 50, AngularUnit.Percent, 1e-5)]
-        public void Conversion(double value, AngularUnit unit, double expected, AngularUnit targetUnit, double accurracy = 1e-10)
+        public void ConversionAngular(double value, AngularUnit unit, double expected, AngularUnit targetUnit, double accurracy = 1e-10)
         {
             var v = new Measurement<AngularUnit>(value, unit);
+            v.In(targetUnit).Should().BeApproximately(expected, accurracy);
+        }
+
+        [Theory]
+        [InlineData(1, SolidAngularUnit.SquareDegree, 3.0461742e-4, SolidAngularUnit.Steradian)]
+        [InlineData(1, SolidAngularUnit.SquareDegree, 3600, SolidAngularUnit.SquareMinute)]
+        [InlineData(1, SolidAngularUnit.Steradian, 11818102.860042277, SolidAngularUnit.SquareMinute)]
+        public void ConversionSolid(double value, SolidAngularUnit unit, double expected, SolidAngularUnit targetUnit, double accurracy = 1e-10)
+        {
+            var v = new Measurement<SolidAngularUnit>(value, unit);
             v.In(targetUnit).Should().BeApproximately(expected, accurracy);
         }
     }

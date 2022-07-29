@@ -165,9 +165,7 @@ namespace Gehtsoft.Measurements.Test
             1e-200.As(DistanceUnit.Centimeter).CompareTo(1e-201.As(DistanceUnit.Centimeter)).Should().Be(1);
             1e-201.As(DistanceUnit.Centimeter).CompareTo(1e-200.As(DistanceUnit.Centimeter)).Should().Be(-1);
             1e-200.As(DistanceUnit.Centimeter).CompareTo(1e-202.As(DistanceUnit.Meter)).Should().Be(0);
-        }
-
-        
+        }       
         
         [Fact]
         public void MathStatements()

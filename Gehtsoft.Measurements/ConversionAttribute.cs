@@ -8,6 +8,7 @@ namespace Gehtsoft.Measurements
     /// <para>The attribute to specify the conversion rule for the measurement unit.</para>
     /// <para>The attribute is applied on enumeration fields which describe one unit of the measurement (e.g. "meter")</para>
     /// <para>One of the enumeration fields must always be attributed as a base value.</para>
+    /// <para>The operation defined is the conversion from the unit to the base unit.</para>
     /// </summary>
     [AttributeUsage(validOn: AttributeTargets.Field)]
     public class ConversionAttribute : Attribute
