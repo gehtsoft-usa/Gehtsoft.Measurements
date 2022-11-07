@@ -36,6 +36,7 @@ namespace Gehtsoft.Measurements
         private static readonly ConcurrentDictionary<string, Type> gTypes = new ConcurrentDictionary<string, Type>();
 
         internal ICustomConversionOperation ConversionInterface { get; }
+        internal ICustomConversionOperation2 ConversionInterface2 { get; }
 
         /// <summary>
         /// The constructor to specify the base unit
@@ -80,7 +81,10 @@ namespace Gehtsoft.Measurements
             }
             ConversionInterface = Activator.CreateInstance(type) as ICustomConversionOperation;
             if (ConversionInterface == null)
-                throw new ArgumentException($"Type {name} does not supprt {nameof(ICustomConversionOperation)}", nameof(name));
+                throw new ArgumentException($"Type {name} does not support {nameof(ICustomConversionOperation)}", nameof(name));
+
+            ConversionInterface2 = ConversionInterface as ICustomConversionOperation2;
+            
         }
 
         /// <summary>

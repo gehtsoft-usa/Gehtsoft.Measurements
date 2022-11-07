@@ -16,9 +16,33 @@ namespace Gehtsoft.Measurements.Test
         [InlineData(100, AngularUnit.Percent, 45, AngularUnit.Degree, 1e-5)]
         [InlineData(50, AngularUnit.Percent, 26.56505, AngularUnit.Degree, 1e-5)]
         [InlineData(26.56505, AngularUnit.Degree, 50, AngularUnit.Percent, 1e-5)]
+        [InlineData(1, AngularUnit.Turn, 360, AngularUnit.Degree, 1e-5)]
+        [InlineData(180, AngularUnit.Degree, 0.5, AngularUnit.Turn, 1e-5)]
+        [InlineData(400, AngularUnit.Gradian, 360, AngularUnit.Degree, 1e-5)]
+        [InlineData(90, AngularUnit.Degree, 100, AngularUnit.Gradian, 1e-5)]
         public void ConversionAngular(double value, AngularUnit unit, double expected, AngularUnit targetUnit, double accurracy = 1e-10)
         {
             var v = new Measurement<AngularUnit>(value, unit);
+            v.In(targetUnit).Should().BeApproximately(expected, accurracy);
+        }
+
+        [Theory]
+        [InlineData(360, AngularUnit.Degree, 6.28318530717958, AngularUnit.Radian)]
+        [InlineData(1000, AngularUnit.MRad, 1, AngularUnit.Radian)]
+        [InlineData(30, AngularUnit.MOA, 0.5, AngularUnit.Degree)]
+        [InlineData(1, AngularUnit.MRad, 3.6, AngularUnit.InchesPer100Yards, 1e-5)]
+        [InlineData(1, AngularUnit.Mil, 3.5343, AngularUnit.InchesPer100Yards, 1e-5)]
+        [InlineData(1, AngularUnit.Thousand, 10.47198, AngularUnit.CmPer100Meters, 1e-5)]
+        [InlineData(100, AngularUnit.Percent, 45, AngularUnit.Degree, 1e-5)]
+        [InlineData(50, AngularUnit.Percent, 26.56505, AngularUnit.Degree, 1e-5)]
+        [InlineData(26.56505, AngularUnit.Degree, 50, AngularUnit.Percent, 1e-5)]
+        [InlineData(1, AngularUnit.Turn, 360, AngularUnit.Degree, 1e-5)]
+        [InlineData(180, AngularUnit.Degree, 0.5, AngularUnit.Turn, 1e-5)]
+        [InlineData(400, AngularUnit.Gradian, 360, AngularUnit.Degree, 1e-5)]
+        [InlineData(90, AngularUnit.Degree, 100, AngularUnit.Gradian, 1e-5)]
+        public void ConversionAngularDecimal(decimal value, AngularUnit unit, decimal expected, AngularUnit targetUnit, decimal accurracy = 1e-10m)
+        {
+            var v = new DecimalMeasurement<AngularUnit>(value, unit);
             v.In(targetUnit).Should().BeApproximately(expected, accurracy);
         }
 

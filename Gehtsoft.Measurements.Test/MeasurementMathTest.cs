@@ -6,8 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-#pragma warning disable RCS1196 // Call extension method as instance method.
-
 namespace Gehtsoft.Measurements.Test
 {
     public class MeasurementMathTest

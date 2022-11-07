@@ -1,27 +1,23 @@
 ﻿using Binaron.Serializer;
 using FluentAssertions;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization.Json;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Xunit;
 
 namespace Gehtsoft.Measurements.Test
 {
-    public class CoreClassesTest
+    public class DecimalCoreClassesTest
     {
         [Fact]
         public void List()
         {
-            Measurement<TestUnit>.BaseUnit.Should().Be(TestUnit.Base);
+            DecimalMeasurement<TestUnit>.BaseUnit.Should().Be(TestUnit.Base);
 
-            var names = Measurement<TestUnit>.GetUnitNames();
+            var names = DecimalMeasurement<TestUnit>.GetUnitNames();
             names.Should().HaveCount(10);
 
             names.Should().Contain(new Tuple<TestUnit, string>(TestUnit.Base, "n1"));
@@ -39,36 +35,36 @@ namespace Gehtsoft.Measurements.Test
         [Fact]
         public void Parse()
         {
-            Measurement<TestUnit>.ParseUnitName("n1").Should().Be(TestUnit.Base);
-            Measurement<TestUnit>.ParseUnitName("n2").Should().Be(TestUnit.Base);
-            Measurement<TestUnit>.ParseUnitName("u1").Should().Be(TestUnit.Unit1);
-            Measurement<TestUnit>.ParseUnitName("\"").Should().Be(TestUnit.Unit1);
-            Measurement<TestUnit>.ParseUnitName("u2").Should().Be(TestUnit.Unit2);
+            DecimalMeasurement<TestUnit>.ParseUnitName("n1").Should().Be(TestUnit.Base);
+            DecimalMeasurement<TestUnit>.ParseUnitName("n2").Should().Be(TestUnit.Base);
+            DecimalMeasurement<TestUnit>.ParseUnitName("u1").Should().Be(TestUnit.Unit1);
+            DecimalMeasurement<TestUnit>.ParseUnitName("\"").Should().Be(TestUnit.Unit1);
+            DecimalMeasurement<TestUnit>.ParseUnitName("u2").Should().Be(TestUnit.Unit2);
 
-            Action action = () => Measurement<TestUnit>.ParseUnitName("unknown");
+            Action action = () => DecimalMeasurement<TestUnit>.ParseUnitName("unknown");
             action.Should().Throw<ArgumentException>();
         }
 
         [Fact]
         public void GetName()
         {
-            Measurement<TestUnit>.GetUnitName(TestUnit.Base).Should().Be("n1");
-            Measurement<TestUnit>.GetUnitName(TestUnit.Unit1).Should().Be("\"");
-            Measurement<TestUnit>.GetUnitName(TestUnit.Unit2).Should().Be("u2");
-            Measurement<TestUnit>.GetUnitName(TestUnit.Unit7).Should().Be("u7");
+            DecimalMeasurement<TestUnit>.GetUnitName(TestUnit.Base).Should().Be("n1");
+            DecimalMeasurement<TestUnit>.GetUnitName(TestUnit.Unit1).Should().Be("\"");
+            DecimalMeasurement<TestUnit>.GetUnitName(TestUnit.Unit2).Should().Be("u2");
+            DecimalMeasurement<TestUnit>.GetUnitName(TestUnit.Unit7).Should().Be("u7");
 
-            Action action = () => Measurement<TestUnit>.GetUnitName((TestUnit)100);
+            Action action = () => DecimalMeasurement<TestUnit>.GetUnitName((TestUnit)100);
             action.Should().Throw<ArgumentException>();
         }
 
         [Fact]
         public void DefaultAccuracy()
         {
-            Measurement<TestUnit>.GetUnitDefaultAccuracy(TestUnit.Base).Should().Be(5);
-            Measurement<TestUnit>.GetUnitDefaultAccuracy(TestUnit.Unit1).Should().Be(3);
-            Measurement<TestUnit>.GetUnitDefaultAccuracy(TestUnit.Unit2).Should().Be(2);
+            DecimalMeasurement<TestUnit>.GetUnitDefaultAccuracy(TestUnit.Base).Should().Be(5);
+            DecimalMeasurement<TestUnit>.GetUnitDefaultAccuracy(TestUnit.Unit1).Should().Be(3);
+            DecimalMeasurement<TestUnit>.GetUnitDefaultAccuracy(TestUnit.Unit2).Should().Be(2);
 
-            Action action = () => Measurement<TestUnit>.GetUnitName((TestUnit)100);
+            Action action = () => DecimalMeasurement<TestUnit>.GetUnitName((TestUnit)100);
             action.Should().Throw<ArgumentException>();
         }
 
@@ -83,14 +79,14 @@ namespace Gehtsoft.Measurements.Test
         [InlineData(10, TestUnit.Unit7, 24)]
         [InlineData(10, TestUnit.Unit8, -0.8)]
         [InlineData(10, TestUnit.Unit9, -0.8)]
-        public void Conversion_Method1(double value, TestUnit unit, double expected)
+        public void Conversion_Method1(decimal value, TestUnit unit, decimal expected)
         {
-            Measurement<TestUnit>.ToBase(value, unit).Should().BeApproximately(expected, 1e-10);
-            Measurement<TestUnit>.FromBase(expected, unit).Should().BeApproximately(value, 1e-10);
+            DecimalMeasurement<TestUnit>.ToBase(value, unit).Should().BeApproximately(expected, 1e-10m);
+            DecimalMeasurement<TestUnit>.FromBase(expected, unit).Should().BeApproximately(value, 1e-10m);
 
-            var v1 = new Measurement<TestUnit>(value, unit);
-            v1.In(TestUnit.Base).Should().BeApproximately(expected, 1e-10);
-            v1.To(TestUnit.Base).Value.Should().BeApproximately(expected, 1e-10);
+            var v1 = new DecimalMeasurement<TestUnit>(value, unit);
+            v1.In(TestUnit.Base).Should().BeApproximately(expected, 1e-10m);
+            v1.To(TestUnit.Base).Value.Should().BeApproximately(expected, 1e-10m);
         }
 
         [Theory]
@@ -98,9 +94,9 @@ namespace Gehtsoft.Measurements.Test
         [InlineData(20, TestUnit.Unit4, 38, TestUnit.Unit1)]
         [InlineData(10, TestUnit.Unit8, 10, TestUnit.Unit9)]
         [InlineData(10, TestUnit.Unit9, 10, TestUnit.Unit8)]
-        public void Conversion_Method2(double value, TestUnit unit, double expected, TestUnit unit1)
+        public void Conversion_Method2(decimal value, TestUnit unit, decimal expected, TestUnit unit1)
         {
-            Measurement<TestUnit>.Convert(value, unit, unit1).Should().BeApproximately(expected, 1e-10);
+            DecimalMeasurement<TestUnit>.Convert(value, unit, unit1).Should().BeApproximately(expected, 1e-10m);
         }
 
         [Theory]
@@ -110,10 +106,10 @@ namespace Gehtsoft.Measurements.Test
         [InlineData(12, TestUnit.Unit2, 5, TestUnit.Unit4, 0)]
         [InlineData(13, TestUnit.Unit2, 5, TestUnit.Unit4, 1)]
         [InlineData(12, TestUnit.Unit2, 6, TestUnit.Unit4, -1)]
-        public void Compare(double value1, TestUnit unit1, double value2, TestUnit unit2, int expected)
+        public void Compare(decimal value1, TestUnit unit1, decimal value2, TestUnit unit2, int expected)
         {
-            var v1 = new Measurement<TestUnit>(value1, unit1);
-            var v2 = new Measurement<TestUnit>(value2, unit2);
+            var v1 = new DecimalMeasurement<TestUnit>(value1, unit1);
+            var v2 = new DecimalMeasurement<TestUnit>(value2, unit2);
             int rc = v1.CompareTo(v2);
             if (expected == 0)
             {
@@ -144,31 +140,31 @@ namespace Gehtsoft.Measurements.Test
         [InlineData("ru", "1 234\"", 1234, TestUnit.Unit1)]
         [InlineData("ru", "1234,23\"", 1234.23, TestUnit.Unit1)]
         [InlineData("ru", "1 234,23\"", 1234.23, TestUnit.Unit1)]
-        public void TryParse(string culture, string text, double value, TestUnit unit)
+        public void TryParse(string culture, string text, decimal value, TestUnit unit)
         {
             CultureInfo ci = culture == null ? CultureInfo.InvariantCulture : CultureInfo.GetCultures(CultureTypes.AllCultures).First(c => c.Name == culture);
             ci.Should().NotBeNull();
-            Measurement<TestUnit>.TryParse(ci, text, out Measurement<TestUnit> o).Should().BeTrue();
-            o.Value.Should().BeApproximately(value, 1e-10);
+            DecimalMeasurement<TestUnit>.TryParse(ci, text, out DecimalMeasurement<TestUnit> o).Should().BeTrue();
+            o.Value.Should().BeApproximately(value, 1e-10m);
             o.Unit.Should().Be(unit);
         }
 
         [Theory]
         [InlineData("1\"", 1, TestUnit.Unit1)]
         [InlineData("1.2345678u2", 1.2345678, TestUnit.Unit2)]
-        public void ParsingConstructor(string text, double value, TestUnit unit)
+        public void ParsingConstructor(string text, decimal value, TestUnit unit)
         {
-            var m = new Measurement<TestUnit>(text);
-            m.Value.Should().BeApproximately(value, 1e-10);
+            var m = new DecimalMeasurement<TestUnit>(text);
+            m.Value.Should().BeApproximately(value, 1e-10m);
             m.Unit.Should().Be(unit);
         }
 
         [Theory]
         [InlineData("1\"", 1, TestUnit.Unit1)]
         [InlineData("1.2345678u2", 1.2345678, TestUnit.Unit2)]
-        public void ConversionToString1(string text, double value, TestUnit unit)
+        public void ConversionToString1(string text, decimal value, TestUnit unit)
         {
-            var m = new Measurement<TestUnit>(value, unit);
+            var m = new DecimalMeasurement<TestUnit>(value, unit);
             m.ToString(CultureInfo.InvariantCulture).Should().Be(text);
         }
 
@@ -176,9 +172,9 @@ namespace Gehtsoft.Measurements.Test
         [InlineData("1.23456789123456u2", "NF", 1.23456789123456, TestUnit.Unit2)]
         [InlineData("1.23u2", "ND", 1.2345678, TestUnit.Unit2)]
         [InlineData("1.2346u2", "N4", 1.2345678, TestUnit.Unit2)]
-        public void ConversionToString2(string text, string format, double value, TestUnit unit)
+        public void ConversionToString2(string text, string format, decimal value, TestUnit unit)
         {
-            var m = new Measurement<TestUnit>(value, unit);
+            var m = new DecimalMeasurement<TestUnit>(value, unit);
             m.ToString(format, CultureInfo.InvariantCulture).Should().Be(text);
         }
 
@@ -186,13 +182,13 @@ namespace Gehtsoft.Measurements.Test
         public class XmlContainerForMeasurement
         {
             [XmlIgnore]
-            public Measurement<DistanceUnit> Value { get; set; }
+            public DecimalMeasurement<DistanceUnit> Value { get; set; }
 
             [XmlAttribute("value")]
             public string XmlValue
             {
                 get => Value.Text;
-                set => Value = new Measurement<DistanceUnit>(value);
+                set => Value = new DecimalMeasurement<DistanceUnit>(value);
             }
         }
 
@@ -200,7 +196,7 @@ namespace Gehtsoft.Measurements.Test
         public void SerializationXml()
         {
             var serializer = new XmlSerializer(typeof(XmlContainerForMeasurement));
-            var container = new XmlContainerForMeasurement() { Value = new Measurement<DistanceUnit>(15, DistanceUnit.Centimeter) };
+            var container = new XmlContainerForMeasurement() { Value = new DecimalMeasurement<DistanceUnit>(15, DistanceUnit.Centimeter) };
             using var sw = new StringWriter();
             serializer.Serialize(sw, container);
             string xml = sw.ToString();
@@ -208,36 +204,36 @@ namespace Gehtsoft.Measurements.Test
             using var sr = new StringReader(xml);
             var container1 = serializer.Deserialize(sr) as XmlContainerForMeasurement;
             container1.Should().NotBeNull();
-            container1.Value.Should().Be(new Measurement<DistanceUnit>(15, DistanceUnit.Centimeter));
+            container1.Value.Should().Be(new DecimalMeasurement<DistanceUnit>(15, DistanceUnit.Centimeter));
         }
 
         [Fact]
         public void SerializationJson()
         {
-            var v = new Measurement<TestUnit>(1245.78912345, TestUnit.Unit1);
+            var v = new DecimalMeasurement<TestUnit>(1245.78912345m, TestUnit.Unit1);
             string s = JsonSerializer.Serialize(v);
             s.Should().Be("{\"value\":\"1245.78912345\\u0022\"}");
-            var v1 = JsonSerializer.Deserialize<Measurement<TestUnit>>(s);
-            v1.Value.Should().Be(1245.78912345);
+            var v1 = JsonSerializer.Deserialize<DecimalMeasurement<TestUnit>>(s);
+            v1.Value.Should().Be(1245.78912345m);
             v1.Unit.Should().Be(TestUnit.Unit1);
         }
 
         [Fact]
         public void SerializationBinaron()
         {
-            var v = new Measurement<TestUnit>(1245.78912345, TestUnit.Unit1);
+            var v = new DecimalMeasurement<TestUnit>(1245.78912345m, TestUnit.Unit1);
             byte[] arr;
 
             using (var ms = new MemoryStream())
             {
-                BinaronConvert.Serialize<Measurement<TestUnit>>(v, ms);
+                BinaronConvert.Serialize<DecimalMeasurement<TestUnit>>(v, ms);
                 arr = ms.ToArray();
             }
 
             using (var ms = new MemoryStream(arr))
             {
-                var v1 = BinaronConvert.Deserialize<Measurement<TestUnit>>(ms);
-                v1.Value.Should().Be(1245.78912345);
+                var v1 = BinaronConvert.Deserialize<DecimalMeasurement<TestUnit>>(ms);
+                v1.Value.Should().Be(1245.78912345m);
                 v1.Unit.Should().Be(TestUnit.Unit1);
             }
         }
@@ -260,7 +256,7 @@ namespace Gehtsoft.Measurements.Test
             Type generic = typeof(Measurement<>);
             Type measureType = generic.MakeGenericType(new Type[] { type });
 
-            Array units = (Array)measureType.GetMethod(nameof(Measurement<DistanceUnit>.GetUnitNames)).Invoke(null, null);
+            Array units = (Array)measureType.GetMethod(nameof(DecimalMeasurement<DistanceUnit>.GetUnitNames)).Invoke(null, null);
             units.Should().NotBeNull();
             units.Length.Should().NotBe(0);
             int i = 0;
@@ -274,16 +270,16 @@ namespace Gehtsoft.Measurements.Test
 
                 object v = Activator.CreateInstance(measureType, new object[] { 123.0, x });
 
-                measureType.GetField (nameof(Measurement<DistanceUnit>.Value)).GetValue(v).Should().Be(123);
-                measureType.GetField(nameof(Measurement<DistanceUnit>.Unit)).GetValue(v).Should().Be(x);
+                measureType.GetField(nameof(DecimalMeasurement<DistanceUnit>.Value)).GetValue(v).Should().Be(123);
+                measureType.GetField(nameof(DecimalMeasurement<DistanceUnit>.Unit)).GetValue(v).Should().Be(x);
 
                 string s = v.ToString();
                 s.Should().StartWith("123");
                 s.Should().EndWith(n as string);
 
                 object v1 = Activator.CreateInstance(measureType, new object[] { s });
-                measureType.GetField(nameof(Measurement<DistanceUnit>.Value)).GetValue(v1).Should().Be(123);
-                measureType.GetField(nameof(Measurement<DistanceUnit>.Unit)).GetValue(v1).Should().Be(x);
+                measureType.GetField(nameof(DecimalMeasurement<DistanceUnit>.Value)).GetValue(v1).Should().Be(123);
+                measureType.GetField(nameof(DecimalMeasurement<DistanceUnit>.Unit)).GetValue(v1).Should().Be(x);
 
                 i++;
             }
@@ -294,7 +290,7 @@ namespace Gehtsoft.Measurements.Test
 
         public void Formattable()
         {
-            var v = new Measurement<DistanceUnit>(1.2345678, DistanceUnit.Meter);
+            var v = new DecimalMeasurement<DistanceUnit>(1.2345678m, DistanceUnit.Meter);
             $"{v}".Should().Be("1.2345678m");
             $"{v:ND}".Should().Be("1.2m");
             $"{v:N2}".Should().Be("1.23m");
@@ -304,35 +300,35 @@ namespace Gehtsoft.Measurements.Test
         [Fact]
         public void NewUnitExtension()
         {
-            var u1 = AngularUnit.MOA.New(25);
-            u1.Should().Be(new Measurement<AngularUnit>(25, AngularUnit.MOA));
+            var u1 = AngularUnit.MOA.NewDecimal(25);
+            u1.Should().Be(new DecimalMeasurement<AngularUnit>(25, AngularUnit.MOA));
 
-            var u2 = DistanceUnit.Point.New(1.23456);
-            u2.Value.Should().Be(1.23456);
+            var u2 = DistanceUnit.Point.NewDecimal(1.23456m);
+            u2.Value.Should().Be(1.23456m);
             u2.Unit.Should().Be(DistanceUnit.Point);
         }
 
         [Fact]
         public void TupleTest()
         {
-            var t1 = new Tuple<double, AngularUnit>(15, AngularUnit.MOA);
+            var t1 = new Tuple<decimal, AngularUnit>(15, AngularUnit.MOA);
 
-            var u1 = new Measurement<AngularUnit>(t1);
-            u1.Should().Be(AngularUnit.MOA.New(15));
+            var u1 = new DecimalMeasurement<AngularUnit>(t1);
+            u1.Should().Be(AngularUnit.MOA.NewDecimal(15));
 
-            var u2 = (Measurement<AngularUnit>)t1;
-            u2.Should().Be(AngularUnit.MOA.New(15));
+            var u2 = (DecimalMeasurement<AngularUnit>)t1;
+            u2.Should().Be(AngularUnit.MOA.NewDecimal(15));
 
-            var t2 = (Tuple<double, AngularUnit>)u1;
-            t2.Should().Be(new Tuple<double, AngularUnit>(15, AngularUnit.MOA));
+            var t2 = (Tuple<decimal, AngularUnit>)u1;
+            t2.Should().Be(new Tuple<decimal, AngularUnit>(15, AngularUnit.MOA));
 
-            (double a, AngularUnit b) t3 = (10.0, AngularUnit.MOA);
+            (decimal a, AngularUnit b) t3 = (10.0m, AngularUnit.MOA);
 
-            var u3 = new Measurement<AngularUnit>(t3);
+            var u3 = new DecimalMeasurement<AngularUnit>(t3);
             u3.Value.Should().Be(t3.a);
             u3.Unit.Should().Be(t3.b);
 
-            (double x, AngularUnit y) t4 = u3;
+            (decimal x, AngularUnit y) t4 = u3;
             t4.x.Should().Be(10);
             t4.y.Should().Be(AngularUnit.MOA);
         }
