@@ -133,6 +133,23 @@ namespace Gehtsoft.Measurements.Test
         }
 
         [Fact]
+        public void Acceleration()
+        {
+            var velocity3 = MeasurementMath.Velocity(new Measurement<AccelerationUnit>(10, AccelerationUnit.MeterPerSecondSquare), TimeSpan.FromSeconds(5));
+            velocity3.In(VelocityUnit.MetersPerSecond).Should().BeApproximately(50, 1e-5);
+
+            var distance3 = MeasurementMath.DistanceTraveled(new Measurement<AccelerationUnit>(10, AccelerationUnit.MeterPerSecondSquare), TimeSpan.FromSeconds(5));
+            distance3.In(DistanceUnit.Meter).Should().BeApproximately(125, 1e-5);        
+        }
+
+        [Fact]
+        public void Pressure()
+        {
+            var pressure = MeasurementMath.Pressure(WeightUnit.Pound.New(10), AreaUnit.SquareInch.New(2));
+            pressure.In(PressureUnit.PoundsPerSquareInch).Should().BeApproximately(5, 1e-5);
+        }
+
+        [Fact]
         public void CompareStatements()
         {
             (DistanceUnit.Centimeter.New(10) == DistanceUnit.Meter.New(0.1)).Should().BeTrue();

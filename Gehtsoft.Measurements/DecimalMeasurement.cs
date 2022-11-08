@@ -321,17 +321,11 @@ namespace Gehtsoft.Measurements
         /// <param name="other"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int CompareTo(DecimalMeasurement<T> other)
+        public int CompareTo(DecimalMeasurement<T> other) 
         {
             decimal v1, v2, e;
             v1 = In(BaseUnit);
             v2 = other.In(BaseUnit);
-            if (v1 < 1e-12m || v2 < 1e-12m)
-                e = Math.Max(v1 / 1e12m, v2 / 1e12m); //compare to 12 sign after decimal point
-            else
-                e = 1e-12m;
-            if (Math.Abs(v1 - v2) < e)
-                return 0;
             return v1.CompareTo(v2);
         }
 

@@ -38,6 +38,18 @@
         [Conversion(ConversionOperation.Custom, "Gehtsoft.Measurements.Test.TestConversion2")]
         Unit9,
 
+        [Unit("u10", 2)]
+        [Conversion(ConversionOperation.Tan)]
+        Unit10,
+
+        [Unit("u11", 2)]
+        [Conversion(ConversionOperation.Atan)]
+        Unit11,
+
+        [Unit("u12", 2)]
+        [Conversion(ConversionOperation.Negate)]
+        Unit12,
+
         [Unit("n1", "n2", 5)]
         [Conversion(ConversionOperation.Base)]
         Base,

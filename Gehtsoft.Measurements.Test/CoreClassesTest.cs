@@ -22,7 +22,7 @@ namespace Gehtsoft.Measurements.Test
             Measurement<TestUnit>.BaseUnit.Should().Be(TestUnit.Base);
 
             var names = Measurement<TestUnit>.GetUnitNames();
-            names.Should().HaveCount(10);
+            names.Should().HaveCount(13);
 
             names.Should().Contain(new Tuple<TestUnit, string>(TestUnit.Base, "n1"));
             names.Should().Contain(new Tuple<TestUnit, string>(TestUnit.Unit1, "\""));
@@ -34,6 +34,9 @@ namespace Gehtsoft.Measurements.Test
             names.Should().Contain(new Tuple<TestUnit, string>(TestUnit.Unit7, "u7"));
             names.Should().Contain(new Tuple<TestUnit, string>(TestUnit.Unit8, "u8"));
             names.Should().Contain(new Tuple<TestUnit, string>(TestUnit.Unit9, "u9"));
+            names.Should().Contain(new Tuple<TestUnit, string>(TestUnit.Unit10, "u10"));
+            names.Should().Contain(new Tuple<TestUnit, string>(TestUnit.Unit11, "u11"));
+            names.Should().Contain(new Tuple<TestUnit, string>(TestUnit.Unit12, "u12"));
         }
 
         [Fact]
@@ -83,6 +86,9 @@ namespace Gehtsoft.Measurements.Test
         [InlineData(10, TestUnit.Unit7, 24)]
         [InlineData(10, TestUnit.Unit8, -0.8)]
         [InlineData(10, TestUnit.Unit9, -0.8)]
+        [InlineData(0.392699081698724, TestUnit.Unit10, 0.414213562373)]
+        [InlineData(0.414213562373, TestUnit.Unit11, 0.392699081698724)]
+        [InlineData(1, TestUnit.Unit12, -1)]
         public void Conversion_Method1(double value, TestUnit unit, double expected)
         {
             Measurement<TestUnit>.ToBase(value, unit).Should().BeApproximately(expected, 1e-10);
@@ -110,6 +116,9 @@ namespace Gehtsoft.Measurements.Test
         [InlineData(12, TestUnit.Unit2, 5, TestUnit.Unit4, 0)]
         [InlineData(13, TestUnit.Unit2, 5, TestUnit.Unit4, 1)]
         [InlineData(12, TestUnit.Unit2, 6, TestUnit.Unit4, -1)]
+        [InlineData(1e-13, TestUnit.Base, 1e-13, TestUnit.Base, 0)]
+        [InlineData(2e-13, TestUnit.Base, 1e-13, TestUnit.Base, 1)]
+        [InlineData(1e-13, TestUnit.Base, 2e-13, TestUnit.Base, -1)]
         public void Compare(double value1, TestUnit unit1, double value2, TestUnit unit2, int expected)
         {
             var v1 = new Measurement<TestUnit>(value1, unit1);
@@ -119,16 +128,34 @@ namespace Gehtsoft.Measurements.Test
             {
                 rc.Should().Be(0);
                 v1.Should().BeEquivalentTo(v2);
+                (v1 == v2).Should().BeTrue();
+                (v1 >= v2).Should().BeTrue();
+                (v1 <= v2).Should().BeTrue();
+
+                (v1 != v2).Should().BeFalse();
+                (v1 > v2).Should().BeFalse();
+                (v1 < v2).Should().BeFalse();
             }
             else if (expected > 0)
             {
                 rc.Should().BeGreaterThan(0);
+                
                 v1.Equals(v2).Should().BeFalse();
+                
+                (v1 > v2).Should().BeTrue();
+                (v1 >= v2).Should().BeTrue();
+                (v1 < v2).Should().BeFalse();
+                (v1 <= v2).Should().BeFalse();
             }
             else if (expected < 0)
             {
                 rc.Should().BeLessThan(0);
                 v1.Equals(v2).Should().BeFalse();
+
+                (v1 < v2).Should().BeTrue();
+                (v1 <= v2).Should().BeTrue();
+                (v1 > v2).Should().BeFalse();
+                (v1 >= v2).Should().BeFalse();
             }
         }
 
@@ -335,6 +362,13 @@ namespace Gehtsoft.Measurements.Test
             (double x, AngularUnit y) t4 = u3;
             t4.x.Should().Be(10);
             t4.y.Should().Be(AngularUnit.MOA);
+        }
+
+        [Fact]
+        public void HashCode()
+        {
+            var u = new Measurement<DistanceUnit>(1, DistanceUnit.Yard);
+            u.GetHashCode().Should().Be(36.0.GetHashCode());
         }
     }
 }

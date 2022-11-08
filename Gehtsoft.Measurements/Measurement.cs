@@ -330,14 +330,16 @@ namespace Gehtsoft.Measurements
             double v1, v2, e;
             v1 = In(BaseUnit);
             v2 = other.In(BaseUnit);
-            if (v1 < 1e-12 || v2 < 1e-12)
-                e = Math.Max(v1 / 1e12, v2 / 1e12); //compare to 12 sign after decimal point
-            else
-                e = 1e-12;
+            var e1 = eps(v1);
+            var e2 = eps(v2);
+            e = Math.Min(e1, e2);
             if (Math.Abs(v1 - v2) < e)
                 return 0;
             return v1.CompareTo(v2);
         }
+
+        private static double eps(double value) => Math.Pow(10, Math.Round(Math.Log10(value)) - 12);
+
 
         /// <summary>
         /// Checks whether two measurements are equal

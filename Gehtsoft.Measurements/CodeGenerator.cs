@@ -214,7 +214,7 @@ namespace Gehtsoft.Measurements
                 case ConversionOperation.Custom:
                     return Expression.Call(Expression.Constant(op), op.GetType().GetMethod(nameof(ICustomConversionOperation.ToBase)), new Expression[] { value });
             }
-            return Expression.Constant(0.0);
+            throw new ArgumentException($"Operation {operation} is not support", nameof(operation));
         }
 
         private static Expression OperationToReverseExpression(Expression value, ConversionOperation operation, double factor, ICustomConversionOperation op = null)
@@ -244,7 +244,7 @@ namespace Gehtsoft.Measurements
                 case ConversionOperation.Custom:
                     return Expression.Call(Expression.Constant(op), op.GetType().GetMethod(nameof(ICustomConversionOperation.FromBase)), new Expression[] { value });
             }
-            return Expression.Constant(0.0);
+            throw new ArgumentException($"Operation {operation} is not support", nameof(operation));
         }
 
 
@@ -358,7 +358,7 @@ namespace Gehtsoft.Measurements
                         }
                     }
             }
-            return Expression.Constant(0.0);
+            throw new ArgumentException($"Operation {operation} is not support", nameof(operation));
         }
 
         private static Expression OperationToReverseExpressionDecimal(Expression value, ConversionOperation operation, decimal factor, ICustomConversionOperation op = null, ICustomConversionOperation op2 = null)
@@ -408,7 +408,7 @@ namespace Gehtsoft.Measurements
                         }
                     }
             }
-            return Expression.Constant(0.0);
+            throw new ArgumentException($"Operation {operation} is not support", nameof(operation));
         }
     }
 }
