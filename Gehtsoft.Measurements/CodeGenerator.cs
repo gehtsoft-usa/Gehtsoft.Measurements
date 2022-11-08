@@ -207,12 +207,14 @@ namespace Gehtsoft.Measurements
                     return Expression.Divide(Expression.Constant(factor), value);
                 case ConversionOperation.Negate:
                     return Expression.Negate(value);
+                case ConversionOperation.Tan:
+                    return Expression.Call(null, gTan, new Expression[] { value });
                 case ConversionOperation.Atan:
                     return Expression.Call(null, gAtan, new Expression[] { value });
                 case ConversionOperation.Custom:
                     return Expression.Call(Expression.Constant(op), op.GetType().GetMethod(nameof(ICustomConversionOperation.ToBase)), new Expression[] { value });
             }
-            return Expression.Constant(0.0);
+            throw new ArgumentException($"Operation {operation} is not support", nameof(operation));
         }
 
         private static Expression OperationToReverseExpression(Expression value, ConversionOperation operation, double factor, ICustomConversionOperation op = null)
@@ -235,12 +237,178 @@ namespace Gehtsoft.Measurements
                     return Expression.Divide(Expression.Constant(factor), value);
                 case ConversionOperation.Negate:
                     return Expression.Negate(value);
+                case ConversionOperation.Tan:
+                    return Expression.Call(null, gAtan, new Expression[] { value });
                 case ConversionOperation.Atan:
                     return Expression.Call(null, gTan, new Expression[] { value });
                 case ConversionOperation.Custom:
                     return Expression.Call(Expression.Constant(op), op.GetType().GetMethod(nameof(ICustomConversionOperation.FromBase)), new Expression[] { value });
             }
-            return Expression.Constant(0.0);
+            throw new ArgumentException($"Operation {operation} is not support", nameof(operation));
+        }
+
+
+        public static Func<decimal, T, decimal> GenerateConversionDecimal<T>(bool direct)
+        {
+            Type type = typeof(T);
+            var valueParameter = Expression.Parameter(typeof(decimal), "value");
+            var unitParameter = Expression.Parameter(type, "unit");
+            var returnTarget = Expression.Label(typeof(decimal));
+
+            //get fields and prepare cases for switch
+            var fields = type.GetFields(BindingFlags.Public | BindingFlags.Static);
+            var cases = new SwitchCase[fields.Length];
+
+            for (int i = 0; i < fields.Length; i++)
+            {
+                ConversionAttribute attribute = fields[i].GetCustomAttribute<ConversionAttribute>();
+                Expression unit = Expression.Constant(Enum.ToObject(type, fields[i].GetRawConstantValue()));
+                Expression convertor = direct ? ToBaseExpressionDecimal(attribute, valueParameter) : FromBaseExpressionDecimal(attribute, valueParameter);
+                var returnStatement = Expression.Return(returnTarget, convertor);
+                cases[i] = Expression.SwitchCase(returnStatement, new Expression[] { unit });
+            }
+
+            //prepare default method throwing exception
+            var constructorInfo = typeof(ArgumentException).GetConstructor(new Type[] { typeof(string), typeof(string) });
+            var argumentException = Expression.New(constructorInfo, new Expression[] { Expression.Constant("Unknown unit"), Expression.Constant("unit") });
+            var defaultBody = Expression.Throw(argumentException);
+
+            //switch statement
+            var switchStmt = Expression.Switch(unitParameter, defaultBody, cases);
+
+            //method body
+            var body = Expression.Block(typeof(decimal), new Expression[] { switchStmt, Expression.Label(returnTarget, Expression.Constant(0.0m)) });
+
+            //function 
+            var expression = Expression.Lambda(typeof(Func<decimal, T, decimal>), body, new ParameterExpression[] { valueParameter, unitParameter });
+            var functionDelegate = expression.Compile();
+            return (Func<decimal, T, decimal>)functionDelegate;
+        }
+
+        private static Expression ToBaseExpressionDecimal(ConversionAttribute attribute, Expression value)
+        {
+            if (attribute.Operation == ConversionOperation.Base)
+                return value;
+
+            Expression firstOperation = OperationToExpressionDecimal(value, attribute.Operation, (decimal) attribute.Factor, attribute.ConversionInterface, attribute.ConversionInterface2);
+            if (attribute.SecondOperation == ConversionOperation.None)
+                return firstOperation;
+            else
+                return OperationToExpressionDecimal(firstOperation, attribute.SecondOperation, (decimal)attribute.SecondFactor);
+        }
+
+        private static Expression FromBaseExpressionDecimal(ConversionAttribute attribute, Expression value)
+        {
+            if (attribute.Operation == ConversionOperation.Base)
+                return value;
+
+            Expression secondExpression;
+            if (attribute.SecondOperation == ConversionOperation.None)
+                secondExpression = value;
+            else
+                secondExpression = OperationToReverseExpressionDecimal(value, attribute.SecondOperation, (decimal)attribute.SecondFactor);
+
+            return OperationToReverseExpressionDecimal(secondExpression, attribute.Operation, (decimal)attribute.Factor, attribute.ConversionInterface, attribute.ConversionInterface2);
+        }
+
+        private static Expression OperationToExpressionDecimal(Expression value, ConversionOperation operation, decimal factor, ICustomConversionOperation op = null, ICustomConversionOperation2 op2 = null)
+        {
+            switch (operation)
+            {
+                case ConversionOperation.Base:
+                    return value;
+                case ConversionOperation.Add:
+                    return Expression.Add(value, Expression.Constant(factor));
+                case ConversionOperation.Subtract:
+                    return Expression.Subtract(value, Expression.Constant(factor));
+                case ConversionOperation.SubtractFromFactor:
+                    return Expression.Subtract(Expression.Constant(factor), value);
+                case ConversionOperation.Multiply:
+                    return Expression.Multiply(value, Expression.Constant(factor));
+                case ConversionOperation.Divide:
+                    return Expression.Divide(value, Expression.Constant(factor));
+                case ConversionOperation.DivideFactor:
+                    return Expression.Divide(Expression.Constant(factor), value);
+                case ConversionOperation.Negate:
+                    return Expression.Negate(value);
+                case ConversionOperation.Tan:
+                    {
+                        var arg = Expression.Convert(value, typeof(double));
+                        var call = Expression.Call(null, gTan, new Expression[] { arg });
+                        return Expression.Convert(call, typeof(decimal));
+                    }
+                case ConversionOperation.Atan:
+                    {
+                        var arg = Expression.Convert(value, typeof(double));
+                        var call = Expression.Call(null, gAtan, new Expression[] { arg });
+                        return Expression.Convert(call, typeof(decimal));
+
+                    }
+                case ConversionOperation.Custom:
+                    {
+                        if (op2 == null)
+                        {
+                            var arg = Expression.Convert(value, typeof(double));
+                            var call = Expression.Call(Expression.Constant(op), op.GetType().GetMethod(nameof(ICustomConversionOperation.ToBase)), new Expression[] { arg });
+                            return Expression.Convert(call, typeof(decimal));
+                        }
+                        else
+                        {
+                            return Expression.Call(Expression.Constant(op2), op2.GetType().GetMethod(nameof(ICustomConversionOperation2.ToBaseDecimal)), new Expression[] { value });
+                        }
+                    }
+            }
+            throw new ArgumentException($"Operation {operation} is not support", nameof(operation));
+        }
+
+        private static Expression OperationToReverseExpressionDecimal(Expression value, ConversionOperation operation, decimal factor, ICustomConversionOperation op = null, ICustomConversionOperation op2 = null)
+        {
+            switch (operation)
+            {
+                case ConversionOperation.Base:
+                    return value;
+                case ConversionOperation.Add:
+                    return Expression.Subtract(value, Expression.Constant(factor));
+                case ConversionOperation.Subtract:
+                    return Expression.Add(value, Expression.Constant(factor));
+                case ConversionOperation.SubtractFromFactor:
+                    return Expression.Negate(Expression.Subtract(value, Expression.Constant(factor)));
+                case ConversionOperation.Multiply:
+                    return Expression.Divide(value, Expression.Constant(factor));
+                case ConversionOperation.Divide:
+                    return Expression.Multiply(value, Expression.Constant(factor));
+                case ConversionOperation.DivideFactor:
+                    return Expression.Divide(Expression.Constant(factor), value);
+                case ConversionOperation.Negate:
+                    return Expression.Negate(value);
+                case ConversionOperation.Tan:
+                    {
+                        var arg = Expression.Convert(value, typeof(double));
+                        var call = Expression.Call(null, gAtan, new Expression[] { arg });
+                        return Expression.Convert(call, typeof(decimal));
+                    }
+                case ConversionOperation.Atan:
+                    {
+                        var arg = Expression.Convert(value, typeof(double));
+                        var call = Expression.Call(null, gTan, new Expression[] { arg });
+                        return Expression.Convert(call, typeof(decimal));
+                    }
+                case ConversionOperation.Custom:
+                    {
+
+                        if (op2 == null)
+                        {
+                            var arg = Expression.Convert(value, typeof(double));
+                            var call = Expression.Call(Expression.Constant(op), op.GetType().GetMethod(nameof(ICustomConversionOperation.FromBase)), new Expression[] { arg });
+                            return Expression.Convert(call, typeof(decimal));
+                        }
+                        else
+                        {
+                            return Expression.Call(Expression.Constant(op2), op2.GetType().GetMethod(nameof(ICustomConversionOperation2.FromBaseDecimal)), new Expression[] { value });
+                        }
+                    }
+            }
+            throw new ArgumentException($"Operation {operation} is not support", nameof(operation));
         }
     }
 }

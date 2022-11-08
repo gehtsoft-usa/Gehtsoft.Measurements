@@ -45,10 +45,16 @@
         /// </summary>
         Negate,
         /// <summary>
+        /// <para>Calculates tangent of the value</para>
+        /// <para>The factor is ignored</para>
+        /// </summary>
+        Tan,
+        /// <summary>
         /// <para>Calculates arctangent of the value</para>
         /// <para>The factor is ignored</para>
         /// </summary>
         Atan,
+        
         /// <summary>
         /// <para>The custom conversion.</para>
         /// <para>The custom conversion should be implemented using <see cref="ICustomConversionOperation"/> interface.</para>

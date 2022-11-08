@@ -6,8 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-#pragma warning disable RCS1196 // Call extension method as instance method.
-
 namespace Gehtsoft.Measurements.Test
 {
     public class MeasurementMathTest
@@ -132,6 +130,23 @@ namespace Gehtsoft.Measurements.Test
 
             var velocity2 = MeasurementMath.Velocity(distance1, ts1);
             velocity2.In(velocityUnit).Should().BeApproximately(velocity, 1e-5);
+        }
+
+        [Fact]
+        public void Acceleration()
+        {
+            var velocity3 = MeasurementMath.Velocity(new Measurement<AccelerationUnit>(10, AccelerationUnit.MeterPerSecondSquare), TimeSpan.FromSeconds(5));
+            velocity3.In(VelocityUnit.MetersPerSecond).Should().BeApproximately(50, 1e-5);
+
+            var distance3 = MeasurementMath.DistanceTraveled(new Measurement<AccelerationUnit>(10, AccelerationUnit.MeterPerSecondSquare), TimeSpan.FromSeconds(5));
+            distance3.In(DistanceUnit.Meter).Should().BeApproximately(125, 1e-5);        
+        }
+
+        [Fact]
+        public void Pressure()
+        {
+            var pressure = MeasurementMath.Pressure(WeightUnit.Pound.New(10), AreaUnit.SquareInch.New(2));
+            pressure.In(PressureUnit.PoundsPerSquareInch).Should().BeApproximately(5, 1e-5);
         }
 
         [Fact]

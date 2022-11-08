@@ -12,5 +12,13 @@ namespace Gehtsoft.Measurements.Test
         {
             Measurement<GasConsumptionUnit>.Convert(value1, unit1, unit2).Should().BeApproximately(value2, accuracy);
         }
+
+        [Theory]
+        [InlineData(5, GasConsumptionUnit.MilesPerGallon, 47.0429, GasConsumptionUnit.LiterPer100Km, 1e-4)]
+        [InlineData(12, GasConsumptionUnit.LiterPer100Km, 19.6012, GasConsumptionUnit.MilesPerGallon, 1e-4)]
+        public void ConversionDecimal(decimal value1, GasConsumptionUnit unit1, decimal value2, GasConsumptionUnit unit2, decimal accuracy)
+        {
+            DecimalMeasurement<GasConsumptionUnit>.Convert(value1, unit1, unit2).Should().BeApproximately(value2, accuracy);
+        }
     }
 }

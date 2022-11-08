@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
-using System.Xml;
-using System.Xml.Schema;
-using System.Xml.Serialization;
 
 namespace Gehtsoft.Measurements
 {
@@ -22,14 +18,14 @@ namespace Gehtsoft.Measurements
     /// many 3rd party serializers such as `BinaronSerializer`.
     /// </para>
     /// </summary>
-    public readonly struct Measurement<T> : IEquatable<Measurement<T>>, IComparable<Measurement<T>>, IFormattable
+    public readonly struct DecimalMeasurement<T> : IEquatable<DecimalMeasurement<T>>, IComparable<DecimalMeasurement<T>>, IFormattable
         where T : Enum
     {
         /// <summary>
         /// Numerical value
         /// </summary>
         [JsonIgnore]
-        public readonly double Value;
+        public readonly decimal Value;
 
         /// <summary>
         /// The unit
@@ -43,7 +39,7 @@ namespace Gehtsoft.Measurements
         /// <param name="value"></param>
         /// <param name="unit"></param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Measurement(double value, T unit)
+        public DecimalMeasurement(decimal value, T unit)
         {
             Value = value;
             Unit = unit;
@@ -53,7 +49,7 @@ namespace Gehtsoft.Measurements
         /// Constructor that accepts a tuple.
         /// </summary>
         /// <param name="value"></param>
-        public Measurement(Tuple<double, T> value)
+        public DecimalMeasurement(Tuple<decimal, T> value)
         {
             Value = value.Item1;
             Unit = value.Item2;
@@ -63,7 +59,7 @@ namespace Gehtsoft.Measurements
         /// Constructor that accepts a anonymous tuple.
         /// </summary>
         /// <param name="value"></param>
-        public Measurement((double, T) value)
+        public DecimalMeasurement((decimal, T) value)
         {
             Value = value.Item1;
             Unit = value.Item2;
@@ -75,9 +71,9 @@ namespace Gehtsoft.Measurements
         /// <param name="text"></param>
         [JsonConstructor]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Measurement(string text)
+        public DecimalMeasurement(string text)
         {
-            if (!Measurement<T>.TryParseInternal(CultureInfo.InvariantCulture, text, out double value, out T unit))
+            if (!DecimalMeasurement<T>.TryParseInternal(CultureInfo.InvariantCulture, text, out decimal value, out T unit))
                 throw new ArgumentException("Invalid value", nameof(text));
 
             Value = value;
@@ -120,7 +116,7 @@ namespace Gehtsoft.Measurements
         /// <param name="unit"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public double In(T unit) => Convert(Value, Unit, unit);
+        public decimal In(T unit) => Convert(Value, Unit, unit);
 
         /// <summary>
         /// Converts the value into another unit.
@@ -128,7 +124,7 @@ namespace Gehtsoft.Measurements
         /// <param name="unit"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Measurement<T> To(T unit) => new Measurement<T>(In(unit), unit);
+        public DecimalMeasurement<T> To(T unit) => new DecimalMeasurement<T>(In(unit), unit);
 
         /// <summary>
         /// Convert value from one unit to another
@@ -138,7 +134,7 @@ namespace Gehtsoft.Measurements
         /// <param name="to"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static double Convert(double value, T from, T to)
+        public static decimal Convert(decimal value, T from, T to)
         {
             if (from.CompareTo(to) == 0)
                 return value;
@@ -160,10 +156,10 @@ namespace Gehtsoft.Measurements
         public static Measurement<T> ZERO { get; } = new Measurement<T>(0, UnitUtils.GetBase<T>());
 
         private static readonly Func<T, string> mGetUnitName = CodeGenerator.GenerateGetUnitName<T>();
-        private static readonly Func<string, T> mParseUnit =  CodeGenerator.GenerateParseUnitName<T>();
+        private static readonly Func<string, T> mParseUnit = CodeGenerator.GenerateParseUnitName<T>();
         private static readonly Func<T, int> mDefaultAccuracy = CodeGenerator.GenerateGetDefaultUnitAccuracy<T>();
-        private static readonly Func<double, T, double> mToBase = CodeGenerator.GenerateConversion<T>(true);
-        private static readonly Func<double, T, double> mFromBase = CodeGenerator.GenerateConversion<T>(false);
+        private static readonly Func<decimal, T, decimal> mToBaseDecimal = CodeGenerator.GenerateConversionDecimal<T>(true);
+        private static readonly Func<decimal, T, decimal> mFromBaseDecimal = CodeGenerator.GenerateConversionDecimal<T>(false);
 
         /// <summary>
         /// Converts the value from the specified units to a base unit.
@@ -172,7 +168,7 @@ namespace Gehtsoft.Measurements
         /// <param name="unit"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static double ToBase(double value, T unit) => mToBase(value, unit);
+        public static decimal ToBase(decimal value, T unit) => mToBaseDecimal(value, unit);
 
         /// <summary>
         /// Converts the value to the specified unit  from a base unit.
@@ -181,7 +177,7 @@ namespace Gehtsoft.Measurements
         /// <param name="unit"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static double FromBase(double value, T unit) => mFromBase(value, unit);
+        public static decimal FromBase(decimal value, T unit) => mFromBaseDecimal(value, unit);
 
         /// <summary>
         /// Returns all units with their names
@@ -217,7 +213,7 @@ namespace Gehtsoft.Measurements
         /// <param name="text"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static bool TryParse(string text, out Measurement<T> value) => TryParse(CultureInfo.CurrentCulture, text, out value);
+        public static bool TryParse(string text, out DecimalMeasurement<T> value) => TryParse(CultureInfo.CurrentCulture, text, out value);
 
         /// <summary>
         /// Try to parse the value using the specified culture
@@ -226,13 +222,13 @@ namespace Gehtsoft.Measurements
         /// <param name="text"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static bool TryParse(CultureInfo cultureInfo, string text, out Measurement<T> value)
+        public static bool TryParse(CultureInfo cultureInfo, string text, out DecimalMeasurement<T> value)
         {
-            bool rc = TryParseInternal(cultureInfo, text, out double _value, out T unit);
+            bool rc = TryParseInternal(cultureInfo, text, out decimal _value, out T unit);
             if (rc)
-                value = new Measurement<T>(_value, unit);
+                value = new DecimalMeasurement<T>(_value, unit);
             else
-                value = new Measurement<T>(0, default);
+                value = new DecimalMeasurement<T>(0m, default);
             return rc;
         }
 
@@ -243,13 +239,13 @@ namespace Gehtsoft.Measurements
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         override public int GetHashCode()
         {
-            double value = Value;
+            decimal value = Value;
             if (Unit.CompareTo(BaseUnit) != 0)
                 value = ToBase(Value, Unit);
             return value.GetHashCode();
         }
 
-        private static bool TryParseInternal(CultureInfo cultureInfo, string text, out double value, out T unit)
+        private static bool TryParseInternal(CultureInfo cultureInfo, string text, out decimal value, out T unit)
         {
             value = 0;
             unit = default;
@@ -284,13 +280,13 @@ namespace Gehtsoft.Measurements
             {
                 unit = ParseUnitName(text.Substring(lastDigit + 1));
             }
-            catch (ArgumentException )
+            catch (ArgumentException)
             {
                 return false;
             }
 
             string n = text.Substring(0, lastDigit + 1);
-            return double.TryParse(n, NumberStyles.Float | NumberStyles.AllowThousands, cultureInfo, out value);
+            return decimal.TryParse(n, NumberStyles.Float | NumberStyles.AllowThousands, cultureInfo, out value);
         }
 
         /// <summary>
@@ -303,7 +299,7 @@ namespace Gehtsoft.Measurements
         {
             if (obj == null)
                 return false;
-            if (obj is Measurement<T> m)
+            if (obj is DecimalMeasurement<T> m)
                 return Equals(m);
             return false;
         }
@@ -314,7 +310,7 @@ namespace Gehtsoft.Measurements
         /// <param name="other"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Equals(Measurement<T> other)
+        public bool Equals(DecimalMeasurement<T> other)
         {
             return other.In(BaseUnit) == this.In(BaseUnit);
         }
@@ -325,21 +321,13 @@ namespace Gehtsoft.Measurements
         /// <param name="other"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int CompareTo(Measurement<T> other)
+        public int CompareTo(DecimalMeasurement<T> other) 
         {
-            double v1, v2, e;
+            decimal v1, v2, e;
             v1 = In(BaseUnit);
             v2 = other.In(BaseUnit);
-            var e1 = eps(v1);
-            var e2 = eps(v2);
-            e = Math.Min(e1, e2);
-            if (Math.Abs(v1 - v2) < e)
-                return 0;
             return v1.CompareTo(v2);
         }
-
-        private static double eps(double value) => Math.Pow(10, Math.Round(Math.Log10(value)) - 12);
-
 
         /// <summary>
         /// Checks whether two measurements are equal
@@ -348,7 +336,7 @@ namespace Gehtsoft.Measurements
         /// <param name="v2"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator ==(Measurement<T> v1, Measurement<T> v2) => v1.CompareTo(v2) == 0;
+        public static bool operator ==(DecimalMeasurement<T> v1, DecimalMeasurement<T> v2) => v1.CompareTo(v2) == 0;
         /// <summary>
         /// Checks whether two measurements are not equal
         /// </summary>
@@ -356,7 +344,7 @@ namespace Gehtsoft.Measurements
         /// <param name="v2"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator !=(Measurement<T> v1, Measurement<T> v2) => v1.CompareTo(v2) != 0;
+        public static bool operator !=(DecimalMeasurement<T> v1, DecimalMeasurement<T> v2) => v1.CompareTo(v2) != 0;
         /// <summary>
         /// Checks whether the measurement is greater than another
         /// </summary>
@@ -364,7 +352,7 @@ namespace Gehtsoft.Measurements
         /// <param name="v2"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator >(Measurement<T> v1, Measurement<T> v2) => v1.CompareTo(v2) > 0;
+        public static bool operator >(DecimalMeasurement<T> v1, DecimalMeasurement<T> v2) => v1.CompareTo(v2) > 0;
         /// <summary>
         /// Checks whether the measurement is less than another
         /// </summary>
@@ -372,7 +360,7 @@ namespace Gehtsoft.Measurements
         /// <param name="v2"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator <(Measurement<T> v1, Measurement<T> v2) => v1.CompareTo(v2) < 0;
+        public static bool operator <(DecimalMeasurement<T> v1, DecimalMeasurement<T> v2) => v1.CompareTo(v2) < 0;
         /// <summary>
         /// Checks whether the measurement is greater than or equal to another
         /// </summary>
@@ -380,7 +368,7 @@ namespace Gehtsoft.Measurements
         /// <param name="v2"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator >=(Measurement<T> v1, Measurement<T> v2) => v1.CompareTo(v2) >= 0;
+        public static bool operator >=(DecimalMeasurement<T> v1, DecimalMeasurement<T> v2) => v1.CompareTo(v2) >= 0;
         /// <summary>
         /// Checks whether the measurement is less than or equal another
         /// </summary>
@@ -388,7 +376,7 @@ namespace Gehtsoft.Measurements
         /// <param name="v2"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator <=(Measurement<T> v1, Measurement<T> v2) => v1.CompareTo(v2) <= 0;
+        public static bool operator <=(DecimalMeasurement<T> v1, DecimalMeasurement<T> v2) => v1.CompareTo(v2) <= 0;
 
         /// <summary>
         /// Negates the measurement value
@@ -396,7 +384,7 @@ namespace Gehtsoft.Measurements
         /// <param name="v1"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Measurement<T> operator -(Measurement<T> v1) => new Measurement<T>(-v1.Value, v1.Unit);
+        public static DecimalMeasurement<T> operator -(DecimalMeasurement<T> v1) => new DecimalMeasurement<T>(-v1.Value, v1.Unit);
 
         /// <summary>
         /// Unary plus value
@@ -404,7 +392,7 @@ namespace Gehtsoft.Measurements
         /// <param name="v1"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Measurement<T> operator +(Measurement<T> v1) => v1;
+        public static DecimalMeasurement<T> operator +(DecimalMeasurement<T> v1) => v1;
 
         /// <summary>
         /// Add one measurement to another.
@@ -413,7 +401,7 @@ namespace Gehtsoft.Measurements
         /// <param name="v2"></param>
         /// /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Measurement<T> operator +(Measurement<T> v1, Measurement<T> v2) => new Measurement<T>(v1.Value + v2.In(v1.Unit), v1.Unit);
+        public static DecimalMeasurement<T> operator +(DecimalMeasurement<T> v1, DecimalMeasurement<T> v2) => new DecimalMeasurement<T>(v1.Value + v2.In(v1.Unit), v1.Unit);
         /// <summary>
         /// Subtracts one measurement from another.
         /// </summary>
@@ -421,7 +409,7 @@ namespace Gehtsoft.Measurements
         /// <param name="v2"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Measurement<T> operator -(Measurement<T> v1, Measurement<T> v2) => new Measurement<T>(v1.Value - v2.In(v1.Unit), v1.Unit);
+        public static DecimalMeasurement<T> operator -(DecimalMeasurement<T> v1, DecimalMeasurement<T> v2) => new DecimalMeasurement<T>(v1.Value - v2.In(v1.Unit), v1.Unit);
         /// <summary>
         /// Multiples a measurement by a constant.
         /// </summary>
@@ -429,7 +417,7 @@ namespace Gehtsoft.Measurements
         /// <param name="v2"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Measurement<T> operator *(Measurement<T> v1, double v2) => new Measurement<T>(v1.Value * v2, v1.Unit);
+        public static DecimalMeasurement<T> operator *(DecimalMeasurement<T> v1, decimal v2) => new DecimalMeasurement<T>(v1.Value * v2, v1.Unit);
 
         /// <summary>
         /// Multiples a measurement by a constant.
@@ -438,7 +426,7 @@ namespace Gehtsoft.Measurements
         /// <param name="v2"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Measurement<T> operator *(double v1, Measurement<T> v2) => new Measurement<T>(v2.Value * v1, v2.Unit);
+        public static DecimalMeasurement<T> operator *(decimal v1, DecimalMeasurement<T> v2) => new DecimalMeasurement<T>(v2.Value * v1, v2.Unit);
 
         /// <summary>
         /// Divides a measurement to a specified a constant.
@@ -447,7 +435,7 @@ namespace Gehtsoft.Measurements
         /// <param name="v2"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Measurement<T> operator /(Measurement<T> v1, double v2) => new Measurement<T>(v1.Value / v2, v1.Unit);
+        public static DecimalMeasurement<T> operator /(DecimalMeasurement<T> v1, decimal v2) => new DecimalMeasurement<T>(v1.Value / v2, v1.Unit);
 
         /// <summary>
         /// Calculate ratio between two measurements
@@ -456,31 +444,30 @@ namespace Gehtsoft.Measurements
         /// <param name="v2"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static double operator /(Measurement<T> v1, Measurement<T> v2) => v1.Value / v2.In(v1.Unit);
+        public static decimal operator /(DecimalMeasurement<T> v1, DecimalMeasurement<T> v2) => v1.Value / v2.In(v1.Unit);
 
         /// <summary>
         /// Implicitly converts the value to a tuple
         /// </summary>
         /// <param name="value"></param>
-        public static implicit operator Tuple<double, T>(Measurement<T> value) => new Tuple<double, T>(value.Value, value.Unit);
+        public static implicit operator Tuple<decimal, T>(DecimalMeasurement<T> value) => new Tuple<decimal, T>(value.Value, value.Unit);
 
         /// <summary>
         /// Explicitly converts the a tuple to a value
         /// </summary>
         /// <param name="value"></param>
-        public static explicit operator Measurement<T>(Tuple<double, T>  value) => new Measurement<T>(value.Item1, value.Item2);
+        public static explicit operator DecimalMeasurement<T>(Tuple<decimal, T> value) => new DecimalMeasurement<T>(value.Item1, value.Item2);
 
         /// <summary>
         /// Implicitly converts the value to an anonymous tuple
         /// </summary>
         /// <param name="value"></param>
-        public static implicit operator (double, T)(Measurement<T> value) => (value.Value, value.Unit);
+        public static implicit operator (decimal, T)(DecimalMeasurement<T> value) => (value.Value, value.Unit);
 
         /// <summary>
-        /// Implicitly converts the value to a decimal value-based measurement
+        /// Implicitly converts the value to a double value-based measurement
         /// </summary>
         /// <param name="value"></param>
-        public static implicit operator DecimalMeasurement<T>(Measurement<T> value) => new DecimalMeasurement<T>((decimal)value.Value, value.Unit);
-
+        public static implicit operator Measurement<T>(DecimalMeasurement<T> value) => new Measurement<T>((double)value.Value, value.Unit);
     }
 }

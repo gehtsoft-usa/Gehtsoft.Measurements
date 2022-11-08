@@ -26,6 +26,7 @@
         [Conversion(ConversionOperation.Divide, 10800, ConversionOperation.Multiply, 3.14159265358979)]
         //1/3600 of circle
         MOA,
+        
         /// <summary>
         /// Military mil (1/6400 of a circle)
         /// </summary>
@@ -69,5 +70,19 @@
         [Unit("%", "percent", 0)]
         [Conversion(ConversionOperation.Divide, 100, ConversionOperation.Atan, 0)]
         Percent,
+
+        /// <summary>
+        /// The turns (1 turn is one full circle)
+        /// </summary>
+        [Unit("turn", 0)]
+        [Conversion(ConversionOperation.Multiply, 6.28318530717958)]
+        Turn,
+
+        /// <summary>
+        /// Gradian (1/400 of full circle)
+        /// </summary>
+        [Unit("gon", "ᵍ", 0)]
+        [Conversion(ConversionOperation.Multiply, 6.28318530717958, ConversionOperation.Divide, 400.0)]
+        Gradian,
     }
 }
