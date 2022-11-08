@@ -1,0 +1,443 @@
+﻿<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><title>DecimalMeasurement&amp;lt;T&amp;gt;</title><link rel="stylesheet" href="highlighter/default.css">
+<link rel="stylesheet" href="res/styles.css">
+<link rel="stylesheet" href="res/dripicons.css"></head><body><script type="text/javascript" src="highlighter/highlight.pack.js"></script><script type="text/javascript" src="highlighter/highlight.cshtml.js"></script><script type="text/javascript" src="settings.js"></script><script type="text/javascript" src="res/page-scripts.js"></script><script type="text/javascript">
+    loadStarted();
+</script><h1><code>readonly struct <b>DecimalMeasurement&lt;T&gt;</b></code></h1>
+<p></p>
+<table class="tmain" width="100%">
+  <tr>
+    <td colspan="2" class="thdr"><b>Parents</b></td>
+  </tr>
+  <tr>
+    <td class="tmain" width="30" style="border-right: none;"></td>
+    <td class="tmain" style="border-left: none;">
+      <p><code>ValueType</code></p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain" width="30" style="border-right: none;"></td>
+    <td class="tmain" style="border-left: none;">
+      <p><code>IEquatable&lt;<a href="Gehtsoft.Measurements.DecimalMeasurement.html">DecimalMeasurement&lt;T&gt;</a>&gt;</code></p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain" width="30" style="border-right: none;"></td>
+    <td class="tmain" style="border-left: none;">
+      <p><code>IComparable&lt;<a href="Gehtsoft.Measurements.DecimalMeasurement.html">DecimalMeasurement&lt;T&gt;</a>&gt;</code></p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain" width="30" style="border-right: none;"></td>
+    <td class="tmain" style="border-left: none;">
+      <p><code>IFormattable</code></p>
+    </td>
+  </tr>
+</table>
+<h2>Brief</h2>
+<p>The class to manipulate measurements expressed in the specified units.</p><p></p>
+<table class="tmain" width="100%">
+  <tr>
+    <td colspan="2" class="thdr"><b>Parameters</b></td>
+  </tr>
+  <tr>
+    <td class="tmain_nw" width="31%"><code>T</code></td>
+    <td class="tmain" width="69%"></td>
+  </tr>
+</table><h2>Details</h2><p>The unit of the measurement (e.g. length, weight) is defined as the parameter of this generic structure.
+The enumeration used as a measurement units specification must be marked using <a href="Gehtsoft.Measurements.UnitAttribute.html"><code>UnitAttribute</code></a>             and
+<a href="Gehtsoft.Measurements.ConversionAttribute.html"><code>ConversionAttribute</code></a></p>
+<p>The arithmetic operators (e.g. <code class="ctag">+</code>, <code class="ctag">*</code>) and comparison operators are supported.</p>
+<p>The class supports serialization using <code class="ctag">System.Text.Json</code> serializer and <code class="ctag">XmlSerializer</code> as well as
+many 3rd party serializers such as <code class="ctag">BinaronSerializer</code>.</p><p></p>
+<table class="tmain" width="100%">
+  <tr>
+    <td colspan="2" class="thdr"><b>Static Public Properties</b></td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.BaseUnit.pzC.html">BaseUnit</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>The base unit for the measurement</p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.ZERO.hkA.html">ZERO</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>The value with a zero measurement</p>
+    </td>
+  </tr>
+</table><p></p>
+<table class="tmain" width="100%">
+  <tr>
+    <td colspan="2" class="thdr"><b>Static Public Methods</b></td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.Convert.Xw2.html">Convert</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Convert value from one unit to another</p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.FromBase.wzG.html">FromBase</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Converts the value to the specified unit  from a base unit.</p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.GetUnitDefaultAccuracy.sp9.html">GetUnitDefaultAccuracy</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Gets the default accuracy of for the specified unit</p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.GetUnitName.2w4.html">GetUnitName</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Gets the name of the unit by its code</p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.GetUnitNames.ofB.html">GetUnitNames</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Returns all units with their names</p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.op_Addition.Ye.html">op_Addition</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Add one measurement to another.</p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.op_Division.YI4.html">op_Division</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Divides a measurement to a specified a constant.</p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.op_Division.lB1.html">op_Division</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Calculate ratio between two measurements</p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.op_Equality.Mu8.html">op_Equality</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Checks whether two measurements are equal</p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.op_Explicit.2c.html">op_Explicit</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Explicitly converts the a tuple to a value</p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.op_GreaterThan.g91.html">op_GreaterThan</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Checks whether the measurement is greater than another</p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.op_GreaterThanOrEqual.UW7.html">op_GreaterThanOrEqual</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Checks whether the measurement is greater than or equal to another</p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.op_Implicit.lwG.html">op_Implicit</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Implicitly converts the value to a tuple</p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.op_Implicit.or8.html">op_Implicit</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Implicitly converts the value to an anonymous tuple</p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.op_Implicit.ZBF.html">op_Implicit</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Implicitly converts the value to a double value-based measurement</p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.op_Inequality.5gF.html">op_Inequality</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Checks whether two measurements are not equal</p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.op_LessThan.ws6.html">op_LessThan</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Checks whether the measurement is less than another</p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.op_LessThanOrEqual.wkA.html">op_LessThanOrEqual</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Checks whether the measurement is less than or equal another</p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.op_Multiply.LX3.html">op_Multiply</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Multiples a measurement by a constant.</p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.op_Multiply.5YC.html">op_Multiply</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Multiples a measurement by a constant.</p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.op_Subtraction.dRF.html">op_Subtraction</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Subtracts one measurement from another.</p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.op_UnaryNegation.At9.html">op_UnaryNegation</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Negates the measurement value</p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.op_UnaryPlus.29B.html">op_UnaryPlus</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Unary plus value</p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.ParseUnitName.YGE.html">ParseUnitName</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Parses the unit name</p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.ToBase.CI4.html">ToBase</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Converts the value from the specified units to a base unit.</p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.TryParse.Kz7.html">TryParse</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Try to parse the value using the current culture</p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.TryParse.jQG.html">TryParse</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Try to parse the value using the specified culture</p>
+    </td>
+  </tr>
+</table><p></p>
+<table class="tmain" width="100%">
+  <tr>
+    <td colspan="2" class="thdr"><b>Public Fields</b></td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.Unit.yS7.html">Unit</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>The unit</p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.Value.NPA.html">Value</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Numerical value</p>
+    </td>
+  </tr>
+</table><p></p>
+<table class="tmain" width="100%">
+  <tr>
+    <td colspan="2" class="thdr"><b>Public Properties</b></td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.Text.nZ8.html">Text</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>The value as a string with maximum accuracy in invariant culture</p>
+    </td>
+  </tr>
+</table><p></p>
+<table class="tmain" width="100%">
+  <tr>
+    <td colspan="2" class="thdr"><b>Public Constructors</b></td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement..ctor.V91.html">DecimalMeasurement</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Constructor that accepts numeric value and unit</p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement..ctor.SyC.html">DecimalMeasurement</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Constructor that accepts a tuple.</p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement..ctor.buB.html">DecimalMeasurement</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Constructor that accepts a anonymous tuple.</p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement..ctor.2E4.html">DecimalMeasurement</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Constructor that accepts a text representation of a value</p>
+    </td>
+  </tr>
+</table><p></p>
+<table class="tmain" width="100%">
+  <tr>
+    <td colspan="2" class="thdr"><b>Public Methods</b></td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.CompareTo.gE6.html">CompareTo</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Compares measurement to another measurement</p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.Equals.TwC.html">Equals</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Checks whether the measurement equals to another measurement</p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.Equals.yA8.html">Equals</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Checks whether the measurement equals to another measurement</p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.GetHashCode.6lE.html">GetHashCode</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Returns hash code of the value</p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.In.vS2.html">In</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Returns the value in the specified units</p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.To.3eE.html">To</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Converts the value into another unit.</p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.ToString.JnA.html">ToString</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Convert to string with maximum accuracy in invariant culture</p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.ToString.ds2.html">ToString</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Convert to string with maximum accuracy in the specified culture</p>
+    </td>
+  </tr>
+  <tr>
+    <td class="tmain">
+      <p><a href="Gehtsoft.Measurements.DecimalMeasurement.ToString.VN8.html">ToString</a></p>
+    </td>
+    <td class="tmain" width="69%">
+      <p>Convert to string with specified format</p>
+    </td>
+  </tr>
+</table><p>
+  <center><a href="Gehtsoft.Measurements.html">back</a></center>
+</p><script language="javascript" type="text/javascript">syncList();</script></body></html>
