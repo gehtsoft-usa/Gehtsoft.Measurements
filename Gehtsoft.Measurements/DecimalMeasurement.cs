@@ -323,7 +323,7 @@ namespace Gehtsoft.Measurements
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int CompareTo(DecimalMeasurement<T> other) 
         {
-            decimal v1, v2, e;
+            decimal v1, v2;
             v1 = In(BaseUnit);
             v2 = other.In(BaseUnit);
             return v1.CompareTo(v2);

@@ -2,6 +2,7 @@
 <nuget xmlns="http://www.gehtsoft.com/build/nuget">
  <!-- versions. the FIRST version is the current -->
  <versions>
+  <version id="1.1.15">Update dependencies.</version>
   <version id="1.1.14">Add decimal measurements. Update dependencies.</version>
   <version id="1.1.13">Add solid angle units.</version>
   <version id="1.1.12">Fix comparison of very small values. Update dependencies, minor changes.</version>
@@ -11,13 +12,14 @@
   <owner>Gehtsoft</owner>
   <projectUrl>https://github.com/gehtsoft-usa/Gehtsoft.Measurements</projectUrl>
   <license type="expression">LGPL-2.1-or-later</license>
-  <copyright>Gehtsoft USA LLC 2016-2022</copyright>
+  <copyright>Gehtsoft USA LLC 2016-2024</copyright>
+  <custom-property id="readme">docs/README.md</custom-property>
  </properties>
  <projects>
    <project id="Gehtsoft.Measurements">
     <description>Measurements math, manipulations and unit conversion library</description>
     <additional-file file="../doc/Gehtsoft.Measurements.xml" target="*" />
-    <additional-file file="../nuget/readme.md" target="docs/" />
+    <additional-file file="../nuget/README.md" target="docs/" />
    </project>
  </projects>
 </nuget>
