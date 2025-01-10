@@ -3,11 +3,11 @@
 The C# library to manipulate and convert with various measurements/units (e.g. distances, weight, angles, temperatures, and so on)
 expressed in various units (e.g. distances in inches, yards, meters).
 
-The library may be useful for calculations, for example, in math, 
-physic or GIS that does not depend from the system of units used (e.g. SI/Metric or Imperial) 
-or to create a unit convertor application. 
+The library may be useful for calculations, for example, in math,
+physic or GIS that does not depend from the system of units used (e.g. SI/Metric or Imperial)
+or to create a unit convertor application.
 
-Currently, distance/length, velocity, weight, angular measurements, and 
+Currently, distance/length, velocity, weight, angular measurements, and
 energy units are supported.
 
 The library is shared under LGPL license.
@@ -20,6 +20,11 @@ defines the measurement unit to be used:
 
 ```csharp
  var v = new Measurement<DistanceUnit>(10, DistanceUnit.Feet);
+```
+
+or simply
+```
+ var v = DistanceUnit.Feet.New(10);
 ```
 
 You can then manipulate this value using C# operator, format them or
@@ -41,7 +46,7 @@ The class fully supports serialization using `System.Text.Json`
 and `Binaron.Serializer` (see https://github.com/zachsaw/Binaron.Serializer).
 `XmlSerializer` cannot be implemented for a readonly structures without
 introducing of non-safe code. Please refer to tests for an example
-how to implement an XML serialization
+how to implement an XML serialization in your code if needed
 (https://github.com/gehtsoft-usa/Gehtsoft.Measurements/blob/76fc639a657186dc91615839ca9ded4c14af7bc2/Gehtsoft.Measurements.Test/CoreClassesTest.cs#L181).
 
 Read more on http://docs.gehtsoftusa.com/Gehtsoft.Measurements/web-content.html#index.html

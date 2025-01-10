@@ -53,18 +53,12 @@ jobs:
 
       # upload report as build artifact
     - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       if: ${{always()}}
       with:
-        name: 'Test Run'
-        path: ${{github.workspace}}/${{env.file_name}}
+        name: 'testrun_${{env.file_name}}'
+        path: ${{github.workspace}}/
+        overwrite: true
+        include-hidden-files: true
 
-# - TBD: action is outdated and is not supported anymore, need to find a new one
-#      # add report as PR comment (if PR)
-#    - name: comment PR
-#      uses: machine-learning-apps/pr-comment@master
-#      if: ${{ github.event_name == 'pull_request' }}
-#      env:
-#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#      with:
-#        path: ${{env.file_name}}
+

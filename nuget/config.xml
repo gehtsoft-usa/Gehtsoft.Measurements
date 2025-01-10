@@ -2,6 +2,7 @@
 <nuget xmlns="http://www.gehtsoft.com/build/nuget">
  <!-- versions. the FIRST version is the current -->
  <versions>
+  <version id="1.1.14">Add decimal measurements. Update dependencies.</version>
   <version id="1.1.13">Add solid angle units.</version>
   <version id="1.1.12">Fix comparison of very small values. Update dependencies, minor changes.</version>
   <version id="1.1.11">Add troy oz, metric, uk and us tonne, typographical points and picas. Make some math methods extensions. Add new method to construct value (unit.New(value)). Add conversion from and to tuples.</version>
