@@ -14,13 +14,14 @@ jobs:
     runs-on: ubuntu-latest
     env:
       config: 'Release'
+      gs_nuget: 'https://proget.gehtsoft.com/nuget/public-nuget'
 
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 6.0.301
+        dotnet-version: 8.0.403
 
       # restore dependencies
     - name: Install dependencies

@@ -13,6 +13,7 @@ jobs:
     env:
       config: 'Release'
       gs-nuget: https://proget.gehtsoft.com/nuget/public-nuget
+      gs_nuget: https://proget.gehtsoft.com/nuget/public-nuget
     steps:
     - name: checkout sources
       uses: actions/checkout@v2
@@ -20,7 +21,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 6.0.301
+        dotnet-version: 8.0.403
 
     - name: Build release version
       run: |
