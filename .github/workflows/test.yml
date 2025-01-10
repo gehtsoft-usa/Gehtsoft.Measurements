@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       config: 'Release'
-      gs-nuget: 'https://proget.gehtsoft.com/nuget/public-nuget'
+      gs_nuget: 'https://proget.gehtsoft.com/nuget/public-nuget'
 
     steps:
     - uses: actions/checkout@v2
