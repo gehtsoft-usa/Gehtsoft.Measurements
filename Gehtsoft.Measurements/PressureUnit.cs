@@ -27,11 +27,25 @@
         Bar,
 
         /// <summary>
+        /// Millibar
+        /// </summary>
+        [Unit("mbar", 1)]
+        [Conversion(ConversionOperation.Multiply, 100)]
+        Millibar,
+
+        /// <summary>
         /// Atmosphere
         /// </summary>
         [Unit("atm", 3)]
         [Conversion(ConversionOperation.Multiply, 101325)]
         Atmosphere,
+
+        /// <summary>
+        /// Atmosphere
+        /// </summary>
+        [Unit("at", 3)]
+        [Conversion(ConversionOperation.Multiply, 98066.5)]
+        TechincalAtmosphere,
 
         /// <summary>
         /// Millimeters of mercury
@@ -51,7 +65,14 @@
         /// Pounds per square inch
         /// </summary>
         [Unit("psi", "lbf/in2", 1)]
-        [Conversion(ConversionOperation.Multiply, 6895)]
+        [Conversion(ConversionOperation.Multiply, 6894.76)]
         PoundsPerSquareInch,
+
+        /// <summary>
+        /// mm of water
+        /// </summary>
+        [Unit("mmH2O", 2)]
+        [Conversion(ConversionOperation.Multiply, 9.80638)]
+        MillimetersOfWater,
     }
 }

@@ -5,4 +5,6 @@ obj/
 TestResults/
 *.csproj.user
 *.nupkg
+.sonarqube/
 nuget/*.nuspec
+sonar.bat
