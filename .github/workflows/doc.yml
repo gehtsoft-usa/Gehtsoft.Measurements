@@ -12,14 +12,14 @@ jobs:
     runs-on: ubuntu-latest
     env:
       config: 'Release'
-      gs-nuget: https://proget.gehtsoft.com/nuget/public-nuget
-      gs_nuget: https://proget.gehtsoft.com/nuget/public-nuget
+      gs-nuget: https://www.myget.org/F/gehtsoft-public/api
+      gs_nuget: https://www.myget.org/F/gehtsoft-public/api
     steps:
     - name: checkout sources
-      uses: actions/checkout@v2
+      uses: actions/checkout@v7
 
     - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v6
       with:
         dotnet-version: 8.0.403
 
@@ -30,7 +30,7 @@ jobs:
 
     - name: Setup envionment for doc
       run: |
-        echo "gs-nuget=https://proget.gehtsoft.com/nuget/public-nuget" >> $GITHUB_ENV
+        echo "gs-nuget=https://www.myget.org/F/gehtsoft-public/api" >> $GITHUB_ENV
 
     - name: build doc
       run: |
@@ -41,7 +41,7 @@ jobs:
 
     - name: Deploy to GitHub Pages
       if: success()
-      uses: crazy-max/ghaction-github-pages@v2
+      uses: crazy-max/ghaction-github-pages@v5
       with:
         target_branch: gh-pages
         build_dir: doc/dst
