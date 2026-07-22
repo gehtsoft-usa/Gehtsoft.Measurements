@@ -25,8 +25,8 @@ jobs:
 
     - name: Build release version
       run: |
-        dotnet restore
-        dotnet build --configuration $config --no-restore
+        dotnet restore Gehtsoft.Measurements.sln
+        dotnet build Gehtsoft.Measurements.sln --configuration $config --no-restore
 
     - name: Setup envionment for doc
       run: |
