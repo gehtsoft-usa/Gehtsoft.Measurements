@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
@@ -111,7 +112,7 @@ namespace Gehtsoft.Measurements
         {
             if (format == "ND")
                 format = $"N{GetUnitDefaultAccuracy(Unit)}";
-            return $"{(format == "NF" ? Value.ToString() : Value.ToString(format))}{GetUnitName(Unit)}";
+            return $"{(format == "NF" ? Value.ToString(formatProvider) : Value.ToString(format, formatProvider))}{GetUnitName(Unit)}";
         }
 
         /// <summary>
@@ -140,13 +141,13 @@ namespace Gehtsoft.Measurements
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static double Convert(double value, T from, T to)
         {
-            if (from.CompareTo(to) == 0)
+            // EqualityComparer<T>.Default devirtualizes to an unboxed integer compare
+            // for enums on .NET Core+, unlike Enum.CompareTo(object) which boxes both operands.
+            if (EqualityComparer<T>.Default.Equals(from, to))
                 return value;
-            if (from.CompareTo(BaseUnit) != 0)
-                value = ToBase(value, from);
-            if (to.CompareTo(BaseUnit) != 0)
-                value = FromBase(value, to);
-            return value;
+            // ToBase/FromBase already return the value unchanged for the base unit,
+            // so the explicit base-unit checks are redundant.
+            return FromBase(ToBase(value, from), to);
         }
 
         /// <summary>
@@ -160,7 +161,8 @@ namespace Gehtsoft.Measurements
         public static Measurement<T> ZERO { get; } = new Measurement<T>(0, UnitUtils.GetBase<T>());
 
         private static readonly Func<T, string> mGetUnitName = CodeGenerator.GenerateGetUnitName<T>();
-        private static readonly Func<string, T> mParseUnit =  CodeGenerator.GenerateParseUnitName<T>();
+        private static readonly Dictionary<string, T> mParseMap = UnitUtils.GetParseMap<T>();
+        private static readonly Tuple<T, string>[] mUnitNames = UnitUtils.GetUnits<T>();
         private static readonly Func<T, int> mDefaultAccuracy = CodeGenerator.GenerateGetDefaultUnitAccuracy<T>();
         private static readonly Func<double, T, double> mToBase = CodeGenerator.GenerateConversion<T>(true);
         private static readonly Func<double, T, double> mFromBase = CodeGenerator.GenerateConversion<T>(false);
@@ -187,7 +189,7 @@ namespace Gehtsoft.Measurements
         /// Returns all units with their names
         /// </summary>
         /// <returns></returns>
-        public static Tuple<T, string>[] GetUnitNames() => UnitUtils.GetUnits<T>();
+        public static Tuple<T, string>[] GetUnitNames() => (Tuple<T, string>[])mUnitNames.Clone();
 
         /// <summary>
         /// Gets the name of the unit by its code
@@ -209,7 +211,12 @@ namespace Gehtsoft.Measurements
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static T ParseUnitName(string name) => mParseUnit(name);
+        public static T ParseUnitName(string name)
+        {
+            if (mParseMap.TryGetValue(name, out T unit))
+                return unit;
+            throw new ArgumentException("Unknown unit", nameof(name));
+        }
 
         /// <summary>
         /// Try to parse the value using the current culture
@@ -240,13 +247,35 @@ namespace Gehtsoft.Measurements
         /// Returns hash code of the value
         /// </summary>
         /// <returns></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         override public int GetHashCode()
         {
-            double value = Value;
-            if (Unit.CompareTo(BaseUnit) != 0)
-                value = ToBase(Value, Unit);
-            return value.GetHashCode();
+            // The hash must agree with the tolerance-based Equals: values that compare
+            // equal must hash equal. The exact base values of two tolerance-equal
+            // measurements differ by conversion rounding, so we quantize to fewer
+            // significant digits than the comparison tolerance (1e-12 relative) before
+            // hashing. A rare boundary straddle can still hash differently; that only
+            // degrades a hashed-collection lookup, it never corrupts the collection.
+            // ToBase returns the value unchanged when Unit is already the base unit.
+            return QuantizeForHash(ToBase(Value, Unit)).GetHashCode();
+        }
+
+        // Kept well below the 1e-12 relative comparison tolerance (tolerance-equal
+        // values agree to ~12 significant digits) so they almost always round to the
+        // same grid point here.
+        private const int HashSignificantDigits = 10;
+
+        private static double QuantizeForHash(double value)
+        {
+            if (value == 0.0)
+                return 0.0;                 // normalize -0.0 and avoid Log10(0)
+            if (double.IsNaN(value) || double.IsInfinity(value))
+                return value;
+            // Round to HashSignificantDigits significant figures (relative, to match
+            // the relative comparison tolerance). value * scale is always ~1e9 in
+            // magnitude regardless of value, so this neither overflows nor underflows.
+            int exponent = (int)Math.Floor(Math.Log10(Math.Abs(value)));
+            double scale = Math.Pow(10, HashSignificantDigits - 1 - exponent);
+            return Math.Round(value * scale) / scale;
         }
 
         private static bool TryParseInternal(CultureInfo cultureInfo, string text, out double value, out T unit)
@@ -280,14 +309,10 @@ namespace Gehtsoft.Measurements
             if (lastDigit == text.Length - 1)
                 return false;
 
-            try
-            {
-                unit = ParseUnitName(text.Substring(lastDigit + 1));
-            }
-            catch (ArgumentException )
-            {
+            // Non-throwing lookup: a failed unit parse is the routine case for TryParse,
+            // and a thrown/caught exception here costs microseconds versus nanoseconds.
+            if (!mParseMap.TryGetValue(text.Substring(lastDigit + 1), out unit))
                 return false;
-            }
 
             string n = text.Substring(0, lastDigit + 1);
             return double.TryParse(n, NumberStyles.Float | NumberStyles.AllowThousands, cultureInfo, out value);
@@ -316,7 +341,9 @@ namespace Gehtsoft.Measurements
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(Measurement<T> other)
         {
-            return other.In(BaseUnit) == this.In(BaseUnit);
+            // Same (tolerance-based) semantics as operator ==, so that == and Equals
+            // agree and physically-equal measurements in different units are equal.
+            return CompareTo(other) == 0;
         }
 
         /// <summary>
@@ -327,18 +354,15 @@ namespace Gehtsoft.Measurements
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int CompareTo(Measurement<T> other)
         {
-            double v1, v2, e;
-            v1 = In(BaseUnit);
-            v2 = other.In(BaseUnit);
-            var e1 = eps(v1);
-            var e2 = eps(v2);
-            e = Math.Min(e1, e2);
-            if (Math.Abs(v1 - v2) < e)
+            double v1 = In(BaseUnit);
+            double v2 = other.In(BaseUnit);
+            // Relative tolerance: ~50x cheaper than the previous Math.Pow/Log10 pair and,
+            // unlike Math.Log10, well-defined for negative values (Log10 of a negative is
+            // NaN, which disabled the tolerance entirely for negative measurements).
+            if (Math.Abs(v1 - v2) <= 1e-12 * Math.Max(Math.Abs(v1), Math.Abs(v2)))
                 return 0;
             return v1.CompareTo(v2);
         }
-
-        private static double eps(double value) => Math.Pow(10, Math.Round(Math.Log10(value)) - 12);
 
 
         /// <summary>

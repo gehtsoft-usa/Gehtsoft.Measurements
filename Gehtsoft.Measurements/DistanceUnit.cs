@@ -95,6 +95,50 @@
         [Unit("p", 1)]
         [Conversion(ConversionOperation.Divide, 6)]
         Pica,
+
+        /// <summary>
+        /// Micrometer (micron)
+        /// </summary>
+        [Unit("µm", 0)]
+        [Conversion(ConversionOperation.Divide, 25400)]
+        Micrometer,
+
+        /// <summary>
+        /// Decimeter
+        /// </summary>
+        [Unit("dm", 2)]
+        [Conversion(ConversionOperation.Divide, 0.254)]
+        Decimeter,
+
+        /// <summary>
+        /// Thou (1/1000 inch)
+        /// </summary>
+        [Unit("thou", 0)]
+        [Conversion(ConversionOperation.Divide, 1000)]
+        Thou,
+
+        /// <summary>
+        /// Furlong (660 international feet)
+        /// </summary>
+        // Based on the international foot (0.3048 m), consistent with Foot/Mile above.
+        // Some references use the US survey foot for the furlong (~0.30480061 m).
+        [Unit("fur", 3)]
+        [Conversion(ConversionOperation.Multiply, 7920)]
+        Furlong,
+
+        /// <summary>
+        /// Fathom (6 international feet)
+        /// </summary>
+        [Unit("ftm", 2)]
+        [Conversion(ConversionOperation.Multiply, 72)]
+        Fathom,
+
+        /// <summary>
+        /// Hand (4 inches)
+        /// </summary>
+        [Unit("hh", 1)]
+        [Conversion(ConversionOperation.Multiply, 4)]
+        Hand,
     }
 }
 

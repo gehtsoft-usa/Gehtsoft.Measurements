@@ -78,48 +78,6 @@ namespace Gehtsoft.Measurements
             return (Func<T, int>)functionDelegate;
         }
 
-        public static Func<string, T> GenerateParseUnitName<T>()
-        {
-            Type type = typeof(T);
-            var param = Expression.Parameter(typeof(string), "unit");
-            var returnTarget = Expression.Label(type);
-
-            //get fields and prepare cases for switch
-            var fields = type.GetFields(BindingFlags.Public | BindingFlags.Static);
-            var cases = new SwitchCase[fields.Length];
-
-            for (int i = 0; i < fields.Length; i++)
-            {
-                UnitAttribute attribute = fields[i].GetCustomAttribute<UnitAttribute>();
-                var value = Enum.ToObject(type, fields[i].GetRawConstantValue());
-
-                var returnStatement = Expression.Return(returnTarget, Expression.Constant(value));
-                Expression[] args;
-                if (attribute.HasAlternativeName)
-                    args = new Expression[] { Expression.Constant(attribute.Name), Expression.Constant(attribute.AlterantiveName) };
-                else
-                    args = new Expression[] { Expression.Constant(attribute.Name) };
-
-                cases[i] = Expression.SwitchCase(returnStatement, args);
-            }
-
-            //prepare default method throwing exception
-            var constructorInfo = typeof(ArgumentException).GetConstructor(new Type[] { typeof(string), typeof(string) });
-            var argumentException = Expression.New(constructorInfo, new Expression[] { Expression.Constant("Unknown unit"), Expression.Constant("unit") });
-            var defaultBody = Expression.Throw(argumentException);
-
-            //switch statement
-            var switchStmt = Expression.Switch(param, defaultBody, cases);
-
-            //method body
-            var body = Expression.Block(type, new Expression[] { switchStmt, Expression.Label(returnTarget, Expression.Constant(default(T))) });
-
-            //function 
-            var expression = Expression.Lambda(typeof(Func<string, T>), body, new ParameterExpression[] { param });
-            var functionDelegate = expression.Compile();
-            return (Func<string, T>)functionDelegate;
-        }
-
         public static Func<double, T, double> GenerateConversion<T>(bool direct)
         {
             Type type = typeof(T);

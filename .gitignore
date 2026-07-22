@@ -8,3 +8,6 @@ TestResults/
 .sonarqube/
 nuget/*.nuspec
 sonar.bat
+claude/settings.local.json
+.sonar.config
+coverage*.xml

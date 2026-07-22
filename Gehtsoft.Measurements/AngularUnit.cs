@@ -84,5 +84,12 @@
         [Unit("gon", "ᵍ", 0)]
         [Conversion(ConversionOperation.Multiply, 6.28318530717958, ConversionOperation.Divide, 400.0)]
         Gradian,
+
+        /// <summary>
+        /// Second of angle (1/60 of a minute of angle, 1/3600 of a degree)
+        /// </summary>
+        [Unit("arcsec", 1)]
+        [Conversion(ConversionOperation.Divide, 648000, ConversionOperation.Multiply, 3.14159265358979)]
+        ArcSecond,
     }
 }

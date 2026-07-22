@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -97,13 +97,13 @@ namespace Gehtsoft.Measurements.Test
         public void RecangularPrismVolume(double a, DistanceUnit ua, double b, DistanceUnit ub, double c, DistanceUnit uc, double e, VolumeUnit eu)
         {
             var x = MeasurementMath.RectangleArea(new Measurement<DistanceUnit>(a, ua), new Measurement<DistanceUnit>(b, ub));
-            var v = MeasurementMath.RecangularPrismVolume(x, new Measurement<DistanceUnit>(c, uc));
+            var v = MeasurementMath.RectangularPrismVolume(x, new Measurement<DistanceUnit>(c, uc));
             v.In(eu).Should().BeApproximately(e, 1e-6);
         }
 
         [Theory]
         [InlineData(4, WeightUnit.Kilogram, 3, VelocityUnit.MetersPerSecond, 18, EnergyUnit.Joule)]
-        [InlineData(55, WeightUnit.Grain, 2300, VelocityUnit.FeetPerSecond, 645.9287446, EnergyUnit.FootPound)]
+        [InlineData(55, WeightUnit.Grain, 2300, VelocityUnit.FeetPerSecond, 645.9287466, EnergyUnit.FootPound)]
         public void KineticEnergy(double m, WeightUnit wu, double v, VelocityUnit vu, double e, EnergyUnit eu)
         {
             var r = MeasurementMath.KineticEnergy(new Measurement<WeightUnit>(m, wu), new Measurement<VelocityUnit>(v, vu));
@@ -195,7 +195,8 @@ namespace Gehtsoft.Measurements.Test
             (+DistanceUnit.Centimeter.New(5)).Should().Be(DistanceUnit.Centimeter.New(5));
             (-DistanceUnit.Centimeter.New(5)).Should().Be(DistanceUnit.Centimeter.New(-5));
 
-            (WeightUnit.UKTonne.New(1) / WeightUnit.USTonne.New(1)).Should().BeApproximately(1.1201764057331863285556780595369, 1e-10);
+            // UKTonne (2240 lb) / USTonne (2000 lb) is now exact after the B3 accuracy fix.
+            (WeightUnit.UKTonne.New(1) / WeightUnit.USTonne.New(1)).Should().BeApproximately(1.12, 1e-10);
         }
 
         [Fact]

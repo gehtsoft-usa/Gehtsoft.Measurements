@@ -31,7 +31,7 @@
   <ContentFromPackage Package="gehtsoft.build.docgen" Source="Content/template/html/pageImages" Version="0.1.33" Destination="$(DocTargetDir)/pageImages" />
  </Target>
  <ItemGroup>
-  <DocSource Include="$(MSBuildProjectDirectory)/../Gehtsoft.Measurements/bin/Release/netstandard2.0/Gehtsoft.Measurements.dll" />
+  <DocSource Include="$(MSBuildProjectDirectory)/../Gehtsoft.Measurements/bin/Release/net8.0/Gehtsoft.Measurements.dll" />
  </ItemGroup>
  <Target Name="Scan">
   <Asm2Xml Assemblies="@(DocSource)" OutputXml="obj/raw.xml" Mode="net80" />

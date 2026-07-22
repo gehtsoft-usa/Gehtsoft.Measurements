@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using Xunit;
 
 namespace Gehtsoft.Measurements.Test
@@ -10,9 +10,9 @@ namespace Gehtsoft.Measurements.Test
         [InlineData(1, PressureUnit.Atmosphere, 760, PressureUnit.MillimetersOfMercury, 1e-3)]
         [InlineData(29.92, PressureUnit.InchesOfMercury, 759.96801, PressureUnit.MillimetersOfMercury, 1e-3)]
         [InlineData(1, PressureUnit.PoundsPerSquareInch, 0.0689476, PressureUnit.Bar, 1e-5)]
-        [InlineData(15, PressureUnit.TechincalAtmosphere, 1470997.5, PressureUnit.Pascal, 1e-2)]
+        [InlineData(15, PressureUnit.TechnicalAtmosphere, 1470997.5, PressureUnit.Pascal, 1e-2)]
         [InlineData(1, PressureUnit.Atmosphere, 1013.25, PressureUnit.Millibar, 5e-3)]
-        [InlineData(1, PressureUnit.Atmosphere, 10332.56, PressureUnit.MillimetersOfWater, 5e-3)]
+        [InlineData(1, PressureUnit.Atmosphere, 10332.2745, PressureUnit.MillimetersOfWater, 5e-3)]
 
 
         public void Conversion(double value, PressureUnit unit, double expected, PressureUnit targetUnit, double accurracy = 1e-10)

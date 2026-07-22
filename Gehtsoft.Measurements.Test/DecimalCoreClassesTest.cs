@@ -1,5 +1,5 @@
 ﻿using Binaron.Serializer;
-using FluentAssertions;
+using AwesomeAssertions;
 using System;
 using System.Globalization;
 using System.IO;

@@ -1,5 +1,5 @@
 ﻿using Binaron.Serializer;
-using FluentAssertions;
+using AwesomeAssertions;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -369,6 +369,64 @@ namespace Gehtsoft.Measurements.Test
         {
             var u = new Measurement<DistanceUnit>(1, DistanceUnit.Yard);
             u.GetHashCode().Should().Be(36.0.GetHashCode());
+        }
+
+        [Fact]
+        public void EqualsHashCode_ConsistentWithToleranceEquality()
+        {
+            // Two base-unit values within the relative tolerance (1e-12) but not bit-exact.
+            var a = new Measurement<DistanceUnit>(1000.0, DistanceUnit.Inch);
+            var b = new Measurement<DistanceUnit>(1000.0 + 1e-10, DistanceUnit.Inch);
+
+            (a == b).Should().BeTrue();
+            a.Equals(b).Should().BeTrue();           // Equals now agrees with ==
+            a.GetHashCode().Should().Be(b.GetHashCode());
+
+            // Physically-equal measurements expressed in different units.
+            var yard = new Measurement<DistanceUnit>(1, DistanceUnit.Yard);
+            var inch = new Measurement<DistanceUnit>(36, DistanceUnit.Inch);
+
+            (yard == inch).Should().BeTrue();
+            yard.Equals(inch).Should().BeTrue();
+            yard.GetHashCode().Should().Be(inch.GetHashCode());
+
+            // Hashed collections resolve membership via Equals + GetHashCode.
+            var set = new HashSet<Measurement<DistanceUnit>> { a };
+            set.Contains(b).Should().BeTrue();
+
+            // Values outside the tolerance stay unequal.
+            var c = new Measurement<DistanceUnit>(1001.0, DistanceUnit.Inch);
+            (a == c).Should().BeFalse();
+            a.Equals(c).Should().BeFalse();
+        }
+
+        [Fact]
+        public void GetHashCode_UsableAsDictionaryKey()
+        {
+            var dict = new Dictionary<Measurement<DistanceUnit>, int>();
+            const int count = 500;
+
+            // Distinct keys (0.5 m apart, far beyond tolerance) must stay distinct:
+            // no two collapse into the same entry.
+            for (int i = 1; i <= count; i++)
+                dict[new Measurement<DistanceUnit>(i * 0.5, DistanceUnit.Meter)] = i;
+            dict.Count.Should().Be(count);
+
+            for (int i = 1; i <= count; i++)
+            {
+                var original = new Measurement<DistanceUnit>(i * 0.5, DistanceUnit.Meter);
+
+                // Look up via a round-trip through another unit (base value differs by
+                // rounding) — must still resolve to the same entry.
+                var roundTripped = original.To(DistanceUnit.Foot).To(DistanceUnit.Meter);
+                dict.TryGetValue(roundTripped, out int viaRoundTrip).Should().BeTrue();
+                viaRoundTrip.Should().Be(i);
+
+                // Look up via a different unit entirely — must resolve as well.
+                var inFeet = original.To(DistanceUnit.Foot);
+                dict.TryGetValue(inFeet, out int viaFeet).Should().BeTrue();
+                viaFeet.Should().Be(i);
+            }
         }
     }
 }

@@ -39,5 +39,26 @@
         [Unit("lb/ft³", "lb/ft3", 2)]
         [Conversion(ConversionOperation.Multiply, 16.0185)]
         PoundsPerCubicFoot,
+
+        /// <summary>
+        /// Grains per cubic inch (powder loading density)
+        /// </summary>
+        [Unit("gr/in³", "gr/in3", 3)]
+        [Conversion(ConversionOperation.Multiply, 64.79891 / 16.387064)]
+        GrainsPerCubicInch,
+
+        /// <summary>
+        /// Kilograms per liter
+        /// </summary>
+        [Unit("kg/l", 3)]
+        [Conversion(ConversionOperation.Multiply, 1000)]
+        KilogramPerLiter,
+
+        /// <summary>
+        /// Pounds per US gallon
+        /// </summary>
+        [Unit("lb/gal", 2)]
+        [Conversion(ConversionOperation.Multiply, 453.59237 / 3.785411784)]
+        PoundsPerGallon,
     }
 }

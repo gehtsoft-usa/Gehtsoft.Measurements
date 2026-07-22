@@ -182,7 +182,17 @@ namespace Gehtsoft.Measurements
         /// <param name="depth"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Measurement<VolumeUnit> RecangularPrismVolume(Measurement<AreaUnit> area, Measurement<DistanceUnit> depth) => new Measurement<VolumeUnit>(area.In(AreaUnit.SquareMeter) * depth.In(DistanceUnit.Meter), VolumeUnit.CubicMeter);
+        public static Measurement<VolumeUnit> RectangularPrismVolume(Measurement<AreaUnit> area, Measurement<DistanceUnit> depth) => new Measurement<VolumeUnit>(area.In(AreaUnit.SquareMeter) * depth.In(DistanceUnit.Meter), VolumeUnit.CubicMeter);
+
+        /// <summary>
+        /// Calculate the volume of a rectangular prism (misspelled name kept for compatibility, use RectangularPrismVolume instead)
+        /// </summary>
+        /// <param name="area"></param>
+        /// <param name="depth"></param>
+        /// <returns></returns>
+        [Obsolete("Use RectangularPrismVolume instead.")]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Measurement<VolumeUnit> RecangularPrismVolume(Measurement<AreaUnit> area, Measurement<DistanceUnit> depth) => RectangularPrismVolume(area, depth);
 
         /// <summary>
         /// Calculate pressure

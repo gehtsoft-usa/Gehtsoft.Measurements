@@ -20,12 +20,18 @@ namespace Gehtsoft.Measurements
         /// <para>The alternative name of the unit</para>
         /// <para>An example of two names if inch, that may be records as 5in as well as 5".</para>
         /// </summary>
-        public string AlterantiveName { get; set; }
+        public string AlternativeName { get; set; }
+
+        /// <summary>
+        /// <para>The alternative name of the unit (misspelled name kept for compatibility, use AlternativeName instead)</para>
+        /// </summary>
+        [Obsolete("Use AlternativeName instead.")]
+        public string AlterantiveName { get => AlternativeName; set => AlternativeName = value; }
 
         /// <summary>
         /// The flag indicating whether the unit has alternative name
         /// </summary>
-        public bool HasAlternativeName => !string.IsNullOrEmpty(AlterantiveName);
+        public bool HasAlternativeName => !string.IsNullOrEmpty(AlternativeName);
 
         /// <summary>
         /// The default accuracy (number of digits after decimal point).
@@ -52,7 +58,7 @@ namespace Gehtsoft.Measurements
         public UnitAttribute(string name, string alternativeName, int defaultAccuracy)
         {
             Name = name;
-            AlterantiveName = alternativeName;
+            AlternativeName = alternativeName;
             DefaultAccuracy = defaultAccuracy;
         }
     }

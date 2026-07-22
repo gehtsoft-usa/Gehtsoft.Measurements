@@ -32,5 +32,12 @@
         [Unit("g0", 3)]
         [Conversion(ConversionOperation.Multiply, 980.665)]
         EarthGravity,
+
+        /// <summary>
+        /// Inches per second in second
+        /// </summary>
+        [Unit("in/s²", "in/s2", 3)]
+        [Conversion(ConversionOperation.Multiply, 2.54)]
+        InchesPerSecondSquare,
     }
 }

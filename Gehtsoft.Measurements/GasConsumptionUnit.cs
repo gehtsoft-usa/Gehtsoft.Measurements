@@ -25,5 +25,19 @@
         [Unit("mpg", "mi/gal", 1)]
         [Conversion(ConversionOperation.DivideFactor, 2.35214583)]
         MilesPerGallon,
+
+        /// <summary>
+        /// Kilometers per liter
+        /// </summary>
+        [Unit("km/l", 1)]
+        [Conversion(ConversionOperation.DivideFactor, 1)]
+        KilometersPerLiter,
+
+        /// <summary>
+        /// Imperial (UK) miles per gallon
+        /// </summary>
+        [Unit("imp.mpg", "imp.mi/gal", 1)]
+        [Conversion(ConversionOperation.DivideFactor, 4.54609 / 1.609344)]
+        ImperialMilesPerGallon,
     }
 }

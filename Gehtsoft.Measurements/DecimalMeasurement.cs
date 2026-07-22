@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
@@ -107,7 +108,7 @@ namespace Gehtsoft.Measurements
         {
             if (format == "ND")
                 format = $"N{GetUnitDefaultAccuracy(Unit)}";
-            return $"{(format == "NF" ? Value.ToString() : Value.ToString(format))}{GetUnitName(Unit)}";
+            return $"{(format == "NF" ? Value.ToString(formatProvider) : Value.ToString(format, formatProvider))}{GetUnitName(Unit)}";
         }
 
         /// <summary>
@@ -136,13 +137,13 @@ namespace Gehtsoft.Measurements
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static decimal Convert(decimal value, T from, T to)
         {
-            if (from.CompareTo(to) == 0)
+            // EqualityComparer<T>.Default devirtualizes to an unboxed integer compare
+            // for enums on .NET Core+, unlike Enum.CompareTo(object) which boxes both operands.
+            if (EqualityComparer<T>.Default.Equals(from, to))
                 return value;
-            if (from.CompareTo(BaseUnit) != 0)
-                value = ToBase(value, from);
-            if (to.CompareTo(BaseUnit) != 0)
-                value = FromBase(value, to);
-            return value;
+            // ToBase/FromBase already return the value unchanged for the base unit,
+            // so the explicit base-unit checks are redundant.
+            return FromBase(ToBase(value, from), to);
         }
 
         /// <summary>
@@ -156,7 +157,8 @@ namespace Gehtsoft.Measurements
         public static Measurement<T> ZERO { get; } = new Measurement<T>(0, UnitUtils.GetBase<T>());
 
         private static readonly Func<T, string> mGetUnitName = CodeGenerator.GenerateGetUnitName<T>();
-        private static readonly Func<string, T> mParseUnit = CodeGenerator.GenerateParseUnitName<T>();
+        private static readonly Dictionary<string, T> mParseMap = UnitUtils.GetParseMap<T>();
+        private static readonly Tuple<T, string>[] mUnitNames = UnitUtils.GetUnits<T>();
         private static readonly Func<T, int> mDefaultAccuracy = CodeGenerator.GenerateGetDefaultUnitAccuracy<T>();
         private static readonly Func<decimal, T, decimal> mToBaseDecimal = CodeGenerator.GenerateConversionDecimal<T>(true);
         private static readonly Func<decimal, T, decimal> mFromBaseDecimal = CodeGenerator.GenerateConversionDecimal<T>(false);
@@ -183,7 +185,7 @@ namespace Gehtsoft.Measurements
         /// Returns all units with their names
         /// </summary>
         /// <returns></returns>
-        public static Tuple<T, string>[] GetUnitNames() => UnitUtils.GetUnits<T>();
+        public static Tuple<T, string>[] GetUnitNames() => (Tuple<T, string>[])mUnitNames.Clone();
 
         /// <summary>
         /// Gets the name of the unit by its code
@@ -205,7 +207,12 @@ namespace Gehtsoft.Measurements
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static T ParseUnitName(string name) => mParseUnit(name);
+        public static T ParseUnitName(string name)
+        {
+            if (mParseMap.TryGetValue(name, out T unit))
+                return unit;
+            throw new ArgumentException("Unknown unit", nameof(name));
+        }
 
         /// <summary>
         /// Try to parse the value using the current culture
@@ -276,14 +283,10 @@ namespace Gehtsoft.Measurements
             if (lastDigit == text.Length - 1)
                 return false;
 
-            try
-            {
-                unit = ParseUnitName(text.Substring(lastDigit + 1));
-            }
-            catch (ArgumentException)
-            {
+            // Non-throwing lookup: a failed unit parse is the routine case for TryParse,
+            // and a thrown/caught exception here costs microseconds versus nanoseconds.
+            if (!mParseMap.TryGetValue(text.Substring(lastDigit + 1), out unit))
                 return false;
-            }
 
             string n = text.Substring(0, lastDigit + 1);
             return decimal.TryParse(n, NumberStyles.Float | NumberStyles.AllowThousands, cultureInfo, out value);

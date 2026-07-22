@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using System;
 using System.Linq;
 using Xunit;
@@ -120,7 +120,8 @@ namespace Gehtsoft.Measurements.Test
             (+DistanceUnit.Centimeter.NewDecimal(5m)).Should().Be(DistanceUnit.Centimeter.NewDecimal(5m));
             (-DistanceUnit.Centimeter.NewDecimal(5m)).Should().Be(DistanceUnit.Centimeter.NewDecimal(-5m));
 
-            (WeightUnit.UKTonne.NewDecimal(1m) / WeightUnit.USTonne.NewDecimal(1m)).Should().BeApproximately(1.1201764057331863285556780595369m, 1e-10m);
+            // UKTonne (2240 lb) / USTonne (2000 lb) is now exact after the B3 accuracy fix.
+            (WeightUnit.UKTonne.NewDecimal(1m) / WeightUnit.USTonne.NewDecimal(1m)).Should().BeApproximately(1.12m, 1e-10m);
         }
 
         [Fact]
