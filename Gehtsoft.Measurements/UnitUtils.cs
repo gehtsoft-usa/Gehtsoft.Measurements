@@ -39,16 +39,18 @@ namespace Gehtsoft.Measurements
         }
 
         /// <summary>
-        /// Builds a name to unit lookup (including alternative names) for a non-throwing,
-        /// O(1) unit-name parse. Ordinal comparison matches the string switch that was
-        /// previously generated for the same purpose.
+        /// Builds a (name, unit) list (including alternative names) for a non-throwing,
+        /// allocation-free unit-name parse. An array of short names is scanned with an
+        /// ordinal span comparison, which lets the parser slice the input with spans
+        /// instead of allocating substrings; the unit sets are small enough that the
+        /// linear scan is faster than allocating a probe string for a dictionary.
         /// </summary>
-        public static Dictionary<string, T> GetParseMap<T>()
+        public static (string Name, T Unit)[] GetParseList<T>()
             where T : Enum
         {
             Type type = typeof(T);
             var fields = type.GetFields(BindingFlags.Public | BindingFlags.Static);
-            var map = new Dictionary<string, T>(fields.Length, StringComparer.Ordinal);
+            var list = new List<(string, T)>(fields.Length);
             for (int i = 0; i < fields.Length; i++)
             {
                 // Skip obsolete members so a renamed misspelling does not shadow the
@@ -57,11 +59,11 @@ namespace Gehtsoft.Measurements
                     continue;
                 UnitAttribute attribute = fields[i].GetCustomAttribute<UnitAttribute>();
                 T value = (T)fields[i].GetRawConstantValue();
-                map[attribute.Name] = value;
+                list.Add((attribute.Name, value));
                 if (attribute.HasAlternativeName)
-                    map[attribute.AlternativeName] = value;
+                    list.Add((attribute.AlternativeName, value));
             }
-            return map;
+            return list.ToArray();
         }
     }
 }

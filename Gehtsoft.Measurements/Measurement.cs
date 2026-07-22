@@ -161,7 +161,7 @@ namespace Gehtsoft.Measurements
         public static Measurement<T> ZERO { get; } = new Measurement<T>(0, UnitUtils.GetBase<T>());
 
         private static readonly Func<T, string> mGetUnitName = CodeGenerator.GenerateGetUnitName<T>();
-        private static readonly Dictionary<string, T> mParseMap = UnitUtils.GetParseMap<T>();
+        private static readonly (string Name, T Unit)[] mParseList = UnitUtils.GetParseList<T>();
         private static readonly Tuple<T, string>[] mUnitNames = UnitUtils.GetUnits<T>();
         private static readonly Func<T, int> mDefaultAccuracy = CodeGenerator.GenerateGetDefaultUnitAccuracy<T>();
         private static readonly Func<double, T, double> mToBase = CodeGenerator.GenerateConversion<T>(true);
@@ -213,9 +213,26 @@ namespace Gehtsoft.Measurements
         /// <returns></returns>
         public static T ParseUnitName(string name)
         {
-            if (mParseMap.TryGetValue(name, out T unit))
+            if (TryParseUnit(name.AsSpan(), out T unit))
                 return unit;
             throw new ArgumentException("Unknown unit", nameof(name));
+        }
+
+        // Zero-allocation, non-throwing unit-name lookup. Ordinal span comparison over
+        // the small unit set lets the parser avoid allocating substrings entirely.
+        private static bool TryParseUnit(ReadOnlySpan<char> name, out T unit)
+        {
+            var list = mParseList;
+            for (int i = 0; i < list.Length; i++)
+            {
+                if (name.SequenceEqual(list[i].Name.AsSpan()))
+                {
+                    unit = list[i].Unit;
+                    return true;
+                }
+            }
+            unit = default;
+            return false;
         }
 
         /// <summary>
@@ -309,13 +326,13 @@ namespace Gehtsoft.Measurements
             if (lastDigit == text.Length - 1)
                 return false;
 
-            // Non-throwing lookup: a failed unit parse is the routine case for TryParse,
-            // and a thrown/caught exception here costs microseconds versus nanoseconds.
-            if (!mParseMap.TryGetValue(text.Substring(lastDigit + 1), out unit))
+            // Slice with spans so a successful parse allocates nothing (no Substring),
+            // and use the non-throwing lookup for the routine parse-failure case.
+            ReadOnlySpan<char> span = text.AsSpan();
+            if (!TryParseUnit(span.Slice(lastDigit + 1), out unit))
                 return false;
 
-            string n = text.Substring(0, lastDigit + 1);
-            return double.TryParse(n, NumberStyles.Float | NumberStyles.AllowThousands, cultureInfo, out value);
+            return double.TryParse(span.Slice(0, lastDigit + 1), NumberStyles.Float | NumberStyles.AllowThousands, cultureInfo, out value);
         }
 
         /// <summary>

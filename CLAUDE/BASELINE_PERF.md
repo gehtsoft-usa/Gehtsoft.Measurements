@@ -57,8 +57,10 @@ Same machine / runtime. All 284 tests still green.
 - **A1** eliminated all conversion/comparison allocations (the enum boxing) — every hot-path
   op is now 0 B, and conversions/comparisons are ~8–12× faster.
 - **A3** turned the exception-driven `TryParse` failure from ~4.9 µs into ~15 ns (~319×).
-  The success path is unchanged in allocation (the 56 B are the two `Substring` calls —
-  a future A5-style `ReadOnlySpan<char>` rewrite would remove those).
+  Follow-up (v1.1.18): `TryParseInternal` now slices with `ReadOnlySpan<char>` and looks
+  the unit up via an ordinal span scan over the small unit set, so both the success and
+  failure paths allocate **0 B** (was 56 B on success) — verified with
+  `GC.GetAllocatedBytesForCurrentThread`.
 - **A4** cut `GetUnitNames` from ~9.9 µs / 4.7 KB to ~28 ns / 128 B (just the defensive clone).
 - **A2** is folded into the comparison numbers above; `Compare_Negative` now takes the
   real tolerance path instead of the NaN-disabled one.
