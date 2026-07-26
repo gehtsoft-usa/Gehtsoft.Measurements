@@ -8,7 +8,7 @@ namespace Gehtsoft.Measurements
         /// <summary>
         /// Meters per second
         /// </summary>
-        [Unit("m/s", 0)]
+        [Unit("m/s", "mps", 0)]
         [Conversion(ConversionOperation.Base)]
         MetersPerSecond = 0,
 
@@ -22,7 +22,7 @@ namespace Gehtsoft.Measurements
         /// <summary>
         /// Feet per second
         /// </summary>
-        [Unit("ft/s", 1)]
+        [Unit("ft/s", "fps", 1)]
         [Conversion(ConversionOperation.Multiply, 0.3048)]
         FeetPerSecond,
 
