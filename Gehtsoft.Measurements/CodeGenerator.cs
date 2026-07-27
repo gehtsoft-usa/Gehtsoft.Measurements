@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
@@ -8,7 +9,7 @@ namespace Gehtsoft.Measurements
 {
     internal static class CodeGenerator
     {
-        public static Func<T, string> GenerateGetUnitName<T>()
+        public static Func<T, string> GenerateGetUnitName<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>()
         {
             Type type = typeof(T);
             var param = Expression.Parameter(type, "unit");
@@ -43,7 +44,7 @@ namespace Gehtsoft.Measurements
             return (Func<T, string>)functionDelegate;
         }
 
-        public static Func<T, int> GenerateGetDefaultUnitAccuracy<T>()
+        public static Func<T, int> GenerateGetDefaultUnitAccuracy<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>()
         {
             Type type = typeof(T);
             var param = Expression.Parameter(type, "unit");
@@ -78,7 +79,7 @@ namespace Gehtsoft.Measurements
             return (Func<T, int>)functionDelegate;
         }
 
-        public static Func<double, T, double> GenerateConversion<T>(bool direct)
+        public static Func<double, T, double> GenerateConversion<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(bool direct)
         {
             Type type = typeof(T);
             var valueParameter = Expression.Parameter(typeof(double), "value");
@@ -141,9 +142,18 @@ namespace Gehtsoft.Measurements
             return OperationToReverseExpression(secondExpression, attribute.Operation, attribute.Factor, attribute.ConversionInterface);
         }
 
-        private static readonly Type gMath = typeof(Math);
-        private static readonly MethodInfo gTan = gMath.GetMethod(nameof(Math.Tan), new Type[] { typeof(double) });
-        private static readonly MethodInfo gAtan = gMath.GetMethod(nameof(Math.Atan), new Type[] { typeof(double) });
+        // Taken from a delegate rather than looked up by name: the trimmer sees the method
+        // being referenced and keeps it, which a Type.GetMethod(string) call cannot tell it.
+        private static readonly MethodInfo gTan = ((Func<double, double>)Math.Tan).Method;
+        private static readonly MethodInfo gAtan = ((Func<double, double>)Math.Atan).Method;
+
+        // The custom conversion is invoked through the interface, so the method is known
+        // statically. Resolving it from the implementing type instead (op.GetType()) hides it
+        // from the trimmer, which can then remove the very method the conversion calls.
+        private static readonly MethodInfo gCustomToBase = typeof(ICustomConversionOperation).GetMethod(nameof(ICustomConversionOperation.ToBase));
+        private static readonly MethodInfo gCustomFromBase = typeof(ICustomConversionOperation).GetMethod(nameof(ICustomConversionOperation.FromBase));
+        private static readonly MethodInfo gCustomToBaseDecimal = typeof(ICustomConversionOperation2).GetMethod(nameof(ICustomConversionOperation2.ToBaseDecimal));
+        private static readonly MethodInfo gCustomFromBaseDecimal = typeof(ICustomConversionOperation2).GetMethod(nameof(ICustomConversionOperation2.FromBaseDecimal));
 
         private static Expression OperationToExpression(Expression value, ConversionOperation operation, double factor, ICustomConversionOperation op = null)
         {
@@ -170,7 +180,7 @@ namespace Gehtsoft.Measurements
                 case ConversionOperation.Atan:
                     return Expression.Call(null, gAtan, new Expression[] { value });
                 case ConversionOperation.Custom:
-                    return Expression.Call(Expression.Constant(op), op.GetType().GetMethod(nameof(ICustomConversionOperation.ToBase)), new Expression[] { value });
+                    return Expression.Call(Expression.Constant(op, typeof(ICustomConversionOperation)), gCustomToBase, new Expression[] { value });
             }
             throw new ArgumentException($"Operation {operation} is not support", nameof(operation));
         }
@@ -200,13 +210,13 @@ namespace Gehtsoft.Measurements
                 case ConversionOperation.Atan:
                     return Expression.Call(null, gTan, new Expression[] { value });
                 case ConversionOperation.Custom:
-                    return Expression.Call(Expression.Constant(op), op.GetType().GetMethod(nameof(ICustomConversionOperation.FromBase)), new Expression[] { value });
+                    return Expression.Call(Expression.Constant(op, typeof(ICustomConversionOperation)), gCustomFromBase, new Expression[] { value });
             }
             throw new ArgumentException($"Operation {operation} is not support", nameof(operation));
         }
 
 
-        public static Func<decimal, T, decimal> GenerateConversionDecimal<T>(bool direct)
+        public static Func<decimal, T, decimal> GenerateConversionDecimal<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(bool direct)
         {
             Type type = typeof(T);
             var valueParameter = Expression.Parameter(typeof(decimal), "value");
@@ -307,12 +317,12 @@ namespace Gehtsoft.Measurements
                         if (op2 == null)
                         {
                             var arg = Expression.Convert(value, typeof(double));
-                            var call = Expression.Call(Expression.Constant(op), op.GetType().GetMethod(nameof(ICustomConversionOperation.ToBase)), new Expression[] { arg });
+                            var call = Expression.Call(Expression.Constant(op, typeof(ICustomConversionOperation)), gCustomToBase, new Expression[] { arg });
                             return Expression.Convert(call, typeof(decimal));
                         }
                         else
                         {
-                            return Expression.Call(Expression.Constant(op2), op2.GetType().GetMethod(nameof(ICustomConversionOperation2.ToBaseDecimal)), new Expression[] { value });
+                            return Expression.Call(Expression.Constant(op2, typeof(ICustomConversionOperation2)), gCustomToBaseDecimal, new Expression[] { value });
                         }
                     }
             }
@@ -357,12 +367,12 @@ namespace Gehtsoft.Measurements
                         if (op2 == null)
                         {
                             var arg = Expression.Convert(value, typeof(double));
-                            var call = Expression.Call(Expression.Constant(op), op.GetType().GetMethod(nameof(ICustomConversionOperation.FromBase)), new Expression[] { arg });
+                            var call = Expression.Call(Expression.Constant(op, typeof(ICustomConversionOperation)), gCustomFromBase, new Expression[] { arg });
                             return Expression.Convert(call, typeof(decimal));
                         }
                         else
                         {
-                            return Expression.Call(Expression.Constant(op2), op2.GetType().GetMethod(nameof(ICustomConversionOperation2.FromBaseDecimal)), new Expression[] { value });
+                            return Expression.Call(Expression.Constant(op2, typeof(ICustomConversionOperation2)), gCustomFromBaseDecimal, new Expression[] { value });
                         }
                     }
             }

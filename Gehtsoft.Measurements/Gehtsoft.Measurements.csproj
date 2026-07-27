@@ -6,6 +6,17 @@
     <TargetFramework>net8.0</TargetFramework>
     <Version>$(VersionMajor)</Version>
     <DocumentationFile>bin/doc.xml</DocumentationFile>
+    <!-- The library reflects over the unit enumeration and builds its conversion delegates at
+         run time. The analyzers are enabled so that every such entry point either carries the
+         annotation which preserves what it needs, or the annotation which tells the consumer
+         that it cannot be preserved. The build is clean under both, which is what lets the
+         assembly be declared trimmable.
+         IsAotCompatible is deliberately NOT set: Expression.Compile falls back to the
+         expression interpreter under NativeAOT, which works but is far slower than the
+         compiled delegates this library relies on for its speed. -->
+    <EnableAotAnalyzer>true</EnableAotAnalyzer>
+    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+    <IsTrimmable>true</IsTrimmable>
   </PropertyGroup>
 
   <ItemGroup>

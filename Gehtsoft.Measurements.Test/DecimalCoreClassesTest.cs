@@ -366,7 +366,24 @@ namespace Gehtsoft.Measurements.Test
             var u = new DecimalMeasurement<DistanceUnit>(1, DistanceUnit.Yard);
             u.GetHashCode().Should().Be((36.0m).GetHashCode());
         }
+        /// <summary>
+        /// ZERO must be a decimal measurement, not the double-based one.
+        /// </summary>
+        /// <remarks>
+        /// It used to be declared as Measurement&lt;T&gt;, which compiled at every call site only
+        /// because of the implicit conversion between the two measurement types, and quietly
+        /// dragged the value through a double on the way.
+        /// </remarks>
+        [Fact]
+        public void ZeroIsADecimalMeasurement()
+        {
+            typeof(DecimalMeasurement<TestUnit>).GetProperty(nameof(DecimalMeasurement<TestUnit>.ZERO))
+                                                .PropertyType
+                                                .Should().Be(typeof(DecimalMeasurement<TestUnit>));
+
+            DecimalMeasurement<TestUnit>.ZERO.GetType().Should().Be(typeof(DecimalMeasurement<TestUnit>));
+            DecimalMeasurement<TestUnit>.ZERO.Value.Should().Be(0m);
+            DecimalMeasurement<TestUnit>.ZERO.Unit.Should().Be(DecimalMeasurement<TestUnit>.BaseUnit);
+        }
     }
 }
-
-

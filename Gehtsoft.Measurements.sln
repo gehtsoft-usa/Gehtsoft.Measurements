@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gehtsoft.Measurements", "Ge
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gehtsoft.Measurements.Test", "Gehtsoft.Measurements.Test\Gehtsoft.Measurements.Test.csproj", "{15E9136D-771C-46A4-A95B-D870E82C7EA1}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gehtsoft.Measurements.Benchmark", "Gehtsoft.Measurements.Benchmark\Gehtsoft.Measurements.Benchmark.csproj", "{37E686D6-4F18-439E-94FD-A955A4C696E6}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3F91B56D-D4E5-4AB6-B1A4-ED39E4C85480}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
@@ -26,6 +28,10 @@ Global
 		{15E9136D-771C-46A4-A95B-D870E82C7EA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{15E9136D-771C-46A4-A95B-D870E82C7EA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{15E9136D-771C-46A4-A95B-D870E82C7EA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37E686D6-4F18-439E-94FD-A955A4C696E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37E686D6-4F18-439E-94FD-A955A4C696E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37E686D6-4F18-439E-94FD-A955A4C696E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37E686D6-4F18-439E-94FD-A955A4C696E6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

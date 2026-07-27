@@ -2,7 +2,7 @@
 <nuget xmlns="http://www.gehtsoft.com/build/nuget">
  <!-- versions. the FIRST version is the current -->
  <versions>
-  <version id="1.1.18">Allocation-free value parsing (ReadOnlySpan based).</version>
+  <version id="1.1.18">Allocation-free value parsing (ReadOnlySpan based), few fixes.</version>
   <version id="1.1.17">Netstandard support dropped. Performance improvements. Update dependencies. New units for weight, volume, energy, velocity. New measurements: rotational speed, torque</version>
   <version id="1.1.16">Update dependencies. New pressure units.</version>
   <version id="1.1.15">Update dependencies.</version>

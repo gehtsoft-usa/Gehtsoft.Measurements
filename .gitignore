@@ -11,3 +11,4 @@ sonar.bat
 claude/settings.local.json
 .sonar.config
 coverage*.xml
+BenchmarkDotNet.Artifacts/

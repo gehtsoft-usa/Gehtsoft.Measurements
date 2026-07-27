@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Text.Json.Serialization;
 
 namespace Gehtsoft.Measurements
@@ -19,7 +22,17 @@ namespace Gehtsoft.Measurements
     /// many 3rd party serializers such as `BinaronSerializer`.
     /// </para>
     /// </summary>
-    public readonly struct DecimalMeasurement<T> : IEquatable<DecimalMeasurement<T>>, IComparable<DecimalMeasurement<T>>, IFormattable
+    public readonly struct DecimalMeasurement<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T> : IEquatable<DecimalMeasurement<T>>, IComparable<DecimalMeasurement<T>>,
+                                                   IFormattable, ISpanFormattable, IUtf8SpanFormattable,
+                                                   IParsable<DecimalMeasurement<T>>, ISpanParsable<DecimalMeasurement<T>>,
+                                                   IAdditionOperators<DecimalMeasurement<T>, DecimalMeasurement<T>, DecimalMeasurement<T>>,
+                                                   ISubtractionOperators<DecimalMeasurement<T>, DecimalMeasurement<T>, DecimalMeasurement<T>>,
+                                                   IUnaryNegationOperators<DecimalMeasurement<T>, DecimalMeasurement<T>>,
+                                                   IUnaryPlusOperators<DecimalMeasurement<T>, DecimalMeasurement<T>>,
+                                                   IComparisonOperators<DecimalMeasurement<T>, DecimalMeasurement<T>, bool>,
+                                                   IMultiplyOperators<DecimalMeasurement<T>, decimal, DecimalMeasurement<T>>,
+                                                   IDivisionOperators<DecimalMeasurement<T>, decimal, DecimalMeasurement<T>>,
+                                                   IDivisionOperators<DecimalMeasurement<T>, DecimalMeasurement<T>, decimal>
         where T : Enum
     {
         /// <summary>
@@ -67,14 +80,18 @@ namespace Gehtsoft.Measurements
         }
 
         /// <summary>
-        /// Constructor that accepts a text representation of a value
+        /// <para>Constructor that accepts a text representation of a value</para>
+        /// <para>The text is always parsed in the invariant culture, so that the value round-trips through the `Text` property.</para>
         /// </summary>
         /// <param name="text"></param>
         [JsonConstructor]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public DecimalMeasurement(string text)
         {
-            if (!DecimalMeasurement<T>.TryParseInternal(CultureInfo.InvariantCulture, text, out decimal value, out T unit))
+            if (text == null)
+                throw new ArgumentNullException(nameof(text));
+
+            if (!DecimalMeasurement<T>.TryParseInternal(text.AsSpan(), NumberFormatInfo.InvariantInfo, out decimal value, out T unit))
                 throw new ArgumentException("Invalid value", nameof(text));
 
             Value = value;
@@ -99,6 +116,13 @@ namespace Gehtsoft.Measurements
         public string ToString(IFormatProvider cultureInfo) => ToString("NF", cultureInfo);
 
         /// <summary>
+        /// Convert to string with the specified format in invariant culture
+        /// </summary>
+        /// <param name="format">A numeric format or `"ND"` to format with the default accuracy and `"NF"` to display as all digits after decimal point</param>
+        /// <returns></returns>
+        public string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
+
+        /// <summary>
         /// Convert to string with specified format
         /// </summary>
         /// <param name="format">A numeric format or `"ND"` to format with the default accuracy and `"NF"` to display as all digits after decimal point</param>
@@ -106,9 +130,76 @@ namespace Gehtsoft.Measurements
         /// <returns></returns>
         public string ToString(string format, IFormatProvider formatProvider)
         {
+            // The buffer holds any realistic value, so the formatting itself is done without
+            // intermediate strings and only the result is allocated. The path below it stays
+            // for the formats which can overflow the buffer, such as `"N100"` of a huge value.
+            Span<char> buffer = stackalloc char[StackFormatBufferLength];
+            if (TryFormat(buffer, out int charsWritten, format.AsSpan(), formatProvider))
+                return new string(buffer.Slice(0, charsWritten));
+
             if (format == "ND")
-                format = $"N{GetUnitDefaultAccuracy(Unit)}";
+                format = UnitUtils.AccuracyFormat(GetUnitDefaultAccuracy(Unit));
             return $"{(format == "NF" ? Value.ToString(formatProvider) : Value.ToString(format, formatProvider))}{GetUnitName(Unit)}";
+        }
+
+        private const int StackFormatBufferLength = 512;
+
+        /// <summary>
+        /// Formats the value into a character span.
+        /// </summary>
+        /// <param name="destination"></param>
+        /// <param name="charsWritten"></param>
+        /// <param name="format">A numeric format or `"ND"` to format with the default accuracy and `"NF"` to display as all digits after decimal point</param>
+        /// <param name="formatProvider"></param>
+        /// <returns>`false` if the destination is too small to hold the whole value.</returns>
+        public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider formatProvider)
+        {
+            charsWritten = 0;
+
+            if (!Value.TryFormat(destination, out int valueLength, ValueFormat(format), formatProvider))
+                return false;
+
+            string unitName = GetUnitName(Unit);
+            if (!unitName.AsSpan().TryCopyTo(destination.Slice(valueLength)))
+                return false;
+
+            charsWritten = valueLength + unitName.Length;
+            return true;
+        }
+
+        /// <summary>
+        /// Formats the value into a span of UTF-8 bytes.
+        /// </summary>
+        /// <param name="utf8Destination"></param>
+        /// <param name="bytesWritten"></param>
+        /// <param name="format">A numeric format or `"ND"` to format with the default accuracy and `"NF"` to display as all digits after decimal point</param>
+        /// <param name="formatProvider"></param>
+        /// <returns>`false` if the destination is too small to hold the whole value.</returns>
+        public bool TryFormat(Span<byte> utf8Destination, out int bytesWritten, ReadOnlySpan<char> format, IFormatProvider formatProvider)
+        {
+            bytesWritten = 0;
+
+            if (!Value.TryFormat(utf8Destination, out int valueLength, ValueFormat(format), formatProvider))
+                return false;
+
+            // Unit names are not all ASCII (degrees, superscripts, the middle dot), so the name
+            // is transcoded rather than copied. It is written straight into the destination.
+            if (!Encoding.UTF8.TryGetBytes(GetUnitName(Unit).AsSpan(), utf8Destination.Slice(valueLength), out int nameLength))
+                return false;
+
+            bytesWritten = valueLength + nameLength;
+            return true;
+        }
+
+        // Translates the two measurement-specific formats into the numeric format to apply to the
+        // value itself. An empty format is the general format, which is what `"NF"` means here.
+        private ReadOnlySpan<char> ValueFormat(ReadOnlySpan<char> format)
+        {
+            if (format.SequenceEqual("ND".AsSpan()))
+                return UnitUtils.AccuracyFormat(GetUnitDefaultAccuracy(Unit)).AsSpan();
+            if (format.SequenceEqual("NF".AsSpan()))
+                return default;
+            return format;
         }
 
         /// <summary>
@@ -154,7 +245,7 @@ namespace Gehtsoft.Measurements
         /// <summary>
         /// The value with a zero measurement
         /// </summary>
-        public static Measurement<T> ZERO { get; } = new Measurement<T>(0, UnitUtils.GetBase<T>());
+        public static DecimalMeasurement<T> ZERO { get; } = new DecimalMeasurement<T>(0m, UnitUtils.GetBase<T>());
 
         private static readonly Func<T, string> mGetUnitName = CodeGenerator.GenerateGetUnitName<T>();
         private static readonly (string Name, T Unit)[] mParseList = UnitUtils.GetParseList<T>();
@@ -240,20 +331,95 @@ namespace Gehtsoft.Measurements
         public static bool TryParse(string text, out DecimalMeasurement<T> value) => TryParse(CultureInfo.CurrentCulture, text, out value);
 
         /// <summary>
+        /// Try to parse the value from a character span using the current culture
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool TryParse(ReadOnlySpan<char> text, out DecimalMeasurement<T> value) => TryParse(CultureInfo.CurrentCulture, text, out value);
+
+        /// <summary>
         /// Try to parse the value using the specified culture
         /// </summary>
         /// <param name="cultureInfo"></param>
         /// <param name="text"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static bool TryParse(CultureInfo cultureInfo, string text, out DecimalMeasurement<T> value)
+        public static bool TryParse(CultureInfo cultureInfo, string text, out DecimalMeasurement<T> value) => TryParse(cultureInfo, text.AsSpan(), out value);
+
+        /// <summary>
+        /// Try to parse the value from a character span using the specified culture
+        /// </summary>
+        /// <param name="cultureInfo"></param>
+        /// <param name="text"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool TryParse(CultureInfo cultureInfo, ReadOnlySpan<char> text, out DecimalMeasurement<T> value)
+            => TryParseCore(text, NumberFormatInfo.GetInstance(cultureInfo), out value);
+
+        /// <summary>
+        /// Try to parse the value using the specified format provider
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="provider"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool TryParse(string text, IFormatProvider provider, out DecimalMeasurement<T> value)
+            => TryParseCore(text.AsSpan(), NumberFormatInfo.GetInstance(provider), out value);
+
+        /// <summary>
+        /// Try to parse the value from a character span using the specified format provider
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="provider"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool TryParse(ReadOnlySpan<char> text, IFormatProvider provider, out DecimalMeasurement<T> value)
+            => TryParseCore(text, NumberFormatInfo.GetInstance(provider), out value);
+
+        private static bool TryParseCore(ReadOnlySpan<char> text, NumberFormatInfo numberFormat, out DecimalMeasurement<T> value)
         {
-            bool rc = TryParseInternal(cultureInfo, text, out decimal _value, out T unit);
+            bool rc = TryParseInternal(text, numberFormat, out decimal _value, out T unit);
             if (rc)
                 value = new DecimalMeasurement<T>(_value, unit);
             else
                 value = new DecimalMeasurement<T>(0m, default);
             return rc;
+        }
+
+        /// <summary>
+        /// Parses the value using the current culture
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public static DecimalMeasurement<T> Parse(string text) => Parse(text.AsSpan(), CultureInfo.CurrentCulture);
+
+        /// <summary>
+        /// Parses the value from a character span using the current culture
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public static DecimalMeasurement<T> Parse(ReadOnlySpan<char> text) => Parse(text, CultureInfo.CurrentCulture);
+
+        /// <summary>
+        /// Parses the value using the specified format provider
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="provider"></param>
+        /// <returns></returns>
+        public static DecimalMeasurement<T> Parse(string text, IFormatProvider provider) => Parse(text.AsSpan(), provider);
+
+        /// <summary>
+        /// Parses the value from a character span using the specified format provider
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="provider"></param>
+        /// <returns></returns>
+        public static DecimalMeasurement<T> Parse(ReadOnlySpan<char> text, IFormatProvider provider)
+        {
+            if (TryParseCore(text, NumberFormatInfo.GetInstance(provider), out DecimalMeasurement<T> value))
+                return value;
+            throw new FormatException("The text is not a valid measurement value");
         }
 
         /// <summary>
@@ -269,7 +435,10 @@ namespace Gehtsoft.Measurements
             return value.GetHashCode();
         }
 
-        private static bool TryParseInternal(CultureInfo cultureInfo, string text, out decimal value, out T unit)
+        // The whole parse runs on spans and on the pre-built unit list, so it allocates nothing
+        // on either the success or the failure path. A null string reaches this as an empty
+        // span, which is rejected by the length check rather than throwing.
+        private static bool TryParseInternal(ReadOnlySpan<char> text, NumberFormatInfo numberFormat, out decimal value, out T unit)
         {
             value = 0;
             unit = default;
@@ -277,36 +446,52 @@ namespace Gehtsoft.Measurements
             if (text.Length < 2)
                 return false;
 
-            int lastDigit = -1;
-            for (int i = 0; i < text.Length; i++)
+            // The unit is looked for at the end of the text rather than the number at its
+            // start, so that a number written in the exponent notation ("1e3m") is not cut in
+            // the middle. The longest name which ends the text wins; if what is left in front
+            // of it is not a number, the search goes on with the next shorter name. That
+            // retry is what keeps names which hold digits or separators ("in/100yd",
+            // "l/100km") and names which end with another name ("mrad" over "rad") unambiguous.
+            char lastChar = text[text.Length - 1];
+            int maxLength = text.Length;
+            while (true)
             {
-                char c = text[i];
-                if ((c >= '0' && c <= '9') ||
-                    c == cultureInfo.NumberFormat.NumberDecimalSeparator[0] ||
-                    c == cultureInfo.NumberFormat.NumberGroupSeparator[0] ||
-                    c == cultureInfo.NumberFormat.NegativeSign[0] ||
-                    c == '+' ||
-                    c == '-' ||
-                    c == ' ')
+                int nameLength = -1;
+                T candidate = default;
+
+                var list = mParseList;
+                for (int i = 0; i < list.Length; i++)
                 {
-                    lastDigit = i;
+                    string name = list[i].Name;
+
+                    // at least one character must be left for the value itself
+                    if (name.Length >= maxLength || name.Length <= nameLength)
+                        continue;
+
+                    // comparing the last character first keeps a text which ends with no known
+                    // unit at all - the routine parse failure - down to one character compare
+                    // per unit instead of a span comparison per unit
+                    if (name[name.Length - 1] != lastChar)
+                        continue;
+
+                    if (text.EndsWith(name.AsSpan()))
+                    {
+                        nameLength = name.Length;
+                        candidate = list[i].Unit;
+                    }
                 }
-                else
+
+                if (nameLength < 0)
+                    return false;
+
+                if (decimal.TryParse(text.Slice(0, text.Length - nameLength), NumberStyles.Float | NumberStyles.AllowThousands, numberFormat, out value))
                 {
-                    break;
+                    unit = candidate;
+                    return true;
                 }
+
+                maxLength = nameLength;
             }
-
-            if (lastDigit == text.Length - 1)
-                return false;
-
-            // Slice with spans so a successful parse allocates nothing (no Substring),
-            // and use the non-throwing lookup for the routine parse-failure case.
-            ReadOnlySpan<char> span = text.AsSpan();
-            if (!TryParseUnit(span.Slice(lastDigit + 1), out unit))
-                return false;
-
-            return decimal.TryParse(span.Slice(0, lastDigit + 1), NumberStyles.Float | NumberStyles.AllowThousands, cultureInfo, out value);
         }
 
         /// <summary>

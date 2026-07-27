@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace Gehtsoft.Measurements
@@ -17,7 +18,7 @@ namespace Gehtsoft.Measurements
         /// <param name="unit"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static Measurement<T> New<T>(this T unit, double value) where T : Enum => new Measurement<T>(value, unit);
+        public static Measurement<T> New<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(this T unit, double value) where T : Enum => new Measurement<T>(value, unit);
 
         /// <summary>
         /// <para>Creates a new value of the specified unit.</para>
@@ -27,7 +28,7 @@ namespace Gehtsoft.Measurements
         /// <param name="unit"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static DecimalMeasurement<T> NewDecimal<T>(this T unit, decimal value) where T : Enum => new DecimalMeasurement<T>(value, unit);
+        public static DecimalMeasurement<T> NewDecimal<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(this T unit, decimal value) where T : Enum => new DecimalMeasurement<T>(value, unit);
 
         /// <summary>
         /// Creates a new value of the specified unit from a double value
@@ -36,7 +37,7 @@ namespace Gehtsoft.Measurements
         /// <param name="value"></param>
         /// <param name="unit"></param>
         /// <returns></returns>
-        public static Measurement<T> As<T>(this double value, T unit) where T : Enum => new Measurement<T>(value, unit);
+        public static Measurement<T> As<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(this double value, T unit) where T : Enum => new Measurement<T>(value, unit);
 
         /// <summary>
         /// Creates a new value of the specified unit from an integer value
@@ -45,7 +46,7 @@ namespace Gehtsoft.Measurements
         /// <param name="value"></param>
         /// <param name="unit"></param>
         /// <returns></returns>
-        public static Measurement<T> As<T>(this int value, T unit) where T : Enum => new Measurement<T>(value, unit);
+        public static Measurement<T> As<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(this int value, T unit) where T : Enum => new Measurement<T>(value, unit);
 
         /// <summary>
         /// Converts an enumeration of doubles into an enumeration of measures of the specified unit.
@@ -54,7 +55,7 @@ namespace Gehtsoft.Measurements
         /// <param name="values"></param>
         /// <param name="unit"></param>
         /// <returns></returns>
-        public static IEnumerable<Measurement<T>> As<T>(this IEnumerable<double> values, T unit) where T : Enum
+        public static IEnumerable<Measurement<T>> As<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(this IEnumerable<double> values, T unit) where T : Enum
         {
             foreach (var v in values)
                 yield return new Measurement<T>(v, unit);
@@ -67,6 +68,6 @@ namespace Gehtsoft.Measurements
         /// <param name="value"></param>
         /// <param name="unit"></param>
         /// <returns></returns>
-        public static DecimalMeasurement<T> AsDecimal<T>(this decimal value, T unit) where T : Enum => new DecimalMeasurement<T>(value, unit);
+        public static DecimalMeasurement<T> AsDecimal<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(this decimal value, T unit) where T : Enum => new DecimalMeasurement<T>(value, unit);
     }
 }

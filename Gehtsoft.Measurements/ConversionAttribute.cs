@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace Gehtsoft.Measurements
@@ -56,6 +57,12 @@ namespace Gehtsoft.Measurements
         /// </summary>
         /// <param name="operation">Must always be `ConversionOperation.Base`</param>
         /// <param name="name">The full name (namespace + name) of the type that implements <see cref="ICustomConversionOperation">ICustomConversionOperation</see> interface</param>
+        /// <remarks>
+        /// The type is found by scanning the loaded assemblies and is created by reflection, so
+        /// neither the trimmer nor the ahead-of-time compiler can see that it is used. Preserve
+        /// the type explicitly if the application is trimmed.
+        /// </remarks>
+        [RequiresUnreferencedCode("A custom conversion type is located by scanning the loaded assemblies by name, so trimming can remove it. Preserve the type explicitly, or use an arithmetic conversion instead.")]
         public ConversionAttribute(ConversionOperation operation, string name) : this(operation, 0, ConversionOperation.None, 0)
         {
             if (operation != ConversionOperation.Custom)
