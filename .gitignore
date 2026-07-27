@@ -12,3 +12,8 @@ claude/settings.local.json
 .sonar.config
 coverage*.xml
 BenchmarkDotNet.Artifacts/
+
+# Skill development: test runs, transcripts and generated scratch code.
+# The skill itself under SKILL/skills/ is committed; only the test stage is not.
+SKILL/skills/*-workspace/
+SKILL/evals/

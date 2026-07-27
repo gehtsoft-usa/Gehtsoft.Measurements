@@ -212,6 +212,25 @@ deliberately left out of this round.
   library and a genuine `IsAotCompatible`. The cheap stopgap remains a reflection test
   asserting public-API parity between the twins.
 
+## J. `DensityUnit.OuncesPerCubicFeet` was misnamed ✅ DONE
+
+Found while generating the unit catalogue for the Claude Code skill under `SKILL/`. The member
+was named after the cubic foot, but both its unit name (`oz/in³`) and its factor (1729.994) are
+ounces per cubic **inch** — check the arithmetic: 28.349523125 g over 16.387064 cm³ is
+1729.994 kg/m³. Only the C# identifier was wrong, so every caller who used it by its name got
+the right answer and every caller who trusted the identifier got a number 1728 times off.
+
+Fixed the way the Round 1 B4 misspellings were: `OuncesPerCubicInch` added at the **end** of the
+enumeration so no other member's numeric value moves, and `OuncesPerCubicFeet` kept in place and
+marked `[Obsolete]`, which excludes it from `GetUnitNames()` and from parsing while it still
+converts for previously persisted values. Covered by
+`BSeriesUnitsTest.ObsoleteEnumMembers_ExcludedFromListingAndParsing_ButStillConvert` and by a new
+`Density_OuncesPerCubicInch`, which pins the factor to its definition so nobody later "fixes" the
+rename in the wrong direction.
+
+`DensityUnit.cs` had no `using System;`, which is why adding `[Obsolete]` broke the build at
+first — worth knowing if another unit file needs the same treatment.
+
 ## Extra items found while implementing
 
 ### Added: `ToString(string format)`

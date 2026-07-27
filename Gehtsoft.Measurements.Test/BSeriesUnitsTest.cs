@@ -123,7 +123,38 @@ namespace Gehtsoft.Measurements.Test
             Measurement<PowerUnit>.GetUnitNames().Any(t => t.Item1 == PowerUnit.MetricHoursePower)
                 .Should().BeFalse();
             Measurement<PowerUnit>.GetUnitNames().Should().Contain(t => t.Item1 == PowerUnit.MetricHorsePower);
+
+            // Same treatment for the density member named after the wrong unit.
+            Measurement<DensityUnit>.GetUnitNames().Any(t => t.Item1 == DensityUnit.OuncesPerCubicFeet)
+                .Should().BeFalse();
+            Measurement<DensityUnit>.GetUnitNames().Should().Contain(t => t.Item1 == DensityUnit.OuncesPerCubicInch);
+
+            Measurement<DensityUnit>.TryParse(System.Globalization.CultureInfo.InvariantCulture, "1oz/in³", out var d)
+                .Should().BeTrue();
+            d.Unit.Should().Be(DensityUnit.OuncesPerCubicInch);
+
+            new Measurement<DensityUnit>(1, DensityUnit.OuncesPerCubicFeet).In(DensityUnit.OuncesPerCubicInch)
+                .Should().BeApproximately(1, 1e-9);
         }
 #pragma warning restore CS0618
+
+        /// <summary>
+        /// The member used to be called OuncesPerCubicFeet, but its name and its factor have
+        /// always been ounces per cubic inch. This pins the factor to the definition so the
+        /// rename cannot be "fixed" the other way round by mistake.
+        /// </summary>
+        [Fact]
+        public void Density_OuncesPerCubicInch()
+        {
+            // 1 oz per cubic inch = 28.349523125 g / 16.387064 cm³
+            new Measurement<DensityUnit>(1, DensityUnit.OuncesPerCubicInch)
+                .In(DensityUnit.KilogramPerCubicMeter)
+                .Should().BeApproximately(28.349523125 / 16.387064 * 1000, 1e-3);
+
+            // and it is emphatically not per cubic foot, which would be 1728 times smaller
+            new Measurement<DensityUnit>(1, DensityUnit.OuncesPerCubicInch)
+                .In(DensityUnit.KilogramPerCubicMeter)
+                .Should().BeGreaterThan(1000);
+        }
     }
 }

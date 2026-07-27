@@ -32,6 +32,29 @@ The library is shared under LGPL license.
 To use the last stable version of the library in your project please use the package on the nuget
 https://www.nuget.org/packages/Gehtsoft.Measurements
 
+## Links
+
+| | |
+|---|---|
+| API documentation | https://docs.gehtsoftusa.com/Gehtsoft.Measurements/ |
+| NuGet package | https://www.nuget.org/packages/Gehtsoft.Measurements |
+| Claude Code skill | [`SKILL/`](SKILL/) — teaches an AI assistant to use this library |
+
+## Using it with Claude Code or Claude
+
+[`SKILL/`](SKILL/) holds a skill that teaches Claude how to use this library: conversion and
+storage, measurement math, parsing and formatting including JSON and XML, and declaring and
+validating your own units. Install it and Claude stops guessing at member names and at the
+behaviours that are easy to get wrong.
+
+```bash
+cp -r SKILL/skills/gehtsoft-measurements ~/.claude/skills/     # everywhere
+cp -r SKILL/skills/gehtsoft-measurements .claude/skills/       # one project
+```
+
+See [`SKILL/INSTALL.md`](SKILL/INSTALL.md) for the desktop and web apps, and
+[`SKILL/README.md`](SKILL/README.md) for what it covers.
+
 ## Using Library
 
 The core type of the library is the generic structure `Measurement`. The structure accepts an
@@ -140,7 +163,9 @@ options.Converters.Add(new MeasurementJsonConverter());
 Please refer to `CoreClassesTest` in the test project for an example of how to implement an XML
 serialization.
 
-Read more on http://docs.gehtsoftusa.com/Gehtsoft.Measurements/web-content.html#index.html
+## Documentation
+
+The full API reference is at **https://docs.gehtsoftusa.com/Gehtsoft.Measurements/**
 
 ## Defining your own units
 

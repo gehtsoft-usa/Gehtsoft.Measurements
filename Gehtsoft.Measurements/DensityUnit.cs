@@ -1,4 +1,6 @@
-﻿namespace Gehtsoft.Measurements
+﻿using System;
+
+namespace Gehtsoft.Measurements
 {
     /// <summary>
     /// Units of density
@@ -27,8 +29,9 @@
         PoundsPerCubicInch,
 
         /// <summary>
-        /// Ounces per cubic inch
+        /// Ounces per cubic inch (misnamed member kept for compatibility, use OuncesPerCubicInch instead)
         /// </summary>
+        [Obsolete("Use DensityUnit.OuncesPerCubicInch instead. This member is named after the cubic foot but has always been ounces per cubic inch, which is what its unit name and its factor say. It is excluded from GetUnitNames and parsing but still converts.")]
         [Unit("oz/in³", "oz/in3", 0)]
         [Conversion(ConversionOperation.Multiply, 1729.994)]
         OuncesPerCubicFeet,
@@ -60,5 +63,16 @@
         [Unit("lb/gal", 2)]
         [Conversion(ConversionOperation.Multiply, 453.59237 / 3.785411784)]
         PoundsPerGallon,
+
+        /// <summary>
+        /// Ounces per cubic inch
+        /// </summary>
+        /// <remarks>
+        /// Added at the end rather than in place of the misnamed OuncesPerCubicFeet, so that the
+        /// numeric value of every other member stays what it was.
+        /// </remarks>
+        [Unit("oz/in³", "oz/in3", 0)]
+        [Conversion(ConversionOperation.Multiply, 1729.994)]
+        OuncesPerCubicInch,
     }
 }
