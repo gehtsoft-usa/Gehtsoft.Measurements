@@ -1,0 +1,35 @@
+﻿<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><title>Gehtsoft Measurements Library</title><link rel="stylesheet" href="highlighter/default.css">
+<link rel="stylesheet" href="res/styles.css">
+<link rel="stylesheet" href="res/dripicons.css"></head><body><script type="text/javascript" src="highlighter/highlight.pack.js"></script><script type="text/javascript" src="highlighter/highlight.cshtml.js"></script><script type="text/javascript" src="settings.js"></script><script type="text/javascript" src="res/page-scripts.js"></script><script type="text/javascript">
+    loadStarted();
+</script><h1>Gehtsoft Measurements Library</h1><p><b>Gehtsoft.Measurements</b></p>
+<p>The C# library to manipulate with various measurments (e.g. distances, weight, angles, temperatures and so on) expressed in various units (e.g. distances in inches, yards, meters)</p>
+<p>Currently distance/length, velocity, weight, angular measurements and energy units are supported.</p>
+<p>The library is shared under LGPL license.</p>
+<p><b>Using Library</b></p>
+<p>The core class of the library is a generic structure <a href="Gehtsoft.Measurements.Measurement.html"><code>Measurement</code></a>.
+The structure accepts an enumeration as a parameter and this enumeration defines the measurement unit to be used:</p><pre class="example" id="example1"><code class="cs">    Measurement&lt;DistanceUnit&gt; v = new Measurement&lt;DistanceUnit&gt;(10, DistanceUnit.Feet);</code></pre><p>You can then manipulate this value using C# operator, format them or convert it into another unit:</p><pre class="example" id="example2"><code class="cs">    var v1 = v * 2;
+    string v = v.ToString(&quot;N3&quot;);
+    var v2 = v1.To(DistanceUnit.Meter);</code></pre><p>The class fully supports serialization using <code class="ctag">System.Text.Json</code>, <code class="ctag">System.Xml.Serialization.XmlSerializer</code> and Binaron.Serializer (see <a href="https://github.com/zachsaw/Binaron.Serializer" target="_blank">see at github</a>).</p>
+<p><b>Defining your own units</b></p>
+<p>You can define your own measurment units by creating a enumeration and mark it using Unit and Conversion attributes. The first attribute defines the unit name and the default accuracy of the values. The second attribute defines the rules of the conversion. One unit must always be a &quot;base&quot; unit, and conversion rules for other units defines how to convert the specified unit into a base unit.</p><pre class="example" id="example3"><code class="cs">   enum MyWeightUnit
+   {
+       //1 gram
+       [Unit(&quot;g&quot;, 3)]
+       [Conversion(ConversionOperation.Base)]
+       Gram,
+ 
+       //1 kilogram (1 kilogram = 1000 gram)
+       [Unit(&quot;kg&quot;, 1)]
+       [Conversion(ConversionOperation.Multiply, 1000)]
+       Kilogram,
+   }</code></pre><p></p>
+<table class="tmain" width="100%">
+  <tr>
+    <td colspan="2" class="thdr"><b>Groups</b></td>
+  </tr><tr>
+  <td colspan="2" class="tmain">
+    <p><a href="Gehtsoft.Measurements.html">Namespace Gehtsoft.Measurements</a></p>
+    <p></p>
+  </td>
+</tr></table><script language="javascript" type="text/javascript">syncList();</script></body></html>
