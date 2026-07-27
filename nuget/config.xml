@@ -2,7 +2,7 @@
 <nuget xmlns="http://www.gehtsoft.com/build/nuget">
  <!-- versions. the FIRST version is the current -->
  <versions>
-  <version id="1.1.18">Allocation-free value parsing (ReadOnlySpan based), few fixes.</version>
+  <version id="1.1.18">Span-based parsing and formatting: IParsable, ISpanParsable, ISpanFormattable and IUtf8SpanFormattable are implemented, Parse and TryFormat are added, and parsing now accepts the exponent notation (1e3m). Parsing, formatting into a caller buffer, conversion, comparison and arithmetic allocate nothing. New ToString(format) overload. Generic math operator interfaces (IAdditionOperators and friends). New UnitEnumValidator reports what is wrong with a unit enumeration instead of throwing on first use; a misdeclared enumeration is also rejected with an actionable message. New opt-in MeasurementJsonConverter writes a measurement as a plain string. New MeasurementMath helpers: Power from torque and rotational speed, Force, Density, Weight, Acceleration, Min, Max, Clamp, Round. New Sum and Average over sequences of measurements. The assembly is now marked trimmable. BREAKING: DecimalMeasurement.ZERO is now typed DecimalMeasurement rather than Measurement. BREAKING: DensityUnit.OuncesPerCubicFeet is obsolete, replaced by OuncesPerCubicInch, which is what its unit name and its factor always were; parsing oz/in3 now yields OuncesPerCubicInch.</version>
   <version id="1.1.17">Netstandard support dropped. Performance improvements. Update dependencies. New units for weight, volume, energy, velocity. New measurements: rotational speed, torque</version>
   <version id="1.1.16">Update dependencies. New pressure units.</version>
   <version id="1.1.15">Update dependencies.</version>
